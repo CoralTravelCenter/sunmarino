@@ -1,0 +1,73 @@
+@use '../../styles/mixins' as mixins;
+
+:host {
+  --shell-bg: #ffffff;
+  --shell-border: #d0d7de;
+  --shell-title: #111827;
+  --shell-text: #374151;
+  --shell-accent: #0f766e;
+
+  display: block;
+  font-family: inherit;
+}
+
+:host([tone='accent']) {
+  --shell-bg: #ecfeff;
+  --shell-border: #99f6e4;
+  --shell-title: #115e59;
+  --shell-text: #134e4a;
+}
+
+.container {
+  container-type: inline-size;
+  container-name: sunmar-shell;
+  border: 1px solid var(--shell-border);
+  background: var(--shell-bg);
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.header {
+  padding-block: calc(var(--sunmar-padding-s) + var(--sunmar-padding-3xs));
+  padding-inline: var(--sunmar-padding-n);
+  border-bottom: 1px solid var(--shell-border);
+  color: var(--shell-title);
+  font-size: 14px;
+  font-weight: 600;
+  @include mixins.text-balance;
+}
+
+.content {
+  padding: var(--sunmar-padding-n);
+  color: var(--shell-text);
+  font-size: 14px;
+  line-height: 1.4;
+  @include mixins.text-balance;
+}
+
+.loading {
+  padding-block: calc(var(--sunmar-padding-xs) + var(--sunmar-padding-3xs));
+  padding-inline: var(--sunmar-padding-n);
+  font-size: 12px;
+  color: var(--shell-accent);
+  border-top: 1px dashed var(--shell-border);
+}
+
+@include mixins.container-named-min(sunmar-shell, bp-396) {
+  .header,
+  .content {
+    padding-left: calc(var(--sunmar-padding-n) + var(--sunmar-padding-3xs));
+    padding-right: calc(var(--sunmar-padding-n) + var(--sunmar-padding-3xs));
+  }
+}
+
+@include mixins.container-named-min(sunmar-shell, bp-768) {
+  .header {
+    font-size: 16px;
+  }
+
+  .content {
+    font-size: 15px;
+    line-height: 1.5;
+  }
+}

@@ -1,0 +1,68 @@
+@use '../../styles/mixins' as mixins;
+
+:host {
+}
+
+.root {
+}
+
+.panel {
+}
+
+.content {
+}
+
+@include mixins.container-named-min(sunmar-tab-panel, bp-396) {
+  .root {
+  }
+
+  .panel {
+  }
+
+  .content {
+  }
+}
+
+@include mixins.container-named-min(sunmar-tab-panel, bp-768) {
+  .root {
+  }
+
+  .panel {
+  }
+
+  .content {
+  }
+}
+
+@include mixins.container-named-min(sunmar-tab-panel, bp-1024) {
+  .root {
+  }
+
+  .panel {
+  }
+
+  .content {
+  }
+}
+
+@include mixins.container-named-min(sunmar-tab-panel, bp-1280) {
+  .root {
+  }
+
+  .panel {
+  }
+
+  .content {
+  }
+}
+
+@include mixins.container-named-min(sunmar-tab-panel, bp-1400) {
+  .root {
+  }
+
+  .panel {
+  }
+
+  .content {
+  }
+}

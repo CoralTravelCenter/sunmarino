@@ -1,0 +1,240 @@
+@use '../../styles/mixins' as mixins;
+
+:host {
+  display: block;
+}
+
+.root {
+  position: relative;
+  overflow: clip;
+}
+
+.media {
+}
+
+.picture {
+  overflow: clip;
+  opacity: 1;
+  transition: opacity 1s ease;
+  z-index: 2;
+  position: relative;
+}
+
+.picture--hidden {
+  opacity: 0;
+}
+
+.video {
+  @include mixins.absolute-content();
+  pointer-events: none;
+  z-index: 1;
+}
+
+.video-frame {
+  @include mixins.absolute-content();
+}
+
+.video-frame iframe {
+  @include mixins.absolute-content-center()
+}
+
+.content {
+  padding: var(--sunmar-padding-3xl) var(--sunmar-padding-xl);
+  position: absolute;
+  inset: 0;
+  color: var(--sunmar-color-text-light);
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: start;
+  z-index: 3;
+}
+
+.content-inner {
+}
+
+.title {
+  font-size: var(--sunmar-heading-h2-font-size);
+  margin: 0 0 var(--sunmar-margin-n) 0;
+  font-weight: var(--sunmar-heading-h1-font-weight);
+  line-height: var(--sunmar-heading-h2-line-height);
+}
+
+::slotted([slot='text']) {
+  display: block;
+  margin: 0 0 var(--sunmar-margin-xl) 0;
+  font-size: var(--sunmar--text-font-size);
+  line-height: calc(var(--sunmar--text-line-height) / var(--sunmar--text-font-size));
+}
+
+.actions {
+}
+
+.actions-slot {
+}
+
+::slotted([slot='image']) {
+  min-height: 556px;
+}
+
+::slotted([slot='actions']) {
+}
+
+@include mixins.media-min(bp-768) {
+  .root {
+    border-radius: var(--sunmar-radius-base);
+  }
+
+  .media {
+  }
+
+  .picture {
+
+  }
+
+  .video {
+  }
+
+  .content {
+    justify-content: center;
+    max-width: 60%;
+  }
+
+  .content-inner {
+  }
+
+  .eyebrow {
+  }
+
+  .title {
+  }
+
+  .text {
+  }
+
+  .actions {
+  }
+
+  .actions-slot {
+  }
+
+  ::slotted(sunmar-image[slot='image']) {
+  }
+
+  ::slotted([slot='eyebrow']) {
+  }
+
+  ::slotted([slot='title']) {
+  }
+
+  ::slotted([slot='text']) {
+  }
+
+  ::slotted([slot='actions']) {
+  }
+}
+
+@include mixins.container-named-min(sunmar-kv, bp-1024) {
+  .root {
+  }
+
+  .content {
+  }
+
+  .content-inner {
+  }
+
+  .eyebrow {
+  }
+
+  .title {
+  }
+
+  .text {
+  }
+
+  .actions {
+  }
+
+  ::slotted(sunmar-image[slot='image']) {
+  }
+
+  ::slotted([slot='title']) {
+  }
+
+  ::slotted([slot='text']) {
+  }
+
+  ::slotted([slot='actions']) {
+  }
+}
+
+@include mixins.container-named-min(sunmar-kv, bp-1280) {
+  .root {
+  }
+
+  .content {
+  }
+
+  .content-inner {
+  }
+
+  .eyebrow {
+  }
+
+  .title {
+  }
+
+  .text {
+  }
+
+  .actions {
+  }
+
+  ::slotted(sunmar-image[slot='image']) {
+  }
+
+  ::slotted([slot='title']) {
+  }
+
+  ::slotted([slot='text']) {
+  }
+
+  ::slotted([slot='actions']) {
+  }
+}
+
+@include mixins.container-named-min(sunmar-kv, bp-1400) {
+  .root {
+  }
+
+  .content {
+  }
+
+  .content-inner {
+  }
+
+  .eyebrow {
+  }
+
+  .title {
+  }
+
+  .text {
+  }
+
+  .actions {
+  }
+
+  ::slotted(sunmar-image[slot='image']) {
+  }
+
+  ::slotted([slot='title']) {
+  }
+
+  ::slotted([slot='text']) {
+  }
+
+  ::slotted([slot='actions']) {
+  }
+}

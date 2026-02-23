@@ -1,0 +1,138 @@
+@use '../../styles/mixins' as mixins;
+
+:host {
+  display: inline-flex;
+  vertical-align: middle;
+}
+
+:host([full-width]) {
+  display: flex;
+  width: 100%;
+}
+
+.control {
+  font-family: inherit;
+  font-size: var(--sunmar-type-btn-l-font-size);
+  line-height: var(--sunmar-type-btn-l-line-height);
+  font-weight: 700;
+  @include mixins.text-balance;
+  border-radius: var(--sunmar-radius-xxl);
+  padding-block: var(--sunmar-padding-s);
+  padding-inline: calc(var(--sunmar-padding-xl) + var(--sunmar-padding-3xs));
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition:
+    background-color 160ms ease,
+    background-image 160ms ease,
+    color 160ms ease,
+    border-color 160ms ease,
+    transform 120ms ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: auto;
+  appearance: none;
+  text-decoration: none;
+}
+
+:host([full-width]) .control {
+  width: 100%;
+}
+
+.content {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.label {
+  white-space: nowrap;
+}
+
+.prefix-slot,
+.suffix-slot {
+  display: inline-flex;
+  align-items: center;
+}
+
+::slotted([slot='prefix']) {
+  margin-inline-end: var(--sunmar-space-xs);
+  vertical-align: middle;
+  width: var(--sunmar-icon-n);
+  height: var(--sunmar-icon-n);
+  min-width: var(--sunmar-icon-n);
+  min-height: var(--sunmar-icon-n);
+}
+
+::slotted([slot='suffix']) {
+  margin-inline-start: var(--sunmar-space-xs);
+  vertical-align: middle;
+  width: var(--sunmar-icon-n);
+  height: var(--sunmar-icon-n);
+  min-width: var(--sunmar-icon-n);
+  min-height: var(--sunmar-icon-n);
+}
+
+:host([type='primary']) .control {
+  background-color: var(--sunmar-color-btn-bg-primary-default);
+  background-image: linear-gradient(
+    245deg,
+    var(--Gradient-color_Gradinet_Primary_Second, var(--sunmar-color-gradient-primary-second)) 15.84%,
+    var(--Gradient-color_Gradient_Primary_First, var(--sunmar-color-gradient-primary-first)) 84.16%
+  );
+  color: var(--sunmar-color-btn-text-light);
+}
+
+:host([type='secondary']) .control {
+  background-color: var(--sunmar-color-btn-bg-secondary-default);
+  color: var(--sunmar-color-btn-text-light);
+}
+
+:host([type='neutral']) .control {
+  background-color: var(--sunmar-color-btn-bg-light-default);
+  color: var(--sunmar-color-btn-text-dark);
+  border-color: var(--sunmar-color-btn-stroke-light);
+}
+
+:host(:not([disabled])[type='primary']) .control:hover {
+  background-image: var(
+    --gradient_Primary_Hover,
+    linear-gradient(
+      245deg,
+      var(--Gradient-color_Gradient_Primary_First, var(--sunmar-color-gradient-primary-first)) 15.84%,
+      var(--Gradient-color_Gradinet_Primary_Second, var(--sunmar-color-gradient-primary-second)) 84.16%
+    )
+  );
+}
+
+:host(:not([disabled])[type='primary']) .control:active {
+  background-color: var(--sunmar-color-btn-bg-primary-pressed);
+  background-image: none;
+}
+
+:host(:not([disabled])[type='secondary']) .control:hover {
+  background-color: var(--sunmar-color-btn-bg-secondary-hover);
+}
+
+:host(:not([disabled])[type='secondary']) .control:active {
+  background-color: var(--sunmar-color-btn-bg-secondary-pressed);
+}
+
+:host(:not([disabled])[type='neutral']) .control:hover {
+  background-color: var(--sunmar-color-btn-bg-light-hover);
+}
+
+:host(:not([disabled])[type='neutral']) .control:active {
+  background-color: var(--sunmar-color-btn-bg-light-pressed);
+}
+
+:host([disabled]) .control {
+  cursor: not-allowed;
+  opacity: 0.54;
+  transform: none;
+}
+
+.control:focus-visible {
+  outline: 2px solid var(--sunmar-color-brand-blue);
+  outline-offset: 2px;
+}

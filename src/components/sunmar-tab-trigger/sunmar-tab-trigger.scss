@@ -1,0 +1,86 @@
+@use '../../styles/mixins' as mixins;
+
+:host {
+}
+
+.root {
+}
+
+.control {
+}
+
+.content {
+}
+
+.label {
+}
+
+@include mixins.container-named-min(sunmar-tab-trigger, bp-396) {
+  .root {
+  }
+
+  .control {
+  }
+
+  .content {
+  }
+
+  .label {
+  }
+}
+
+@include mixins.container-named-min(sunmar-tab-trigger, bp-768) {
+  .root {
+  }
+
+  .control {
+  }
+
+  .content {
+  }
+
+  .label {
+  }
+}
+
+@include mixins.container-named-min(sunmar-tab-trigger, bp-1024) {
+  .root {
+  }
+
+  .control {
+  }
+
+  .content {
+  }
+
+  .label {
+  }
+}
+
+@include mixins.container-named-min(sunmar-tab-trigger, bp-1280) {
+  .root {
+  }
+
+  .control {
+  }
+
+  .content {
+  }
+
+  .label {
+  }
+}
+
+@include mixins.container-named-min(sunmar-tab-trigger, bp-1400) {
+  .root {
+  }
+
+  .control {
+  }
+
+  .content {
+  }
+
+  .label {
+  }
+}

@@ -1,0 +1,109 @@
+@use '../../styles/mixins' as mixins;
+
+:host {
+  --sunmar-modal-z-index: 2147483000;
+  --sunmar-modal-overlay: rgba(15, 23, 42, 0.6);
+  --sunmar-modal-surface: #ffffff;
+  --sunmar-modal-border: #d1d5db;
+  --sunmar-modal-title: #0f172a;
+  --sunmar-modal-text: #334155;
+
+  position: fixed;
+  inset: 0;
+  z-index: var(--sunmar-modal-z-index);
+  display: none;
+  pointer-events: none;
+  font-family: inherit;
+}
+
+:host([open]) {
+  display: block;
+  pointer-events: auto;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: var(--sunmar-modal-overlay);
+  display: grid;
+  place-items: center;
+  padding: var(--sunmar-padding-m);
+}
+
+.dialog {
+  container-type: inline-size;
+  container-name: sunmar-modal;
+  width: min(620px, 100%);
+  max-height: min(90vh, 760px);
+  background: var(--sunmar-modal-surface);
+  border: 1px solid var(--sunmar-modal-border);
+  border-radius: 16px;
+  overflow: auto;
+  color: var(--sunmar-modal-text);
+  box-shadow: 0 30px 80px rgba(2, 6, 23, 0.35);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sunmar-space-s);
+  padding-block: var(--sunmar-padding-n);
+  padding-inline: var(--sunmar-padding-m);
+  border-bottom: 1px solid var(--sunmar-modal-border);
+}
+
+.title {
+  margin: 0;
+  color: var(--sunmar-modal-title);
+  font-size: 18px;
+  line-height: 1.3;
+  font-weight: 600;
+  @include mixins.text-balance;
+}
+
+.close {
+  appearance: none;
+  border: 1px solid var(--sunmar-modal-border);
+  border-radius: 10px;
+  background: #f8fafc;
+  color: #0f172a;
+  width: 34px;
+  height: 34px;
+  cursor: pointer;
+}
+
+.body {
+  padding: var(--sunmar-padding-m);
+  line-height: 1.5;
+  @include mixins.text-balance;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: calc(var(--sunmar-space-xs) + var(--sunmar-space-3xs));
+  padding-top: var(--sunmar-padding-n);
+  padding-inline: var(--sunmar-padding-m);
+  padding-bottom: var(--sunmar-padding-m);
+  border-top: 1px solid var(--sunmar-modal-border);
+}
+
+@include mixins.container-named-min(sunmar-modal, bp-396) {
+  .header,
+  .body,
+  .actions {
+    padding-left: var(--sunmar-padding-l);
+    padding-right: var(--sunmar-padding-l);
+  }
+}
+
+@include mixins.container-named-min(sunmar-modal, bp-768) {
+  .title {
+    font-size: 20px;
+  }
+
+  .body {
+    font-size: 16px;
+  }
+}

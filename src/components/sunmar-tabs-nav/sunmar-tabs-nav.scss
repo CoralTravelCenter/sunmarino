@@ -1,0 +1,71 @@
+@use '../../styles/mixins' as mixins;
+
+:host {
+}
+
+.root {
+}
+
+.list {
+}
+
+.items-slot {
+}
+
+::slotted(sunmar-tab-trigger) {
+}
+
+@include mixins.container-named-min(sunmar-tabs-nav, bp-396) {
+  .root {
+  }
+
+  .list {
+  }
+
+  ::slotted(sunmar-tab-trigger) {
+  }
+}
+
+@include mixins.container-named-min(sunmar-tabs-nav, bp-768) {
+  .root {
+  }
+
+  .list {
+  }
+
+  ::slotted(sunmar-tab-trigger) {
+  }
+}
+
+@include mixins.container-named-min(sunmar-tabs-nav, bp-1024) {
+  .root {
+  }
+
+  .list {
+  }
+
+  ::slotted(sunmar-tab-trigger) {
+  }
+}
+
+@include mixins.container-named-min(sunmar-tabs-nav, bp-1280) {
+  .root {
+  }
+
+  .list {
+  }
+
+  ::slotted(sunmar-tab-trigger) {
+  }
+}
+
+@include mixins.container-named-min(sunmar-tabs-nav, bp-1400) {
+  .root {
+  }
+
+  .list {
+  }
+
+  ::slotted(sunmar-tab-trigger) {
+  }
+}

@@ -1,0 +1,77 @@
+@use '../../styles/mixins' as mixins;
+
+:host {
+  display: block;
+  container-type: inline-size;
+  container-name: sunmar-accordion;
+}
+
+.root {
+  display: block;
+}
+
+.items-slot {
+  display: block;
+}
+
+::slotted(sunmar-accordion-item) {
+  display: block;
+  margin-block-end: var(--sunmar-space-s);
+}
+
+@include mixins.container-named-min(sunmar-accordion, bp-396) {
+  .root {
+  }
+
+  .items-slot {
+  }
+
+  ::slotted(sunmar-accordion-item) {
+    margin-block-end: var(--sunmar-space-s);
+  }
+}
+
+@include mixins.container-named-min(sunmar-accordion, bp-768) {
+  .root {
+  }
+
+  .items-slot {
+  }
+
+  ::slotted(sunmar-accordion-item) {
+    margin-block-end: var(--sunmar-space-n);
+  }
+}
+
+@include mixins.container-named-min(sunmar-accordion, bp-1024) {
+  .root {
+  }
+
+  .items-slot {
+  }
+
+  ::slotted(sunmar-accordion-item) {
+  }
+}
+
+@include mixins.container-named-min(sunmar-accordion, bp-1280) {
+  .root {
+  }
+
+  .items-slot {
+  }
+
+  ::slotted(sunmar-accordion-item) {
+  }
+}
+
+@include mixins.container-named-min(sunmar-accordion, bp-1400) {
+  .root {
+  }
+
+  .items-slot {
+  }
+
+  ::slotted(sunmar-accordion-item) {
+  }
+}

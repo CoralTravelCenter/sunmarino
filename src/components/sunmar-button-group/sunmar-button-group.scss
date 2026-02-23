@@ -1,0 +1,12 @@
+:host {
+  display: inline-flex;
+}
+
+.group {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: var(--sunmar-space-s);
+}

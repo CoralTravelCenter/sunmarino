@@ -1,0 +1,81 @@
+@use 'sass:map';
+@use 'sass:math';
+@use 'sass:meta';
+
+// CSS custom properties удобны для компонентов, но не подходят как source
+// для @media/@container условий. Поэтому значения брейкпоинтов дублируются
+// здесь как compile-time карта для query-миксинов.
+$sunmar-breakpoints: (
+  bp-396: 396px,
+  bp-768: 768px,
+  bp-1024: 1024px,
+  bp-1280: 1280px,
+  bp-1400: 1400px
+);
+
+@function sunmar-breakpoint($token) {
+  @if meta.type-of($token) == number {
+    @if math.unit($token) == '' {
+      @return $token * 1px;
+    }
+
+    @return $token;
+  }
+
+  $value: map.get($sunmar-breakpoints, $token);
+  @if $value == null {
+    @error "Unknown Sunmar breakpoint '#{$token}'.";
+  }
+
+  @return $value;
+}
+
+@mixin container-min($min-width) {
+  @container (min-width: #{sunmar-breakpoint($min-width)}) {
+    @content;
+  }
+}
+
+@mixin container-named-min($container-name, $min-width) {
+  @container #{$container-name} (min-width: #{sunmar-breakpoint($min-width)}) {
+    @content;
+  }
+}
+
+@mixin media-min($min-width) {
+  @media (min-width: #{sunmar-breakpoint($min-width)}) {
+    @content;
+  }
+}
+
+@mixin media-max($max-width) {
+  $max-value: sunmar-breakpoint($max-width) - 0.02px;
+
+  @media (max-width: #{$max-value}) {
+    @content;
+  }
+}
+
+@mixin text-balance {
+  overflow-wrap: break-word;
+
+  @supports (text-wrap: balance) {
+    text-wrap: balance;
+  }
+}
+
+@mixin absolute-content {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  inset: 0;
+}
+
+@mixin absolute-content-center {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}

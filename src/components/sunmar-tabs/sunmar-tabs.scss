@@ -1,0 +1,110 @@
+@use '../../styles/mixins' as mixins;
+
+:host {
+}
+
+.root {
+}
+
+.nav {
+}
+
+.nav-slot {
+}
+
+.panels {
+}
+
+.panels-slot {
+}
+
+::slotted([slot='nav']) {
+}
+
+::slotted(sunmar-tab-panel) {
+}
+
+@include mixins.container-named-min(sunmar-tabs, bp-396) {
+  .root {
+  }
+
+  .nav {
+  }
+
+  .panels {
+  }
+
+  ::slotted([slot='nav']) {
+  }
+
+  ::slotted(sunmar-tab-panel) {
+  }
+}
+
+@include mixins.container-named-min(sunmar-tabs, bp-768) {
+  .root {
+  }
+
+  .nav {
+  }
+
+  .panels {
+  }
+
+  ::slotted([slot='nav']) {
+  }
+
+  ::slotted(sunmar-tab-panel) {
+  }
+}
+
+@include mixins.container-named-min(sunmar-tabs, bp-1024) {
+  .root {
+  }
+
+  .nav {
+  }
+
+  .panels {
+  }
+
+  ::slotted([slot='nav']) {
+  }
+
+  ::slotted(sunmar-tab-panel) {
+  }
+}
+
+@include mixins.container-named-min(sunmar-tabs, bp-1280) {
+  .root {
+  }
+
+  .nav {
+  }
+
+  .panels {
+  }
+
+  ::slotted([slot='nav']) {
+  }
+
+  ::slotted(sunmar-tab-panel) {
+  }
+}
+
+@include mixins.container-named-min(sunmar-tabs, bp-1400) {
+  .root {
+  }
+
+  .nav {
+  }
+
+  .panels {
+  }
+
+  ::slotted([slot='nav']) {
+  }
+
+  ::slotted(sunmar-tab-panel) {
+  }
+}

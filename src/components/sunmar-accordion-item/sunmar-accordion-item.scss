@@ -1,0 +1,251 @@
+@use '../../styles/mixins' as mixins;
+
+:host {
+  display: block;
+  color: var(--sunmar-color-text-dark);
+  container-type: inline-size;
+  container-name: sunmar-accordion-item;
+}
+
+.root {
+  display: block;
+  background: var(--sunmar-color-base-light);
+  border: 1px solid var(--sunmar-color-btn-stroke-light);
+  border-radius: var(--sunmar-radius-l);
+  box-shadow: var(--sunmar-shadow-main);
+  overflow: clip;
+}
+
+.trigger {
+  width: 100%;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+  column-gap: var(--sunmar-space-s);
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  text-align: left;
+  appearance: none;
+  font-family: inherit;
+  margin: 0;
+  padding: var(--sunmar-padding-xl);
+  transition: background-color 160ms ease;
+}
+
+.trigger-content {
+  min-width: 0;
+}
+
+.icon {
+  width: calc(var(--sunmar-icon-n) + var(--sunmar-space-s));
+  height: calc(var(--sunmar-icon-n) + var(--sunmar-space-s));
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: var(--sunmar-color-base-icon);
+}
+
+.icon::before {
+  content: '';
+  width: 12px;
+  height: 12px;
+  border-top: 3px solid currentColor;
+  border-right: 3px solid currentColor;
+  transform: rotate(-45deg);
+  transition: transform 180ms ease;
+}
+
+.panel {
+  display: block;
+}
+
+.content {
+  font-family: inherit;
+  font-size: var(--sunmar-type-l-font-size);
+  line-height: var(--sunmar-type-l-line-height);
+  font-weight: 400;
+  color: var(--sunmar-color-text-dark);
+  padding-inline: var(--sunmar-padding-xl);
+  padding-bottom: var(--sunmar-padding-xl);
+}
+
+::slotted([slot='header']) {
+  all: unset;
+  display: block;
+  color: inherit;
+  font-family: inherit;
+  font-size: var(--sunmar-heading-h4-font-size);
+  line-height: var(--sunmar-heading-h4-line-height);
+  font-weight: var(--sunmar-heading-h4-font-weight);
+  letter-spacing: var(--sunmar-heading-h4-letter-spacing);
+  margin: 0;
+  @include mixins.text-balance;
+}
+
+:host([open]) .trigger {
+  padding-bottom: 0;
+}
+
+:host([open]) .content {
+  padding-top: var(--sunmar-padding-l);
+}
+
+:host([open]) .icon::before {
+  transform: rotate(-135deg);
+}
+
+:host([disabled]) .root {
+  opacity: 0.56;
+}
+
+:host([disabled]) .trigger {
+  cursor: not-allowed;
+}
+
+.trigger:focus-visible {
+  outline: 2px solid var(--sunmar-color-brand-blue);
+  outline-offset: -2px;
+}
+
+@include mixins.container-named-min(sunmar-accordion-item, bp-396) {
+  .root {
+    border-radius: var(--sunmar-radius-l);
+  }
+
+  .trigger {
+    padding: var(--sunmar-padding-xl);
+    column-gap: var(--sunmar-space-s);
+  }
+
+  .trigger-content {
+  }
+
+  .icon {
+    width: calc(var(--sunmar-icon-n) + var(--sunmar-space-s));
+    height: calc(var(--sunmar-icon-n) + var(--sunmar-space-s));
+  }
+
+  .panel {
+  }
+
+  .content {
+    font-size: var(--sunmar-type-l-font-size);
+    line-height: var(--sunmar-type-l-line-height);
+    padding-inline: var(--sunmar-padding-xl);
+    padding-bottom: var(--sunmar-padding-xl);
+  }
+
+  ::slotted([slot='header']) {
+    font-size: var(--sunmar-heading-h4-font-size);
+    line-height: var(--sunmar-heading-h4-line-height);
+    font-weight: var(--sunmar-heading-h4-font-weight);
+  }
+}
+
+@include mixins.container-named-min(sunmar-accordion-item, bp-768) {
+  .root {
+    border-radius: var(--sunmar-radius-xl);
+  }
+
+  .trigger {
+    padding-block: var(--sunmar-padding-3xl);
+    padding-inline: var(--sunmar-padding-3xl);
+    column-gap: var(--sunmar-space-l);
+  }
+
+  .trigger-content {
+  }
+
+  .icon {
+    width: var(--sunmar-icon-xl);
+    height: var(--sunmar-icon-xl);
+  }
+
+  .panel {
+  }
+
+  .content {
+    font-size: var(--sunmar-heading-h4-font-size);
+    line-height: var(--sunmar-heading-h4-line-height);
+    padding-inline: var(--sunmar-padding-3xl);
+    padding-bottom: var(--sunmar-padding-3xl);
+  }
+
+  ::slotted([slot='header']) {
+    font-size: var(--sunmar-heading-h1-font-size);
+    line-height: var(--sunmar-heading-h1-line-height);
+    font-weight: var(--sunmar-heading-h1-font-weight);
+  }
+}
+
+@include mixins.container-named-min(sunmar-accordion-item, bp-1024) {
+  .root {
+  }
+
+  .trigger {
+  }
+
+  .trigger-content {
+  }
+
+  .icon {
+  }
+
+  .panel {
+  }
+
+  .content {
+  }
+
+  ::slotted([slot='header']) {
+  }
+}
+
+@include mixins.container-named-min(sunmar-accordion-item, bp-1280) {
+  .root {
+  }
+
+  .trigger {
+  }
+
+  .trigger-content {
+  }
+
+  .icon {
+  }
+
+  .panel {
+  }
+
+  .content {
+  }
+
+  ::slotted([slot='header']) {
+  }
+}
+
+@include mixins.container-named-min(sunmar-accordion-item, bp-1400) {
+  .root {
+  }
+
+  .trigger {
+  }
+
+  .trigger-content {
+  }
+
+  .icon {
+  }
+
+  .panel {
+  }
+
+  .content {
+  }
+
+  ::slotted([slot='header']) {
+  }
+}
