@@ -54,10 +54,10 @@
 }
 
 .title {
-  font-size: var(--sunmar-heading-h2-font-size);
+  font-size: var(--sunmar-heading-h1-font-size);
   margin: 0 0 var(--sunmar-margin-n) 0;
   font-weight: var(--sunmar-heading-h1-font-weight);
-  line-height: var(--sunmar-heading-h2-line-height);
+  line-height: calc(var(--sunmar-heading-h1-line-height) / var(--sunmar-heading-h1-font-size));
 }
 
 ::slotted([slot='text']) {
@@ -98,6 +98,7 @@
   .content {
     justify-content: center;
     max-width: 60%;
+    padding-inline: var(--sunmar-padding-2xl);
   }
 
   .content-inner {
@@ -107,6 +108,7 @@
   }
 
   .title {
+    font-size: 40px;
   }
 
   .text {
@@ -218,6 +220,7 @@
   }
 
   .title {
+    font-size: 56px;
   }
 
   .text {

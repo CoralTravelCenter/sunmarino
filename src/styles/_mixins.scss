@@ -64,6 +64,39 @@ $sunmar-breakpoints: (
   }
 }
 
+// Горизонтальный scroll-snap контейнер (x mandatory) с базовой кастомизацией скроллбара.
+// Параметры скроллбара опциональны и могут быть переопределены в каждом компоненте.
+@mixin scroll-snap-container(
+  $scrollbar-size: 6px,
+  $scrollbar-thumb-color: rgba(0, 0, 0, 0.24),
+  $scrollbar-track-color: transparent,
+  $scrollbar-radius: 999px
+) {
+  overflow-x: scroll;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: #{$scrollbar-thumb-color} #{$scrollbar-track-color};
+
+  &::-webkit-scrollbar {
+    height: $scrollbar-size;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: $scrollbar-track-color;
+    border-radius: $scrollbar-radius;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: $scrollbar-thumb-color;
+    border-radius: $scrollbar-radius;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    filter: brightness(0.92);
+  }
+}
+
 @mixin absolute-content {
   position: absolute;
   width: 100%;

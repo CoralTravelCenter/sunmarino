@@ -1,0 +1,48 @@
+@mixin horizontal-scroll-snap(
+  $content-gap,
+  $scrollbar-size,
+  $scrollbar-thumb,
+  $scrollbar-track,
+  $scrollbar-bottom-gap: 0,
+  $corner-radius: 12px
+) {
+  :is(.simplebar-wrapper, .simplebar-mask, .simplebar-offset, .simplebar-content-wrapper) {
+    border-radius: $corner-radius;
+  }
+
+  .simplebar-content-wrapper {
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .simplebar-content {
+    display: flex;
+    gap: $content-gap;
+    width: max-content;
+  }
+
+  .simplebar-content::before,
+  .simplebar-content::after {
+    content: none;
+  }
+
+  .simplebar-track.simplebar-horizontal {
+    height: $scrollbar-size;
+    bottom: $scrollbar-bottom-gap;
+    pointer-events: auto;
+  }
+
+  .simplebar-track.simplebar-horizontal::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 999px;
+    background: $scrollbar-track;
+  }
+
+  .simplebar-track.simplebar-horizontal .simplebar-scrollbar::before {
+    background: $scrollbar-thumb;
+    border-radius: 999px;
+    opacity: 1;
+  }
+}

@@ -1,0 +1,57 @@
+@use '../../styles/mixins' as mixins;
+@use '../../styles/simplebar' as simplebar;
+
+:host {
+  --sunmar-sticky-nav-bg: transparent;
+  --sunmar-sticky-nav-scrollbar-size: 8px;
+  --sunmar-sticky-nav-scrollbar-thumb: var(--sunmar-color-base-light-alt1);
+  --sunmar-sticky-nav-scrollbar-track: rgba(0, 0, 0, 0.04);
+  --sunmar-sticky-nav-scrollbar-bottom-gap: 0;
+
+  display: block;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+
+  @media (max-width: 767px) {
+    padding-inline: 16px;
+  }
+}
+
+.root {
+  background: var(--sunmar-sticky-nav-bg);
+  @include simplebar.horizontal-scroll-snap(
+    var(--sunmar-padding-xs),
+    var(--sunmar-sticky-nav-scrollbar-size),
+    var(--sunmar-sticky-nav-scrollbar-thumb),
+    var(--sunmar-sticky-nav-scrollbar-track),
+    var(--sunmar-sticky-nav-scrollbar-bottom-gap),
+    12px
+  );
+}
+
+:host([scrollbar='native']) .root {
+  @include mixins.scroll-snap-container(
+    var(--sunmar-sticky-nav-scrollbar-size),
+    var(--sunmar-sticky-nav-scrollbar-thumb),
+    var(--sunmar-sticky-nav-scrollbar-track),
+    999px
+  );
+}
+
+.root slot[name='nav-link'] {
+  display: flex;
+  gap: var(--sunmar-padding-xs);
+  white-space: nowrap;
+  width: max-content;
+}
+
+::slotted([slot='nav-link']) {
+  flex: 0 0 auto;
+  scroll-snap-align: start;
+  border-radius: 100px;
+  padding: 16px 30px;
+  background: #F5F5F8;
+  color: var(--sunmar-color-text-dark);
+  text-decoration: none;
+}

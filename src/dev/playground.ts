@@ -6,8 +6,51 @@ const PREVIEW_HTML = `
     sunmar-kv::part(iframe) {
         height: 120%;
     }
+    sunmar-kv::part(iframe-mob) {
+        width: 150%;
+    }
+    .sticky-demo {
+      display: grid;
+      gap: 16px;
+    }
+    .sticky-demo__scroll {
+      height: 320px;
+      overflow: auto;
+      border: 1px solid #d0d7de;
+      border-radius: 12px;
+      background: #fff;
+      padding: 12px;
+    }
+    .sticky-demo__stack {
+      display: grid;
+      gap: 16px;
+      min-height: 720px;
+      align-content: start;
+    }
+    .sticky-demo__chip {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 36px;
+      padding: 0 12px;
+      border-radius: 999px;
+      border: 1px solid #d0d7de;
+      color: #0e2855;
+      text-decoration: none;
+      font: 600 14px/1 'Segoe UI', sans-serif;
+      background: #fff;
+    }
+    .sticky-demo__section {
+      display: grid;
+      gap: 8px;
+      padding: 16px;
+      border: 1px dashed #d0d7de;
+      border-radius: 12px;
+      background: #fafafa;
+    }
   </style>
   <div style="display:grid; gap: 24px;">
+   <section class="sunmarino kv">
     <sunmar-kv
     vimeo-id-desktop="1162544497"
     vimeo-id-mobile="1162544372"
@@ -27,97 +70,25 @@ const PREVIEW_HTML = `
         <sunmar-button type="primary">Подобрать тур</sunmar-button>
       </div>
     </sunmar-kv>
-
-    <sunmar-shell tone="neutral">
-      <span slot="title">Buttons Preview</span>
-      <sunmar-button-group>
-        <sunmar-button type="primary">Действие (button)</sunmar-button>
-        <sunmar-button type="secondary">Узнать больше</sunmar-button>
-        <sunmar-link type="neutral" href="https://www.sunmar.ru/" target="_blank">
-          Перейти на Sunmar (link)
-        </sunmar-link>
-        <sunmar-link
-          type="neutral"
-          href="https://www.sunmar.ru/"
-          target="_blank"
-          disabled
-        >
-          Недоступная ссылка
-        </sunmar-link>
-      </sunmar-button-group>
-      <span slot="loading">Кнопка и ссылка разделены на отдельные компоненты. Hover/active только через CSS.</span>
-    </sunmar-shell>
-
-    <sunmar-shell tone="neutral">
-      <span slot="title">Accordion Preview</span>
-      <div style="display:grid; gap: 24px;">
-        <div>
-          <div style="margin-bottom: 8px; font-weight: 600;">mode="single"</div>
-          <sunmar-accordion mode="single">
-            <sunmar-accordion-item open>
-              <span slot="header">Первый вопрос</span>
-              Контент первого пункта.
-            </sunmar-accordion-item>
-            <sunmar-accordion-item>
-              <span slot="header">Второй вопрос</span>
-              Контент второго пункта.
-            </sunmar-accordion-item>
-            <sunmar-accordion-item>
-              <span slot="header">Третий вопрос</span>
-              Контент третьего пункта.
-            </sunmar-accordion-item>
-          </sunmar-accordion>
-        </div>
-
-        <div>
-          <div style="margin-bottom: 8px; font-weight: 600;">mode="multiple"</div>
-          <sunmar-accordion mode="multiple">
-            <sunmar-accordion-item open>
-              <span slot="header">Можно открыть несколько</span>
-              Первый открытый пункт.
-            </sunmar-accordion-item>
-            <sunmar-accordion-item open>
-              <span slot="header">Второй тоже открыт</span>
-              Второй открытый пункт.
-            </sunmar-accordion-item>
-            <sunmar-accordion-item>
-              <span slot="header">Третий закрыт</span>
-              Закрытый пункт.
-            </sunmar-accordion-item>
-          </sunmar-accordion>
-        </div>
-      </div>
-    </sunmar-shell>
-
-    <sunmar-shell tone="neutral">
-      <span slot="title">Tabs Preview (Sync + data-attrs)</span>
-      <div style="display:grid; gap: 24px;">
-        <sunmar-tabs id="tabs-sync-a" value="hare">
-          <sunmar-tabs-nav slot="nav">
-            <sunmar-tab-trigger value="hare" data-personaj="Заяц">Заяц</sunmar-tab-trigger>
-            <sunmar-tab-trigger value="wolf" data-personaj="Волк">Волк</sunmar-tab-trigger>
-            <sunmar-tab-trigger value="fox" data-personaj="Лиса">Лиса</sunmar-tab-trigger>
-          </sunmar-tabs-nav>
-
-          <sunmar-tab-panel value="hare">Контент панели "Заяц"</sunmar-tab-panel>
-          <sunmar-tab-panel value="wolf">Контент панели "Волк"</sunmar-tab-panel>
-          <sunmar-tab-panel value="fox">Контент панели "Лиса"</sunmar-tab-panel>
-        </sunmar-tabs>
-
-        <sunmar-tabs id="tabs-sync-b" value="hare">
-          <sunmar-tabs-nav slot="nav">
-            <sunmar-tab-trigger value="hare" data-personaj="Заяц">Заяц (копия)</sunmar-tab-trigger>
-            <sunmar-tab-trigger value="wolf" data-personaj="Волк">Волк (копия)</sunmar-tab-trigger>
-            <sunmar-tab-trigger value="fox" data-personaj="Лиса">Лиса (копия)</sunmar-tab-trigger>
-          </sunmar-tabs-nav>
-
-          <sunmar-tab-panel value="hare">Синхронизированная панель "Заяц"</sunmar-tab-panel>
-          <sunmar-tab-panel value="wolf">Синхронизированная панель "Волк"</sunmar-tab-panel>
-          <sunmar-tab-panel value="fox">Синхронизированная панель "Лиса"</sunmar-tab-panel>
-        </sunmar-tabs>
-      </div>
-      <span slot="loading">Переключение в одном экземпляре синхронизирует второй через внешний JS и событие sunmar-tabs-change.</span>
-    </sunmar-shell>
+    </section>
+    <section class="sunmarino">
+    <div class="container">
+    <sunmar-lid>
+      <h2 class="sunmar-h2" slot="title">Лид текст</h2>
+      <p class="sunmar-text" slot="text">
+       Анапа – одно из популярных летних направлений для российских туристов. Из-за того, что отдых там временно невозможен, многие задаются вопросом: куда теперь отправляться на море? В России можно найти отдых на любой вкус, в том числе и пляжный. Приморские курорты привлекают туристов со всей страны и даже из зарубежья. Каждый из них имеет яркую индивидуальность, и сейчас мы расскажем, куда можно отправиться в отпуск вместо Анапы.
+      </p>
+      <sunmar-button>Я кнопка</sunmar-button>
+    </sunmar-lid>
+    </div>
+    </section>
+            <sunmar-sticky-nav top-offset="81">
+              <a slot="nav-link" href="#sticky-about">О проекте</a>
+              <a slot="nav-link" href="#sticky-details">Детали</a>
+              <a slot="nav-link" href="#sticky-faq">FAQ</a>
+              <a slot="nav-link" href="#sticky-more">Еще</a>
+              <a slot="nav-link" href="#sticky-more">Еще</a>
+            </sunmar-sticky-nav>
   </div>
 `;
 
@@ -176,5 +147,3 @@ async function bootstrapPreview(): Promise<void> {
 }
 
 void bootstrapPreview();
-
-

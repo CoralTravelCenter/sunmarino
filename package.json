@@ -3,10 +3,40 @@
   "version": "0.1.0",
   "description": "Web Components library based on Lit + TypeScript + SCSS",
   "type": "module",
+  "main": "./dist/sunmarino.es.js",
+  "module": "./dist/sunmarino.es.js",
+  "types": "./dist/types/exports.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/types/exports.d.ts",
+      "import": "./dist/sunmarino.es.js",
+      "default": "./dist/sunmarino.es.js"
+    },
+    "./manual": {
+      "types": "./dist/types/manual.d.ts",
+      "import": "./dist/sunmarino.manual.es.js",
+      "default": "./dist/sunmarino.manual.es.js"
+    },
+    "./styles.css": "./dist/index.css",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "sideEffects": [
+    "./dist/sunmarino.es.js",
+    "./dist/sunmarino.iife.js",
+    "./dist/index.css"
+  ],
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
-    "build:external": "SUNMAR_EXTERNAL_VENDOR_DEPS=dayjs,@fluejs/noscroll vite build",
+    "build": "npm run build:js && npm run build:types",
+    "build:js": "npm run build:js:auto && npm run build:js:manual",
+    "build:js:auto": "vite build",
+    "build:js:manual": "SUNMAR_LIBRARY_ENTRY=manual vite build",
+    "build:types": "tsc -p tsconfig.build.json",
+    "build:external": "SUNMAR_EXTERNAL_VENDOR_DEPS=dayjs,@fluejs/noscroll npm run build",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit"
   },
@@ -21,7 +51,8 @@
   "dependencies": {
     "@fluejs/noscroll": "^1.0.0",
     "dayjs": "^1.11.13",
-    "lit": "^3.2.1"
+    "lit": "^3.2.1",
+    "simplebar": "^6.3.3"
   },
   "devDependencies": {
     "@types/node": "^22.9.0",

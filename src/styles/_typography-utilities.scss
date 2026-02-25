@@ -1,0 +1,38 @@
+@use './mixins' as mixins;
+
+:where(.sunmar-h2) {
+  margin: 0;
+  font-family: inherit;
+  font-size: var(--sunmar-heading-h2-font-size);
+  line-height: calc(var(--sunmar-heading-h2-line-height) /  var(--sunmar-heading-h2-font-size));
+  color: var(--sunmar-color-text-dark);
+  font-weight: var(--sunmar-heading-h2-font-weight);
+}
+
+:where(.sunmar-text) {
+  margin: 0;
+  font-family: inherit;
+  color: var(--sunmar-color-text-dark);
+  font-size: var(--sunmar--text-font-size);
+  line-height: calc(var(--sunmar--text-line-height) / var(--sunmar--text-font-size));
+}
+
+:where(.sunmar-text-balance) {
+  @include mixins.text-balance;
+}
+
+:where(section.sunmarino) {
+  padding-block: calc(var(--sunmar-padding-2xl) / 2);
+
+  .container {
+    @media (max-width: 767px) {
+      padding-inline: 16px;
+    }
+  }
+}
+
+:where(section.sunmarino.kv) {
+  @media (max-width: 767px) {
+    padding-top: 0;
+  }
+}

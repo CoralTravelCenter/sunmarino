@@ -19,6 +19,10 @@ import {
   SunmarLink
 } from '../components/sunmar-link/sunmar-link';
 import {
+  SUNMAR_LID_TAG_NAME,
+  SunmarLid
+} from '../components/sunmar-lid/sunmar-lid';
+import {
   SUNMAR_IMAGE_TAG_NAME,
   SunmarImage
 } from '../components/sunmar-image/sunmar-image';
@@ -50,6 +54,10 @@ import {
   SUNMAR_TAB_PANEL_TAG_NAME,
   SunmarTabPanel
 } from '../components/sunmar-tab-panel/sunmar-tab-panel';
+import {
+  SUNMAR_STICKY_NAV_TAG_NAME,
+  SunmarStickyNav
+} from '../components/sunmar-sticky-nav/sunmar-sticky-nav';
 
 const sunmarComponentRegistryEntries = [
   [SUNMAR_SHELL_TAG_NAME, SunmarShell],
@@ -57,6 +65,7 @@ const sunmarComponentRegistryEntries = [
   [SUNMAR_BUTTON_TAG_NAME, SunmarButton],
   [SUNMAR_BUTTON_GROUP_TAG_NAME, SunmarButtonGroup],
   [SUNMAR_LINK_TAG_NAME, SunmarLink],
+  [SUNMAR_LID_TAG_NAME, SunmarLid],
   [SUNMAR_IMAGE_TAG_NAME, SunmarImage],
   [SUNMAR_KV_TAG_NAME, SunmarKv],
   [SUNMAR_ACCORDION_TAG_NAME, SunmarAccordion],
@@ -64,7 +73,8 @@ const sunmarComponentRegistryEntries = [
   [SUNMAR_TABS_TAG_NAME, SunmarTabs],
   [SUNMAR_TABS_NAV_TAG_NAME, SunmarTabsNav],
   [SUNMAR_TAB_TRIGGER_TAG_NAME, SunmarTabTrigger],
-  [SUNMAR_TAB_PANEL_TAG_NAME, SunmarTabPanel]
+  [SUNMAR_TAB_PANEL_TAG_NAME, SunmarTabPanel],
+  [SUNMAR_STICKY_NAV_TAG_NAME, SunmarStickyNav]
 ] as const;
 
 export function registerSunmarComponents(registry?: CustomElementRegistry): void {

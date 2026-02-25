@@ -1,0 +1,13 @@
+@use '../../styles/mixins' as mixins;
+
+:host {
+  display: block;
+}
+
+.root {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sunmar-padding-xl);
+  text-align: center;
+}
