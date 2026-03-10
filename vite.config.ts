@@ -7,7 +7,7 @@ export default defineConfig(({ command }) => {
   const libraryEntryMode = process.env.SUNMAR_LIBRARY_ENTRY?.trim() === 'manual' ? 'manual' : 'auto';
   const isManualLibraryEntry = libraryEntryMode === 'manual';
   const externalDepsEnv = process.env.SUNMAR_EXTERNAL_VENDOR_DEPS?.trim();
-  const defaultExternalDeps = ['dayjs', '@fluejs/noscroll'];
+  const defaultExternalDeps = ['@fluejs/noscroll'];
   const externalVendorDeps = externalDepsEnv
     ? externalDepsEnv === 'true'
       ? defaultExternalDeps
@@ -22,11 +22,15 @@ export default defineConfig(({ command }) => {
   const libraryFormats: LibraryFormats[] = isManualLibraryEntry ? ['es'] : ['es', 'iife'];
 
   return {
-    resolve: {
-      alias: [
-        // Для dayjs используем ESM-вход и даем treeshaking удалить лишнее.
-        { find: /^dayjs$/, replacement: 'dayjs/esm' }
-      ]
+    css: {
+      preprocessorOptions: {
+        scss: {
+          api: 'modern-compiler'
+        },
+        sass: {
+          api: 'modern-compiler'
+        }
+      }
     },
     plugins: [
       ...(isDev
@@ -65,7 +69,6 @@ export default defineConfig(({ command }) => {
         external: externalVendorDeps,
         output: {
           globals: {
-            dayjs: 'dayjs',
             '@fluejs/noscroll': 'NoScroll'
           },
           compact: true,
