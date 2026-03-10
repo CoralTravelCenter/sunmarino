@@ -1,57 +1,71 @@
 @use '../../styles/mixins' as mixins;
-@use '../../styles/simplebar' as simplebar;
 
 :host {
-  --sunmar-sticky-nav-bg: transparent;
-  --sunmar-sticky-nav-scrollbar-size: 8px;
-  --sunmar-sticky-nav-scrollbar-thumb: var(--sunmar-color-base-light-alt1);
-  --sunmar-sticky-nav-scrollbar-track: rgba(0, 0, 0, 0.04);
-  --sunmar-sticky-nav-scrollbar-bottom-gap: 0;
+  --sunmar-sticky-nav-z-index: 10;
+  --sunmar-sticky-nav-bg: var(--Base-color_Base_Light_Gray, #F5F5F8);
+  --sunmar-sticky-nav-border: none;
+  --sunmar-sticky-nav-gap: 0px;
+  --sunmar-sticky-nav-top-offset: 0px;
 
   display: block;
   position: sticky;
-  top: 0;
-  z-index: 10;
-
-  @media (max-width: 767px) {
-    padding-inline: 16px;
-  }
+  top: var(--sunmar-sticky-nav-top-offset);
+  width: 100%;
+  box-sizing: border-box;
+  z-index: var(--sunmar-sticky-nav-z-index);
 }
 
 .root {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 8px;
+  border: var(--sunmar-sticky-nav-border);
+  border-radius: 42px;
   background: var(--sunmar-sticky-nav-bg);
-  @include simplebar.horizontal-scroll-snap(
-    var(--sunmar-padding-xs),
-    var(--sunmar-sticky-nav-scrollbar-size),
-    var(--sunmar-sticky-nav-scrollbar-thumb),
-    var(--sunmar-sticky-nav-scrollbar-track),
-    var(--sunmar-sticky-nav-scrollbar-bottom-gap),
-    12px
-  );
 }
 
-:host([scrollbar='native']) .root {
-  @include mixins.scroll-snap-container(
-    var(--sunmar-sticky-nav-scrollbar-size),
-    var(--sunmar-sticky-nav-scrollbar-thumb),
-    var(--sunmar-sticky-nav-scrollbar-track),
-    999px
-  );
+.items {
+  @include mixins.scroll-snap-container();
+  @include mixins.hide-scrollbar;
+
+  width: 100%;
+  min-width: 0;
+  overflow-y: hidden;
+  border-radius: inherit;
 }
 
-.root slot[name='nav-link'] {
+.items-slot {
   display: flex;
-  gap: var(--sunmar-padding-xs);
-  white-space: nowrap;
+  align-items: stretch;
+  gap: var(--sunmar-sticky-nav-gap);
   width: max-content;
+  min-width: 100%;
 }
 
-::slotted([slot='nav-link']) {
+::slotted([slot="nav-link"]) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   flex: 0 0 auto;
-  scroll-snap-align: start;
-  border-radius: 100px;
+  min-height: 100%;
   padding: 16px 30px;
-  background: #F5F5F8;
-  color: var(--sunmar-color-text-dark);
+  border-radius: 100px;
+  color: #000000;
+  cursor: pointer;
   text-decoration: none;
+  white-space: nowrap;
+  scroll-snap-align: start;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+::slotted([slot="nav-link"]:focus-visible) {
+  outline: 2px solid #061a3e;
+  outline-offset: 2px;
+}
+
+::slotted([slot="nav-link"].active) {
+  background: #061a3e;
+  color: #ffffff;
 }

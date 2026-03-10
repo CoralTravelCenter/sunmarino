@@ -173,18 +173,18 @@ registerSunmarComponents();
 
 ## Sticky Nav API
 
-- `sunmar-sticky-nav` attributes: `top-offset` (number, пиксели для `top`), `scrollbar="custom|native"` (по умолчанию `custom`)
+- `sunmar-sticky-nav` attributes: `top-offset` (number, optional override для отступа sticky-блока от верхней границы viewport)
 - `sunmar-sticky-nav` slots: `nav-link` (например, ссылки/кнопки/`sunmar-link`)
 - `sunmar-sticky-nav` parts: `root`, `items`
-- компонент реализован через `position: sticky`
+- компонент реализован через нативный `position: sticky`
 - есть минимальная JS-логика:
-  - если компонент находится внутри `.row-outer-container`, он пытается переместиться сразу после ближайшего такого контейнера
-  - для кастомного горизонтального скроллбара использует `SimpleBar` через util `src/utils/scroll/custom-scrollbar.ts`
-  - при `scrollbar="native"` использует native horizontal scroll + scroll-snap без `SimpleBar`
+  - в `connectedCallback()` компонент переносится сразу за ближайший `.row-outer-container`, если он найден
+  - если `top-offset` не задан, верхний offset вычисляется реактивно через `matchMedia`: mobile `81px`, tablet `65px`, desktop `16px`
 - CSS custom properties:
   - `--sunmar-sticky-nav-z-index`
   - `--sunmar-sticky-nav-bg`
   - `--sunmar-sticky-nav-border`
+  - `--sunmar-sticky-nav-gap`
 
 Пример:
 
@@ -196,30 +196,11 @@ registerSunmarComponents();
 </sunmar-sticky-nav>
 ```
 
-Native fallback без `SimpleBar`:
+Ограничения sticky-поведения:
 
-```html
-<sunmar-sticky-nav top-offset="12" scrollbar="native">
-  <a slot="nav-link" href="#about">О проекте</a>
-  <a slot="nav-link" href="#details">Детали</a>
-</sunmar-sticky-nav>
-```
-
-Стилизация кастомного скроллбара через CSS variables на хосте:
-
-```css
-sunmar-sticky-nav {
-  --sunmar-sticky-nav-scrollbar-size: 10px;
-  --sunmar-sticky-nav-scrollbar-thumb: #d8242a;
-  --sunmar-sticky-nav-scrollbar-track: rgba(0, 0, 0, 0.06);
-}
-```
-
-Ограничения `position: sticky`:
-
-- поведение зависит от scroll-контейнера и может ломаться, если у предков `overflow: hidden/auto/scroll`
-- ожидаемое поведение также может меняться при сложных layout-контекстах (`transform`, `filter`, `contain`)
-- визуальные стили и sticky-позиционирование находятся на `:host`, `nav` внутри используется как семантическая обертка
+- sticky-логика опирается на нативный `position: sticky`, поэтому зависит от layout родителей
+- `top-offset` задает явный override; без него используется реактивный offset от `matchMedia`
+- визуальные стили находятся на `:host`, `nav` внутри используется как семантическая обертка
 
 ## KV API
 
