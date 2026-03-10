@@ -36,7 +36,7 @@
     "build:js:auto": "vite build",
     "build:js:manual": "SUNMAR_LIBRARY_ENTRY=manual vite build",
     "build:types": "tsc -p tsconfig.build.json",
-    "build:external": "SUNMAR_EXTERNAL_VENDOR_DEPS=dayjs,@fluejs/noscroll npm run build",
+    "build:external": "SUNMAR_EXTERNAL_VENDOR_DEPS=@fluejs/noscroll npm run build",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit"
   },
@@ -50,9 +50,7 @@
   "license": "MIT",
   "dependencies": {
     "@fluejs/noscroll": "^1.0.0",
-    "dayjs": "^1.11.13",
-    "lit": "^3.2.1",
-    "simplebar": "^6.3.3"
+    "lit": "^3.2.1"
   },
   "devDependencies": {
     "@types/node": "^22.9.0",
