@@ -136,7 +136,7 @@
   }
 }
 
-@include mixins.container-named-min(sunmar-kv, bp-1024) {
+@include mixins.media-min(bp-1024) {
   .root {
   }
 
@@ -171,7 +171,7 @@
   }
 }
 
-@include mixins.container-named-min(sunmar-kv, bp-1280) {
+@include mixins.media-min(bp-1280) {
   .root {
   }
 
@@ -206,7 +206,7 @@
   }
 }
 
-@include mixins.container-named-min(sunmar-kv, bp-1400) {
+@include mixins.media-min(bp-1440) {
   .root {
   }
 

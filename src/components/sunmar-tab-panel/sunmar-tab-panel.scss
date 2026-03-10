@@ -12,7 +12,7 @@
 .content {
 }
 
-@include mixins.container-named-min(sunmar-tab-panel, bp-396) {
+@include mixins.media-min(bp-768) {
   .root {
   }
 
@@ -23,7 +23,7 @@
   }
 }
 
-@include mixins.container-named-min(sunmar-tab-panel, bp-768) {
+@include mixins.media-min(bp-1024) {
   .root {
   }
 
@@ -34,7 +34,7 @@
   }
 }
 
-@include mixins.container-named-min(sunmar-tab-panel, bp-1024) {
+@include mixins.media-min(bp-1280) {
   .root {
   }
 
@@ -45,18 +45,7 @@
   }
 }
 
-@include mixins.container-named-min(sunmar-tab-panel, bp-1280) {
-  .root {
-  }
-
-  .panel {
-  }
-
-  .content {
-  }
-}
-
-@include mixins.container-named-min(sunmar-tab-panel, bp-1400) {
+@include mixins.media-min(bp-1440) {
   .root {
   }
 

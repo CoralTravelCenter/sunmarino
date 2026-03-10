@@ -15,7 +15,7 @@
 ::slotted(sunmar-tab-trigger) {
 }
 
-@include mixins.container-named-min(sunmar-tabs-nav, bp-396) {
+@include mixins.media-min(bp-768) {
   .root {
   }
 
@@ -26,7 +26,7 @@
   }
 }
 
-@include mixins.container-named-min(sunmar-tabs-nav, bp-768) {
+@include mixins.media-min(bp-1024) {
   .root {
   }
 
@@ -37,7 +37,7 @@
   }
 }
 
-@include mixins.container-named-min(sunmar-tabs-nav, bp-1024) {
+@include mixins.media-min(bp-1280) {
   .root {
   }
 
@@ -48,18 +48,7 @@
   }
 }
 
-@include mixins.container-named-min(sunmar-tabs-nav, bp-1280) {
-  .root {
-  }
-
-  .list {
-  }
-
-  ::slotted(sunmar-tab-trigger) {
-  }
-}
-
-@include mixins.container-named-min(sunmar-tabs-nav, bp-1400) {
+@include mixins.media-min(bp-1440) {
   .root {
   }
 

@@ -3,8 +3,6 @@
 :host {
   display: block;
   color: var(--sunmar-color-text-dark);
-  container-type: inline-size;
-  container-name: sunmar-accordion-item;
 }
 
 .root {
@@ -110,42 +108,7 @@
   outline-offset: -2px;
 }
 
-@include mixins.container-named-min(sunmar-accordion-item, bp-396) {
-  .root {
-    border-radius: var(--sunmar-radius-l);
-  }
-
-  .trigger {
-    padding: var(--sunmar-padding-xl);
-    column-gap: var(--sunmar-space-s);
-  }
-
-  .trigger-content {
-  }
-
-  .icon {
-    width: calc(var(--sunmar-icon-n) + var(--sunmar-space-s));
-    height: calc(var(--sunmar-icon-n) + var(--sunmar-space-s));
-  }
-
-  .panel {
-  }
-
-  .content {
-    font-size: var(--sunmar-type-l-font-size);
-    line-height: var(--sunmar-type-l-line-height);
-    padding-inline: var(--sunmar-padding-xl);
-    padding-bottom: var(--sunmar-padding-xl);
-  }
-
-  ::slotted([slot='header']) {
-    font-size: var(--sunmar-heading-h4-font-size);
-    line-height: var(--sunmar-heading-h4-line-height);
-    font-weight: var(--sunmar-heading-h4-font-weight);
-  }
-}
-
-@include mixins.container-named-min(sunmar-accordion-item, bp-768) {
+@include mixins.media-min(bp-768) {
   .root {
     border-radius: var(--sunmar-radius-xl);
   }
@@ -181,7 +144,7 @@
   }
 }
 
-@include mixins.container-named-min(sunmar-accordion-item, bp-1024) {
+@include mixins.media-min(bp-1024) {
   .root {
   }
 
@@ -204,7 +167,7 @@
   }
 }
 
-@include mixins.container-named-min(sunmar-accordion-item, bp-1280) {
+@include mixins.media-min(bp-1280) {
   .root {
   }
 
@@ -227,7 +190,7 @@
   }
 }
 
-@include mixins.container-named-min(sunmar-accordion-item, bp-1400) {
+@include mixins.media-min(bp-1440) {
   .root {
   }
 
