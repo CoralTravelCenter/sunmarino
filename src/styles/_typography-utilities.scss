@@ -21,13 +21,15 @@
   @include mixins.text-balance;
 }
 
-:where(section.sunmarino) {
-  padding-block: calc(var(--sunmar-padding-2xl) / 2);
+:where(.sunmarino-container) {
+  padding-block: 32px;
 
-  .container {
-    @media (max-width: 767px) {
-      padding-inline: 16px;
-    }
+  @media (max-width: 767px) {
+    padding-inline: 16px;
+  }
+
+  @media (min-width: 768px) {
+    padding-block: 40px;
   }
 }
 

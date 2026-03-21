@@ -3,6 +3,30 @@
     width: 140%;
     height: 140%;
   }
+
+  .sticky-nav-demo-sections {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    padding: 24px 0 80px;
+  }
+
+  .sticky-nav-demo-section {
+    min-height: 70vh;
+    padding: 32px;
+    border-radius: 24px;
+    background: #f5f5f8;
+  }
+
+  .sticky-nav-demo-section h2,
+  .sticky-nav-demo-section p {
+    margin: 0;
+  }
+
+  .sticky-nav-demo-section p {
+    margin-top: 16px;
+    max-width: 720px;
+  }
 </style>
 
 <section class="sunmarino kv">
@@ -15,8 +39,8 @@
             src="https://b2ccdn.sunmar.ru/content/landing-pages/rb-summer/rb-kv-mo.jpg"
             alt=""
     ></sunmar-image>
-    <div slot="video-desktop" data-vimeo-id="1162544497"></div>
-    <div slot="video-mobile" data-vimeo-id="1162544372"></div>
+<!--    <div slot="video-desktop" data-vimeo-id="1162544497"></div>-->
+<!--    <div slot="video-mobile" data-vimeo-id="1162544372"></div>-->
     <h1 slot="title">ОчеВИДНАЯ выгода Раннего бронирования</h1>
     <p slot="text">
        Скидки до 50% скидки и предоплата 20% от стоимости
@@ -28,20 +52,54 @@
     </div>
   </sunmar-kv>
 </section>
+<sunmar-sticky-nav disable-relocate>
+  <a slot="nav-link" href="#april">Почему апрель?</a>
+  <a slot="nav-link" href="#turkey">Турция</a>
+  <a slot="nav-link" href="#egypt">Египет</a>
+  <a slot="nav-link" href="#maldives">Мальдивы</a>
+  <a slot="nav-link" href="#thailand">Таиланд</a>
+</sunmar-sticky-nav>
 <section class="sunmarino">
-  <div class="container">
+  <div class="sunmarino-container">
     <sunmar-lid>
       <h2 class="sunmar-h2" slot="title">Лид текст</h2>
       <p class="sunmar-text" slot="text">
         Анапа – одно из популярных летних направлений для российских туристов. Из-за того, что отдых там временно невозможен, многие задаются вопросом: куда теперь отправляться на море? В России можно найти отдых на любой вкус, в том числе и пляжный. Приморские курорты привлекают туристов со всей страны и даже из зарубежья. Каждый из них имеет яркую индивидуальность, и сейчас мы расскажем, куда можно отправиться в отпуск вместо Анапы.
       </p>
-      <sunmar-button>Я кнопка</sunmar-button>
     </sunmar-lid>
   </div>
 </section>
-<sunmar-sticky-nav top-offset="81">
-  <a slot="nav-link" href="#">О проекте</a>
-  <a slot="nav-link" href="#">Детали</a>
-  <a slot="nav-link" href="#">FAQ</a>
-  <a slot="nav-link" href="#">Еще</a>
-</sunmar-sticky-nav>
+<section class="sunmarino sticky-nav-demo-section" id="april">
+  <h2>Почему апрель?</h2>
+  <p>
+    Моковая секция для теста sticky-nav. Здесь можно прокруткой проверить, как компонент переключает активное состояние по IntersectionObserver.
+  </p>
+</section>
+
+<section class="sunmarino sticky-nav-demo-section" id="turkey">
+  <h2>Турция</h2>
+  <p>
+    Секция с отдельным id. Навигационная ссылка должна становиться активной, когда линия активации sticky-nav попадает в эту область.
+  </p>
+</section>
+
+<section class="sunmarino sticky-nav-demo-section" id="egypt">
+  <h2>Египет</h2>
+  <p>
+    Высота сделана намеренно большой, чтобы было удобно тестировать переходы активного пункта при скролле вниз и вверх.
+  </p>
+</section>
+
+<section class="sunmarino sticky-nav-demo-section" id="maldives">
+  <h2>Мальдивы</h2>
+  <p>
+    Эта секция нужна только для локального playground и не влияет на публичный API библиотеки.
+  </p>
+</section>
+
+<section class="sunmarino sticky-nav-demo-section" id="thailand">
+  <h2>Таиланд</h2>
+  <p>
+    Последняя тестовая секция. По ней удобно проверить финальное active-состояние ближе к нижней части страницы.
+  </p>
+</section>

@@ -1,14 +1,14 @@
-@use '../../styles/mixins' as mixins;
-
 :host {
   --sunmar-sticky-nav-z-index: 10;
   --sunmar-sticky-nav-bg: var(--Base-color_Base_Light_Gray, #F5F5F8);
   --sunmar-sticky-nav-border: none;
-  --sunmar-sticky-nav-gap: 0px;
+  --sunmar-sticky-nav-gap: 8px;
   --sunmar-sticky-nav-top-offset: 0px;
 
   display: block;
   position: sticky;
+  max-width: 1530px;
+  margin: 0 auto;
   top: var(--sunmar-sticky-nav-top-offset);
   width: 100%;
   box-sizing: border-box;
@@ -16,56 +16,82 @@
 }
 
 .root {
-  width: 100%;
-  box-sizing: border-box;
+  width: calc(100% - 24px);
+  display: flex;
+  margin: 0 auto;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--sunmar-sticky-nav-gap);
   padding: 8px;
   border: var(--sunmar-sticky-nav-border);
-  border-radius: 42px;
+  border-radius: 24px;
   background: var(--sunmar-sticky-nav-bg);
 }
 
-.items {
-  @include mixins.scroll-snap-container();
-  @include mixins.hide-scrollbar;
-
-  width: 100%;
-  min-width: 0;
-  overflow-y: hidden;
-  border-radius: inherit;
-}
-
-.items-slot {
-  display: flex;
-  align-items: stretch;
-  gap: var(--sunmar-sticky-nav-gap);
-  width: max-content;
-  min-width: 100%;
-}
 
 ::slotted([slot="nav-link"]) {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex: 0 0 auto;
-  min-height: 100%;
+  flex: 1 1 auto;
   padding: 16px 30px;
+  border: 1px solid var(--sunmar-color-btn-stroke-light);
   border-radius: 100px;
-  color: #000000;
+  background: transparent;
+  color: var(--sunmar-color-btn-text-dark);
   cursor: pointer;
   text-decoration: none;
-  white-space: nowrap;
-  scroll-snap-align: start;
+  text-align: center;
   transition:
-    background-color 0.2s ease,
-    color 0.2s ease;
+    background-color 160ms ease,
+    color 160ms ease,
+    border-color 160ms ease;
+}
+
+::slotted([slot="nav-link"]:not(.active):hover) {
+  background-color: var(--sunmar-color-btn-bg-light-default);
+}
+
+::slotted([slot="nav-link"]:not(.active):active) {
+  background-color: var(--sunmar-color-btn-bg-light-pressed);
 }
 
 ::slotted([slot="nav-link"]:focus-visible) {
-  outline: 2px solid #061a3e;
+  outline: 2px solid var(--sunmar-color-brand-blue);
   outline-offset: 2px;
 }
 
 ::slotted([slot="nav-link"].active) {
-  background: #061a3e;
-  color: #ffffff;
+  background-color: var(--sunmar-color-btn-bg-secondary-default);
+  border-color: var(--sunmar-color-btn-bg-secondary-default);
+  color: var(--sunmar-color-btn-text-light);
+}
+
+::slotted([slot="nav-link"].active:hover) {
+  background-color: var(--sunmar-color-btn-bg-secondary-hover);
+  border-color: var(--sunmar-color-btn-bg-secondary-hover);
+}
+
+::slotted([slot="nav-link"].active:active) {
+  background-color: var(--sunmar-color-btn-bg-secondary-pressed);
+  border-color: var(--sunmar-color-btn-bg-secondary-pressed);
+}
+
+@media (min-width: 992px) {
+  .root {
+    width: calc(100% - 48px);
+  }
+}
+
+@media (min-width: 1201px) {
+  .root {
+    width: calc(100% - 160px);
+  }
+}
+
+@media (min-width: 1024px) {
+  .root{
+    flex-wrap: nowrap;
+  }
+
+  ::slotted([slot="nav-link"]) {
+    flex: 1;
+  }
 }
