@@ -9,7 +9,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Layout-компонент для action-layer. Группирует кнопки и ссылки, сохраняя wrap и gap на уровне visual contract.'
+          'Layout-компонент для action-layer. Группирует кнопки, сохраняя wrap и gap на уровне visual contract.'
       }
     }
   }
@@ -24,7 +24,7 @@ export const MixedActions: Story = {
     <sunmar-button-group>
       <sunmar-button type="primary">Подобрать тур</sunmar-button>
       <sunmar-button type="neutral">В избранное</sunmar-button>
-      <sunmar-link href="#details" type="secondary">Подробнее</sunmar-link>
+      <sunmar-button type="secondary">Подробнее</sunmar-button>
     </sunmar-button-group>
   `
 };
@@ -35,7 +35,7 @@ export const Wrapping: Story = {
       <sunmar-button-group>
         <sunmar-button type="primary">Первый action</sunmar-button>
         <sunmar-button type="secondary">Второй action</sunmar-button>
-        <sunmar-link href="#third" type="neutral">Третий action</sunmar-link>
+        <sunmar-button type="neutral">Третий action</sunmar-button>
       </sunmar-button-group>
     </div>
   `

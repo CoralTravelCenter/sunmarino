@@ -10,7 +10,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Горизонтальная sticky-навигация со slot-driven ссылками и responsive offset. Для корректной работы внутри Storybook показывается в контексте row-outer-container.'
+          'Sticky-навигация со slot-driven ссылками, responsive offset и автоматическим active-state по IntersectionObserver.'
       }
     }
   }
@@ -21,33 +21,33 @@ export default meta;
 type Story = StoryObj;
 
 const renderStickyNavStory = (topOffset?: number) => html`
-  <div style="min-height: 1200px; background: #ffffff;">
-    <div class="row-outer-container" style="padding: 32px; background: #f5f5f8;">
-      <div style="max-width: 960px; margin: 0 auto;">
-        <h2 class="sunmar-h2" style="margin: 0 0 16px;">Контекст hero-блока</h2>
-        <p class="sunmar-text" style="margin: 0;">
-          Sticky-nav сначала монтируется внутри контейнера, затем переносится после него для нативного position: sticky.
-        </p>
-        <sunmar-sticky-nav top-offset=${ifDefined(topOffset?.toString())}>
-          <a slot="nav-link" href="#about" class="active">О проекте</a>
-          <a slot="nav-link" href="#details">Детали</a>
-          <a slot="nav-link" href="#faq">FAQ</a>
-          <a slot="nav-link" href="#contacts">Контакты</a>
-        </sunmar-sticky-nav>
-      </div>
-    </div>
-    <div style="max-width: 960px; margin: 0 auto; padding: 32px;">
-      <section id="about" style="min-height: 320px;">
-        <h3 class="sunmar-h3">О проекте</h3>
+  <div style="min-height: 100vh; background: #ffffff; padding: 24px 0 80px;">
+    <sunmar-sticky-nav
+      disable-relocate
+      top-offset=${ifDefined(topOffset?.toString())}
+    >
+      <a slot="nav-link" href="#april">Почему апрель?</a>
+      <a slot="nav-link" href="#turkey">Турция</a>
+      <a slot="nav-link" href="#egypt">Египет</a>
+      <a slot="nav-link" href="#maldives">Мальдивы</a>
+      <a slot="nav-link" href="#thailand">Таиланд</a>
+    </sunmar-sticky-nav>
+
+    <div style="display: flex; flex-direction: column; gap: 24px; padding: 24px 0 0;">
+      <section id="april" style="min-height: 70vh; padding: 32px; border-radius: 24px; background: #f5f5f8;">
+        <h2 class="sunmar-h2" style="margin: 0;">Почему апрель?</h2>
       </section>
-      <section id="details" style="min-height: 320px;">
-        <h3 class="sunmar-h3">Детали</h3>
+      <section id="turkey" style="min-height: 70vh; padding: 32px; border-radius: 24px; background: #f5f5f8;">
+        <h2 class="sunmar-h2" style="margin: 0;">Турция</h2>
       </section>
-      <section id="faq" style="min-height: 320px;">
-        <h3 class="sunmar-h3">FAQ</h3>
+      <section id="egypt" style="min-height: 70vh; padding: 32px; border-radius: 24px; background: #f5f5f8;">
+        <h2 class="sunmar-h2" style="margin: 0;">Египет</h2>
       </section>
-      <section id="contacts" style="min-height: 320px;">
-        <h3 class="sunmar-h3">Контакты</h3>
+      <section id="maldives" style="min-height: 70vh; padding: 32px; border-radius: 24px; background: #f5f5f8;">
+        <h2 class="sunmar-h2" style="margin: 0;">Мальдивы</h2>
+      </section>
+      <section id="thailand" style="min-height: 70vh; padding: 32px; border-radius: 24px; background: #f5f5f8;">
+        <h2 class="sunmar-h2" style="margin: 0;">Таиланд</h2>
       </section>
     </div>
   </div>
