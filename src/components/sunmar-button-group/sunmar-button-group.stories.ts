@@ -8,8 +8,38 @@ const meta: Meta = {
     layout: 'centered',
     docs: {
       description: {
-        component:
-          'Layout-компонент для action-layer. Группирует кнопки, сохраняя wrap и gap на уровне visual contract.'
+        component: `
+Layout-компонент для action-layer.
+
+**Purpose**
+- группирует несколько action-элементов в один визуальный блок
+- держит единый \`gap\` и \`wrap\` на уровне visual contract
+
+**Semantic contract**
+- рендерит внутренний контейнер с \`role="group"\`
+- сам не добавляет интерактивности и не меняет поведение дочерних action-элементов
+
+**Slots**
+- только default slot
+- внутрь рекомендуется передавать \`sunmar-button\` и \`sunmar-link\`
+
+**Parts**
+- \`group\` — внутренний layout-контейнер
+
+**Behavior**
+- элементы располагаются через \`inline-flex\`
+- при нехватке места переносятся на новую строку
+- spacing между элементами централизован и не зависит от самих кнопок
+
+**What it does not do**
+- не управляет active-state
+- не является toggle-group
+- не синхронизирует selected/pressed состояние детей
+- не задает внешнюю ширину родительского контейнера
+
+**Usage note**
+- используйте компонент там, где нужен единый блок CTA, например внутри \`slot="actions"\` у \`sunmar-kv\`
+`
       }
     }
   }
