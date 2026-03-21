@@ -263,7 +263,7 @@
 
 - `sunmar-tabs-nav` attributes: нет
 - `sunmar-tabs-nav` slots: `default` (ожидаются `sunmar-tab-trigger`)
-- `sunmar-tabs-nav` parts: `root`
+- `sunmar-tabs-nav` parts: `root`, `list`
 
 - `sunmar-tab-trigger` attributes: `value`, `selected`, `disabled`
 - `sunmar-tab-trigger` slots: `default`

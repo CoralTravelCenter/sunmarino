@@ -1,4 +1,5 @@
 import { LitElement, css, html, unsafeCSS } from 'lit';
+import { property } from 'lit/decorators.js';
 import { componentBaseStyles } from '../../styles/component-base';
 import styles from './sunmar-tab-trigger.scss?inline';
 
@@ -6,18 +7,17 @@ export const SUNMAR_TAB_TRIGGER_TAG_NAME = 'sunmar-tab-trigger';
 const TAB_TRIGGER_ACTIVATE_EVENT = 'sunmar-tab-trigger-activate';
 
 export class SunmarTabTrigger extends LitElement {
-  static properties = {
-    value: { type: String, reflect: true },
-    selected: { type: Boolean, reflect: true },
-    disabled: { type: Boolean, reflect: true }
-  };
-
   static styles = [componentBaseStyles, css`
     ${unsafeCSS(styles)}
   `];
 
+  @property({ type: String, reflect: true })
   value = '';
+
+  @property({ type: Boolean, reflect: true })
   selected = false;
+
+  @property({ type: Boolean, reflect: true })
   disabled = false;
 
   protected render() {

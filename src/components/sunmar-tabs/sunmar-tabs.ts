@@ -1,4 +1,5 @@
 import { LitElement, css, html, unsafeCSS } from 'lit';
+import { property } from 'lit/decorators.js';
 import { componentBaseStyles } from '../../styles/component-base';
 import styles from './sunmar-tabs.scss?inline';
 
@@ -31,14 +32,11 @@ export type SunmarTabsChangeDetail = {
 };
 
 export class SunmarTabs extends LitElement {
-  static properties = {
-    value: { type: String, reflect: true }
-  };
-
   static styles = [componentBaseStyles, css`
     ${unsafeCSS(styles)}
   `];
 
+  @property({ type: String, reflect: true })
   value = '';
 
   connectedCallback(): void {
