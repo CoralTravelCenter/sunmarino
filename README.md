@@ -138,16 +138,19 @@
 ## Lid API
 
 - `sunmar-lid` attributes: нет
-- `sunmar-lid` slots: `title`, `text`
-- `sunmar-lid` внутри рендерит семантические `h2` и `p` (текст передаем через слоты)
-- `sunmar-lid` parts: `root`, `title`, `text`
+- `sunmar-lid` slots: `title`, `text`, `default`
+- `sunmar-lid` ожидает семантический контент в light DOM:
+  - `title` — обычно `h2`
+  - `text` — обычно `p`
+  - `default` — CTA или дополнительный контент
+- `sunmar-lid` parts: `root`, `title`, `text`, `actions`
 
 Пример:
 
 ```html
 <sunmar-lid>
-  <span slot="title">Заголовок блока</span>
-  <span slot="text">Описание блока с обычным текстом.</span>
+  <h2 slot="title">Заголовок блока</h2>
+  <p slot="text">Описание блока с обычным текстом.</p>
 </sunmar-lid>
 ```
 

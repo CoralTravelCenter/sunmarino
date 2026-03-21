@@ -12,9 +12,15 @@ export class SunmarLid extends LitElement {
   protected render() {
     return html`
       <div class="root" part="root">
-        <slot name="title"></slot>
-        <slot name="text"></slot>
-        <slot/>
+        <div class="title" part="title">
+          <slot name="title"></slot>
+        </div>
+        <div class="text" part="text">
+          <slot name="text"></slot>
+        </div>
+        <div class="actions" part="actions">
+          <slot></slot>
+        </div>
       </div>
     `;
   }
