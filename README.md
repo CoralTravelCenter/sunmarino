@@ -192,7 +192,7 @@
 - выбор видео-источника:
   - `< 768px`: сначала `video-mobile`, затем fallback на `video-desktop`
   - `>= 768px`: сначала `video-desktop`, затем fallback на `video-mobile`
-- `sunmar-kv` behavior: если активный Vimeo playback начался, fallback-картинка плавно скрывается (`opacity: 0`)
+- `sunmar-kv` behavior: если активный Vimeo playback начался, видео плавно проявляется поверх fallback-картинки
 - `sunmar-kv` использует общий util `vimeoAutoPlay(...)` (Vimeo Player API, immediate autoplay без `IntersectionObserver`)
 - `sunmar-kv` media slots:
   - `image` (обычно `sunmar-image`; допустим любой media-узел, который сам умеет корректно заполнять область визуала)

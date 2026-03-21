@@ -109,12 +109,9 @@
   line-height: calc(var(--sunmar--text-line-height) / var(--sunmar--text-font-size));
 }
 
-.actions {
-  margin-top: 32px;
-}
-
 ::slotted([slot='actions']) {
   display: block;
+  margin-top: 32px;
 }
 
 @include mixins.media-min(bp-768) {
@@ -171,4 +168,3 @@
     line-height: 1.1;
   }
 }
-

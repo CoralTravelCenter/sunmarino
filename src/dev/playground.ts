@@ -57,7 +57,3 @@ async function bootstrapPreview(): Promise<void> {
 }
 
 void bootstrapPreview();
-
-
-// vimeo-id-desktop="1162544497"
-// vimeo-id-mobile="1162544372"

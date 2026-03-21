@@ -1,5 +1,4 @@
 import { LitElement, css, html, nothing, unsafeCSS } from 'lit';
-import { classMap } from 'lit/directives/class-map.js';
 import { state } from 'lit/decorators.js';
 import { componentBaseStyles } from '../../styles/component-base';
 import { observeMinWidth } from '../../utils/dom/observe-media';
@@ -126,6 +125,7 @@ export class SunmarKv extends LitElement {
     this.stopVimeoAutoPlay = null;
     this.vimeoIframePartObserver?.disconnect();
     this.vimeoIframePartObserver = null;
+    this.renderRoot.querySelector('.video')?.classList.remove('playback');
   }
 
   private setupVimeoIframePartObserver(): void {
@@ -157,18 +157,13 @@ export class SunmarKv extends LitElement {
   }
 
   protected render() {
-    const pictureClasses = {
-      picture: true,
-      'picture--hidden': this.hasVideo && this.videoReady
-    };
-
     return html`
       <section class="root" part="root">
         <slot class="video-config-slot" name="video-desktop" @slotchange=${this.handleVideoSlotChange}></slot>
         <slot class="video-config-slot" name="video-mobile" @slotchange=${this.handleVideoSlotChange}></slot>
 
         <div class="media" part="media">
-          <div class=${classMap(pictureClasses)} part="picture">
+          <div class="picture" part="picture">
             <slot name="image"></slot>
           </div>
           ${this.hasVideo
@@ -195,9 +190,7 @@ export class SunmarKv extends LitElement {
             <div class="text" part="text">
               <slot name="text"></slot>
             </div>
-            <div class="actions" part="actions">
-              <slot name="actions"></slot>
-            </div>
+            <slot class="actions-slot" name="actions"></slot>
           </div>
         </div>
       </section>
