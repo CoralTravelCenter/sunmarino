@@ -1,4 +1,5 @@
 import { LitElement, css, html, unsafeCSS } from 'lit';
+import { property } from 'lit/decorators.js';
 import { componentBaseStyles } from '../../styles/component-base';
 import styles from './sunmar-button.scss?inline';
 
@@ -8,20 +9,20 @@ export type SunmarNativeButtonType = 'button' | 'submit' | 'reset';
 export const SUNMAR_BUTTON_TAG_NAME = 'sunmar-button';
 
 export class SunmarButton extends LitElement {
-  static properties = {
-    type: { type: String, reflect: true },
-    disabled: { type: Boolean, reflect: true },
-    nativeType: { type: String, attribute: 'native-type' },
-    fullWidth: { type: Boolean, reflect: true, attribute: 'full-width' }
-  };
-
   static styles = [componentBaseStyles, css`
     ${unsafeCSS(styles)}
   `];
 
+  @property({ type: String, reflect: true })
   type: SunmarButtonType = 'primary';
+
+  @property({ type: Boolean, reflect: true })
   disabled = false;
+
+  @property({ type: String, attribute: 'native-type' })
   nativeType: SunmarNativeButtonType = 'button';
+
+  @property({ type: Boolean, reflect: true, attribute: 'full-width' })
   fullWidth = false;
 
   protected render() {

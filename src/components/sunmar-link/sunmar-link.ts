@@ -1,4 +1,5 @@
 import { LitElement, css, html, unsafeCSS } from 'lit';
+import { property } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { componentBaseStyles } from '../../styles/component-base';
 import styles from './sunmar-link.scss?inline';
@@ -8,26 +9,29 @@ export type SunmarLinkType = 'primary' | 'secondary' | 'neutral';
 export const SUNMAR_LINK_TAG_NAME = 'sunmar-link';
 
 export class SunmarLink extends LitElement {
-  static properties = {
-    type: { type: String, reflect: true },
-    disabled: { type: Boolean, reflect: true },
-    href: { type: String, reflect: true },
-    target: { type: String, reflect: true },
-    rel: { type: String, reflect: true },
-    download: { type: String, reflect: true },
-    fullWidth: { type: Boolean, reflect: true, attribute: 'full-width' }
-  };
-
   static styles = [componentBaseStyles, css`
     ${unsafeCSS(styles)}
   `];
 
+  @property({ type: String, reflect: true })
   type: SunmarLinkType = 'primary';
+
+  @property({ type: Boolean, reflect: true })
   disabled = false;
+
+  @property({ type: String, reflect: true })
   href = '';
+
+  @property({ type: String, reflect: true })
   target = '';
+
+  @property({ type: String, reflect: true })
   rel = '';
+
+  @property({ type: String, reflect: true })
   download?: string;
+
+  @property({ type: Boolean, reflect: true, attribute: 'full-width' })
   fullWidth = false;
 
   protected render() {
