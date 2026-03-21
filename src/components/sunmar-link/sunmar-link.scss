@@ -4,16 +4,8 @@
   @include action-control.host;
 }
 
-:host([full-width]) {
-  @include action-control.host-full-width;
-}
-
 .control {
   @include action-control.control;
-}
-
-:host([full-width]) .control {
-  @include action-control.control-full-width;
 }
 
 .content {

@@ -22,9 +22,6 @@ export class SunmarButton extends LitElement {
   @property({ type: String, attribute: 'native-type' })
   nativeType: SunmarNativeButtonType = 'button';
 
-  @property({ type: Boolean, reflect: true, attribute: 'full-width' })
-  fullWidth = false;
-
   protected render() {
     return html`
       <button class="control" part="control" type=${this.nativeType} ?disabled=${this.disabled}>

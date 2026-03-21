@@ -31,9 +31,6 @@ export class SunmarLink extends LitElement {
   @property({ type: String, reflect: true })
   download?: string;
 
-  @property({ type: Boolean, reflect: true, attribute: 'full-width' })
-  fullWidth = false;
-
   protected render() {
     const target = this.target.trim() || undefined;
     const href = this.disabled ? undefined : this.href.trim() || undefined;

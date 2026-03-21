@@ -9,7 +9,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Базовый action-компонент на нативном button. Поддерживает visual variants, full-width и слоты prefix/suffix.'
+          'Базовый action-компонент на нативном button. Поддерживает visual variants и слоты prefix/suffix.'
       }
     }
   }
@@ -37,14 +37,6 @@ export const NeutralWithIcon: Story = {
       <span slot="prefix">★</span>
       Избранное
     </sunmar-button>
-  `
-};
-
-export const FullWidth: Story = {
-  render: () => html`
-    <div style="width: 360px;">
-      <sunmar-button type="primary" full-width>Занять всю ширину</sunmar-button>
-    </div>
   `
 };
 

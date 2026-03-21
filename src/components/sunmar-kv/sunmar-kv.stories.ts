@@ -3,8 +3,6 @@ import { html } from 'lit';
 
 const desktopImageUrl = 'https://b2ccdn.sunmar.ru/content/landing-pages/rb-summer/rb-kv.jpg';
 const mobileImageUrl = 'https://b2ccdn.sunmar.ru/content/landing-pages/rb-summer/rb-kv-mo.jpg';
-const desktopVimeoId = '1162544497';
-const mobileVimeoId = '1162544372';
 
 const meta: Meta = {
   title: 'Components/KV',
@@ -13,8 +11,24 @@ const meta: Meta = {
     layout: 'fullscreen',
     docs: {
       description: {
-        component:
-          'Hero/KV-компонент с SEO-friendly light DOM контентом, fallback-изображением и опциональным Vimeo background video.'
+        component: `
+Hero/KV-компонент с SEO-friendly light DOM контентом.
+
+**Semantic contract**
+- \`slot="title"\` — ожидается семантический заголовок \`h1|h2|h3\`
+- \`slot="text"\` — ожидается \`p\`
+- \`slot="actions"\` — CTA-контент
+
+**Media contract**
+- \`slot="image"\` — baseline media, остается главным fallback
+- \`slot="video-desktop"\` и \`slot="video-mobile"\` — опциональные config-узлы с \`data-vimeo-id\`
+- видео проявляется только после успешного playback и не заменяет fallback-картинку до загрузки
+
+**Styling API**
+- CSS variables: \`--sunmar-kv-video-width\`, \`--sunmar-kv-video-height\`
+- image positioning: \`--sunmar-image-object-position\`
+- доступны \`::part(root|media|picture|video|video-frame|content|content-inner|eyebrow|title|text|actions)\`
+`
       }
     }
   }
@@ -39,51 +53,6 @@ export const Default: Story = {
       <div slot="actions">
         <sunmar-button type="primary">Подобрать тур</sunmar-button>
       </div>
-    </sunmar-kv>
-  `
-};
-
-export const WithVideoDesktopAndMobile: Story = {
-  render: () => html`
-    <sunmar-kv>
-      <sunmar-image
-        slot="image"
-        media="(min-width: 768px)"
-        srcset=${desktopImageUrl}
-        src=${mobileImageUrl}
-        alt="Видео-фон с fallback изображением"
-      ></sunmar-image>
-      <div slot="video-desktop" data-vimeo-id=${desktopVimeoId}></div>
-      <div slot="video-mobile" data-vimeo-id=${mobileVimeoId}></div>
-      <h1 slot="title">Hero с фоновым видео</h1>
-      <p slot="text">Видео появляется только после успешного playback и остается поверх fallback-картинки.</p>
-      <div slot="actions">
-        <sunmar-button type="primary">Подобрать тур</sunmar-button>
-      </div>
-    </sunmar-kv>
-  `
-};
-
-export const MediaOverrides: Story = {
-  render: () => html`
-    <sunmar-kv
-      style="
-        --sunmar-kv-video-width: 140%;
-        --sunmar-kv-video-height: 140%;
-      "
-    >
-      <sunmar-image
-        slot="image"
-        style="--sunmar-image-object-position: 60% center;"
-        media="(min-width: 768px)"
-        srcset=${desktopImageUrl}
-        src=${mobileImageUrl}
-        alt="Кастомизированное медиа"
-      ></sunmar-image>
-      <div slot="video-desktop" data-vimeo-id=${desktopVimeoId}></div>
-      <div slot="video-mobile" data-vimeo-id=${mobileVimeoId}></div>
-      <h1 slot="title">Кастомизация media API</h1>
-      <p slot="text">В этой story задокументированы object-position картинки и sizing API для Vimeo iframe.</p>
     </sunmar-kv>
   `
 };

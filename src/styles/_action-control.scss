@@ -8,11 +8,6 @@
   }
 }
 
-@mixin host-full-width {
-  display: flex;
-  width: 100%;
-}
-
 @mixin control {
   font-family: inherit;
   font-size: var(--sunmar-type-btn-l-font-size);
@@ -36,10 +31,6 @@
     color 160ms ease,
     border-color 160ms ease,
     transform 120ms ease;
-}
-
-@mixin control-full-width {
-  width: 100%;
 }
 
 @mixin content {

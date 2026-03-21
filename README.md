@@ -115,7 +115,7 @@
 ## Button API
 
 - strict API: legacy-атрибуты (`variant`, `state`) и legacy alias-и не поддерживаются
-- `sunmar-button` attributes: `type="primary|secondary|neutral"`, `disabled`, `native-type="button|submit|reset"`, `full-width`
+- `sunmar-button` attributes: `type="primary|secondary|neutral"`, `disabled`, `native-type="button|submit|reset"`
 - `sunmar-button` slots: `default`, `prefix`, `suffix`
 - `sunmar-button` parts: `control`, `content`, `label`, `prefix`, `suffix`
 - состояния `hover/active` управляются только нативными псевдоклассами `:hover/:active` (без state-атрибутов)
@@ -126,7 +126,7 @@
 ## Link API
 
 - strict API: используем только атрибуты из документации (legacy alias-и не поддерживаются)
-- `sunmar-link` attributes: `type="primary|secondary|neutral"`, `href`, `target`, `rel`, `download`, `disabled`, `full-width`
+- `sunmar-link` attributes: `type="primary|secondary|neutral"`, `href`, `target`, `rel`, `download`, `disabled`
 - `sunmar-link` slots: `default`, `prefix`, `suffix`
 - `sunmar-link` parts: `control`, `content`, `label`, `prefix`, `suffix`
 - состояния `hover/active` управляются нативными псевдоклассами `:hover/:active`
