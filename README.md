@@ -5,24 +5,23 @@
 - `Lit + TypeScript`
 - `SCSS` стили импортируются в компоненты (`*.scss?inline`)
 - `vite-plugin-monkey` используется только в `dev`
-- production build собирается как библиотека (`es` + `iife`) для подключения через `<script src="...">`
+- production build собирается как библиотека в формате `iife` для подключения через `<script src="...">`
 - единый префикс для компонентов: `sunmar-*`
 - модалка `sunmar-modal` блокирует скролл через `@fluejs/noscroll`
 
 ## Скрипты
 
 - `npm run dev` - локальный dev сервер
-- `npm run build` - production build JS (`auto` + `manual`) и `.d.ts` в `dist/`
-- `npm run build:js` - только JS-бандлы (`sunmarino.es.js`, `sunmarino.iife.js`, `sunmarino.manual.es.js`)
+- `npm run build` - production build JS (`sunmarino.iife.js`) и `.d.ts` в `dist/`
+- `npm run build:js` - только JS-бандл `sunmarino.iife.js`
 - `npm run build:types` - только TypeScript declaration files в `dist/types/`
-- `npm run build:external` - сборка с external vendor deps (`dayjs`, `@fluejs/noscroll`) для уменьшения размера бандла
+- `npm run build:external` - сборка с external vendor deps (`@fluejs/noscroll`) для уменьшения размера бандла
 - `npm run preview` - просмотр production сборки
 - `npm run typecheck` - проверка TypeScript
 
 ## Точки входа
 
 - Библиотека (auto register + runtime tokens): `src/index.ts`
-- Библиотека (manual, без авто-регистрации): `src/manual.ts`
 - Общие re-exports без side effects: `src/exports.ts`
 - Dev preview (локально + monkey): `src/dev/playground.ts`
 - Scroll util для общих блокировок скролла: `src/utils/scroll/no-scroll.ts`
@@ -75,30 +74,8 @@
 - `src/index.ts` вызывает регистрацию автоматически (удобно для `<script src="...">`)
 - `src/index.ts` также один раз инжектит `:root` CSS variables дизайн-токенов
 - при необходимости можно вызывать регистрацию вручную через экспорт `registerSunmarComponents`
-- для bundler-сценария без авто-регистрации используем subpath `sunmarino-web-components/manual`
 
 ## Подключение пакета
-
-### Bundler (auto register)
-
-```ts
-import 'sunmarino-web-components';
-```
-
-- автоматически регистрирует компоненты
-- автоматически подключает runtime токены (`:root` CSS custom properties)
-
-### Bundler (manual register)
-
-```ts
-import 'sunmarino-web-components/styles.css';
-import { registerSunmarComponents } from 'sunmarino-web-components/manual';
-
-registerSunmarComponents();
-```
-
-- не выполняет авто-регистрацию при импорте `manual`
-- runtime токены подключаем отдельно через `sunmarino-web-components/styles.css`
 
 ### Script tag (IIFE)
 
@@ -154,37 +131,43 @@ registerSunmarComponents();
 - `sunmar-image` attributes: `src`, `srcset` (optional), `media` (optional, default `'(min-width: 768px)'`), `alt`
 - `sunmar-image` внутри рендерит `picture` (`source` + fallback `img`) и упрощает использование в `sunmar-kv`
 - `sunmar-image` parts: `picture`, `img`
+- CSS custom properties:
+  - `--sunmar-image-object-fit` (default `cover`)
+  - `--sunmar-image-object-position` (default `center center`)
 
 ## Lid API
 
 - `sunmar-lid` attributes: нет
-- `sunmar-lid` slots: `title`, `text`
-- `sunmar-lid` внутри рендерит семантические `h2` и `p` (текст передаем через слоты)
-- `sunmar-lid` parts: `root`, `title`, `text`
+- `sunmar-lid` slots: `title`, `text`, `default`
+- `sunmar-lid` ожидает семантический контент в light DOM:
+  - `title` — обычно `h2`
+  - `text` — обычно `p`
+  - `default` — CTA или дополнительный контент
+- `sunmar-lid` parts: `root`, `title`, `text`, `actions`
 
 Пример:
 
 ```html
 <sunmar-lid>
-  <span slot="title">Заголовок блока</span>
-  <span slot="text">Описание блока с обычным текстом.</span>
+  <h2 slot="title">Заголовок блока</h2>
+  <p slot="text">Описание блока с обычным текстом.</p>
 </sunmar-lid>
 ```
 
 ## Sticky Nav API
 
-- `sunmar-sticky-nav` attributes: `top-offset` (number, пиксели для `top`), `scrollbar="custom|native"` (по умолчанию `custom`)
+- `sunmar-sticky-nav` attributes: `top-offset` (number, optional override для отступа sticky-блока от верхней границы viewport)
 - `sunmar-sticky-nav` slots: `nav-link` (например, ссылки/кнопки/`sunmar-link`)
 - `sunmar-sticky-nav` parts: `root`, `items`
-- компонент реализован через `position: sticky`
+- компонент реализован через нативный `position: sticky`
 - есть минимальная JS-логика:
-  - если компонент находится внутри `.row-outer-container`, он пытается переместиться сразу после ближайшего такого контейнера
-  - для кастомного горизонтального скроллбара использует `SimpleBar` через util `src/utils/scroll/custom-scrollbar.ts`
-  - при `scrollbar="native"` использует native horizontal scroll + scroll-snap без `SimpleBar`
+  - в `connectedCallback()` компонент переносится сразу за ближайший `.row-outer-container`, если он найден
+  - если `top-offset` не задан, верхний offset вычисляется реактивно через `matchMedia`: mobile `81px`, tablet `65px`, desktop `16px`
 - CSS custom properties:
   - `--sunmar-sticky-nav-z-index`
   - `--sunmar-sticky-nav-bg`
   - `--sunmar-sticky-nav-border`
+  - `--sunmar-sticky-nav-gap`
 
 Пример:
 
@@ -196,49 +179,62 @@ registerSunmarComponents();
 </sunmar-sticky-nav>
 ```
 
-Native fallback без `SimpleBar`:
+Ограничения sticky-поведения:
 
-```html
-<sunmar-sticky-nav top-offset="12" scrollbar="native">
-  <a slot="nav-link" href="#about">О проекте</a>
-  <a slot="nav-link" href="#details">Детали</a>
-</sunmar-sticky-nav>
-```
-
-Стилизация кастомного скроллбара через CSS variables на хосте:
-
-```css
-sunmar-sticky-nav {
-  --sunmar-sticky-nav-scrollbar-size: 10px;
-  --sunmar-sticky-nav-scrollbar-thumb: #d8242a;
-  --sunmar-sticky-nav-scrollbar-track: rgba(0, 0, 0, 0.06);
-}
-```
-
-Ограничения `position: sticky`:
-
-- поведение зависит от scroll-контейнера и может ломаться, если у предков `overflow: hidden/auto/scroll`
-- ожидаемое поведение также может меняться при сложных layout-контекстах (`transform`, `filter`, `contain`)
-- визуальные стили и sticky-позиционирование находятся на `:host`, `nav` внутри используется как семантическая обертка
+- sticky-логика опирается на нативный `position: sticky`, поэтому зависит от layout родителей
+- `top-offset` задает явный override; без него используется реактивный offset от `matchMedia`
+- визуальные стили находятся на `:host`, `nav` внутри используется как семантическая обертка
 
 ## KV API
 
-- `sunmar-kv` attributes: `vimeo-id` (fallback, optional), `vimeo-id-desktop` (optional), `vimeo-id-mobile` (optional)
-- выбор видео-ID:
-  - `< 768px`: `vimeo-id-mobile` -> `vimeo-id` -> `vimeo-id-desktop`
-  - `>= 768px`: `vimeo-id-desktop` -> `vimeo-id` -> `vimeo-id-mobile`
-- `sunmar-kv` behavior: если активный Vimeo playback начался, fallback-картинка плавно скрывается (`opacity: 0`)
+- `sunmar-kv` video API:
+  - видео опционально
+  - источник видео задается не атрибутами, а отдельными slotted config-узлами
+  - если `slot="video-desktop"` и `slot="video-mobile"` отсутствуют, компонент работает только с изображением
+  - ожидаемый контракт config-узла: любой элемент с `slot="video-desktop"` или `slot="video-mobile"` и `data-vimeo-id="..."`
+- выбор видео-источника:
+  - `< 768px`: сначала `video-mobile`, затем fallback на `video-desktop`
+  - `>= 768px`: сначала `video-desktop`, затем fallback на `video-mobile`
+- `sunmar-kv` behavior: если активный Vimeo playback начался, видео плавно проявляется поверх fallback-картинки
 - `sunmar-kv` использует общий util `vimeoAutoPlay(...)` (Vimeo Player API, immediate autoplay без `IntersectionObserver`)
 - `sunmar-kv` media slots:
-  - `image` (ожидается `sunmar-image`, внутри которого реализован `picture`)
+  - `image` (обычно `sunmar-image`; допустим любой media-узел, который сам умеет корректно заполнять область визуала)
+  - `video-desktop` (config-узел с `data-vimeo-id`, активен от `768px`)
+  - `video-mobile` (config-узел с `data-vimeo-id`, активен до `767px`)
 - `sunmar-kv` content slots:
-  - `eyebrow` (контент, лучше `span`)
-  - `title` (контент, лучше `span`; семантический `h1` рендерится внутри компонента)
-  - `text` (контент, лучше `span`; семантический `p` рендерится внутри компонента)
+  - `eyebrow` (контент, лучше `span` или `p`)
+  - `title` (ожидается семантический заголовок `h1|h2|h3` в light DOM)
+  - `text` (ожидается `p` в light DOM)
   - `actions`
-- `sunmar-kv` min-height: `520px`
-- `sunmar-kv` parts: `root`, `media`, `picture`, `video`, `video-frame`, `scrim`, `content`, `content-inner`, `eyebrow`, `title`, `text`, `actions`
+- размеры `KV`:
+  - base: `556px`
+  - `>= 768px`: `320px`
+  - `>= 1024px`: `360px`
+  - `>= 1280px`: `400px`
+  - `>= 1440px`: `500px`
+- content padding:
+  - base: `48px 32px`
+  - `>= 768px`: `48px 40px`
+  - `>= 1024px`: `48px`
+  - `>= 1280px`: `48px 80px`
+- `title` font-size:
+  - base: `40px`
+  - `>= 1440px`: `56px`
+- `text` font-size: `16px`
+- `sunmar-kv` parts: `root`, `media`, `picture`, `video`, `video-frame`, `content`, `content-inner`, `eyebrow`, `title`, `text`, `actions`
 - Vimeo iframe создается SDK динамически; `sunmar-kv` через `MutationObserver` ставит на него `part="iframe"` (desktop) или `part="iframe-mob"` (mobile)
+- CSS custom properties для Vimeo iframe:
+  - `--sunmar-kv-video-width` (default `100%`)
+  - `--sunmar-kv-video-height` (default `100%`)
+- для редких точечных кейсов размеры и позиционирование Vimeo iframe также можно переопределять через `::part(iframe)` и `::part(iframe-mob)`
+- SEO-friendly контракт:
+  - значимый контент (`title`, `text`, `actions`) должен приходить уже семантическим в light DOM
+  - компонент отвечает за layout и styling, а не за генерацию `h1/p` из `span`
+- fallback-модель media:
+  - изображение всегда остается baseline
+  - видео показываем только после успешной загрузки и старта playback
+  - при ошибке Vimeo или медленной сети ничего не делаем — остается изображение
+- для точечного визуального переопределения используем `::part(...)`, если базового контракта недостаточно
 
 ## Accordion API
 

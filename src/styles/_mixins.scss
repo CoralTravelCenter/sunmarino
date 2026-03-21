@@ -6,11 +6,10 @@
 // для @media/@container условий. Поэтому значения брейкпоинтов дублируются
 // здесь как compile-time карта для query-миксинов.
 $sunmar-breakpoints: (
-  bp-396: 396px,
   bp-768: 768px,
   bp-1024: 1024px,
   bp-1280: 1280px,
-  bp-1400: 1400px
+  bp-1440: 1440px
 );
 
 @function sunmar-breakpoint($token) {
@@ -61,6 +60,17 @@ $sunmar-breakpoints: (
 
   @supports (text-wrap: balance) {
     text-wrap: balance;
+  }
+}
+
+@mixin hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+    width: 0;
+    height: 0;
   }
 }
 

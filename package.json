@@ -3,19 +3,12 @@
   "version": "0.1.0",
   "description": "Web Components library based on Lit + TypeScript + SCSS",
   "type": "module",
-  "main": "./dist/sunmarino.es.js",
-  "module": "./dist/sunmarino.es.js",
+  "main": "./dist/sunmarino.iife.js",
   "types": "./dist/types/exports.d.ts",
   "exports": {
     ".": {
       "types": "./dist/types/exports.d.ts",
-      "import": "./dist/sunmarino.es.js",
-      "default": "./dist/sunmarino.es.js"
-    },
-    "./manual": {
-      "types": "./dist/types/manual.d.ts",
-      "import": "./dist/sunmarino.manual.es.js",
-      "default": "./dist/sunmarino.manual.es.js"
+      "default": "./dist/sunmarino.iife.js"
     },
     "./styles.css": "./dist/index.css",
     "./package.json": "./package.json"
@@ -25,20 +18,19 @@
     "README.md"
   ],
   "sideEffects": [
-    "./dist/sunmarino.es.js",
     "./dist/sunmarino.iife.js",
     "./dist/index.css"
   ],
   "scripts": {
     "dev": "vite",
     "build": "npm run build:js && npm run build:types",
-    "build:js": "npm run build:js:auto && npm run build:js:manual",
-    "build:js:auto": "vite build",
-    "build:js:manual": "SUNMAR_LIBRARY_ENTRY=manual vite build",
+    "build:js": "vite build",
     "build:types": "tsc -p tsconfig.build.json",
-    "build:external": "SUNMAR_EXTERNAL_VENDOR_DEPS=dayjs,@fluejs/noscroll npm run build",
+    "build:external": "SUNMAR_EXTERNAL_VENDOR_DEPS=@fluejs/noscroll npm run build",
     "preview": "vite preview",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
   },
   "keywords": [
     "web-components",
@@ -50,15 +42,17 @@
   "license": "MIT",
   "dependencies": {
     "@fluejs/noscroll": "^1.0.0",
-    "dayjs": "^1.11.13",
-    "lit": "^3.2.1",
-    "simplebar": "^6.3.3"
+    "lit": "^3.2.1"
   },
   "devDependencies": {
     "@types/node": "^22.9.0",
     "sass": "^1.80.6",
     "typescript": "^5.6.3",
     "vite": "^5.4.10",
-    "vite-plugin-monkey": "^5.0.8"
+    "vite-plugin-monkey": "^5.0.8",
+    "storybook": "^10.3.1",
+    "@storybook/web-components-vite": "^10.3.1",
+    "@storybook/addon-a11y": "^10.3.1",
+    "@storybook/addon-docs": "^10.3.1"
   }
 }

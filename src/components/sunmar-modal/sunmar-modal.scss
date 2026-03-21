@@ -31,8 +31,6 @@
 }
 
 .dialog {
-  container-type: inline-size;
-  container-name: sunmar-modal;
   width: min(620px, 100%);
   max-height: min(90vh, 760px);
   background: var(--sunmar-modal-surface);
@@ -49,7 +47,7 @@
   justify-content: space-between;
   gap: var(--sunmar-space-s);
   padding-block: var(--sunmar-padding-n);
-  padding-inline: var(--sunmar-padding-m);
+  padding-inline: var(--sunmar-padding-l);
   border-bottom: 1px solid var(--sunmar-modal-border);
 }
 
@@ -74,7 +72,8 @@
 }
 
 .body {
-  padding: var(--sunmar-padding-m);
+  padding-block: var(--sunmar-padding-m);
+  padding-inline: var(--sunmar-padding-l);
   line-height: 1.5;
   @include mixins.text-balance;
 }
@@ -84,21 +83,12 @@
   justify-content: flex-end;
   gap: calc(var(--sunmar-space-xs) + var(--sunmar-space-3xs));
   padding-top: var(--sunmar-padding-n);
-  padding-inline: var(--sunmar-padding-m);
+  padding-inline: var(--sunmar-padding-l);
   padding-bottom: var(--sunmar-padding-m);
   border-top: 1px solid var(--sunmar-modal-border);
 }
 
-@include mixins.container-named-min(sunmar-modal, bp-396) {
-  .header,
-  .body,
-  .actions {
-    padding-left: var(--sunmar-padding-l);
-    padding-right: var(--sunmar-padding-l);
-  }
-}
-
-@include mixins.container-named-min(sunmar-modal, bp-768) {
+@include mixins.media-min(bp-768) {
   .title {
     font-size: 20px;
   }

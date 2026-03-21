@@ -1,5 +1,6 @@
 import { LitElement, css, html, unsafeCSS } from 'lit';
 import { ifDefined } from 'lit/directives/if-defined.js';
+import { componentBaseStyles } from '../../styles/component-base';
 import styles from './sunmar-link.scss?inline';
 
 export type SunmarLinkType = 'primary' | 'secondary' | 'neutral';
@@ -13,12 +14,13 @@ export class SunmarLink extends LitElement {
     href: { type: String, reflect: true },
     target: { type: String, reflect: true },
     rel: { type: String, reflect: true },
-    download: { type: String, reflect: true }
+    download: { type: String, reflect: true },
+    fullWidth: { type: Boolean, reflect: true, attribute: 'full-width' }
   };
 
-  static styles = css`
+  static styles = [componentBaseStyles, css`
     ${unsafeCSS(styles)}
-  `;
+  `];
 
   type: SunmarLinkType = 'primary';
   disabled = false;
@@ -26,6 +28,7 @@ export class SunmarLink extends LitElement {
   target = '';
   rel = '';
   download?: string;
+  fullWidth = false;
 
   protected render() {
     const target = this.target.trim() || undefined;

@@ -1,4 +1,5 @@
 import { LitElement, css, html, nothing, unsafeCSS } from 'lit';
+import { componentBaseStyles } from '../../styles/component-base';
 import { acquirePageScrollLock, releasePageScrollLock } from '../../utils/scroll/no-scroll';
 import styles from './sunmar-modal.scss?inline';
 
@@ -11,9 +12,9 @@ export class SunmarModal extends LitElement {
     closeOnEsc: { type: Boolean, reflect: true, attribute: 'close-on-esc' }
   };
 
-  static styles = css`
+  static styles = [componentBaseStyles, css`
     ${unsafeCSS(styles)}
-  `;
+  `];
 
   open = false;
   closeOnBackdrop = true;

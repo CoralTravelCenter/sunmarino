@@ -3,3 +3,5 @@ dist
 .vite
 *.log
 .idea
+*storybook.log
+storybook-static

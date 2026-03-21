@@ -1,4 +1,5 @@
 import { LitElement, css, html, unsafeCSS } from 'lit';
+import { componentBaseStyles } from '../../styles/component-base';
 import styles from './sunmar-accordion.scss?inline';
 
 export type SunmarAccordionMode = 'single' | 'multiple';
@@ -22,9 +23,9 @@ export class SunmarAccordion extends LitElement {
     mode: { type: String, reflect: true }
   };
 
-  static styles = css`
+  static styles = [componentBaseStyles, css`
     ${unsafeCSS(styles)}
-  `;
+  `];
 
   mode: SunmarAccordionMode = 'multiple';
 

@@ -1,0 +1,45 @@
+<style>
+  sunmar-kv::part(iframe-mob) {
+    width: 140%;
+    height: 140%;
+  }
+</style>
+
+<section class="sunmarino kv">
+  <sunmar-kv
+  >
+    <sunmar-image
+            slot="image"
+            media="(min-width: 768px)"
+            srcset="https://b2ccdn.sunmar.ru/content/landing-pages/rb-summer/rb-kv.jpg"
+            src="https://b2ccdn.sunmar.ru/content/landing-pages/rb-summer/rb-kv-mo.jpg"
+            alt=""
+    ></sunmar-image>
+    <div slot="video-desktop" data-vimeo-id="1162544497"></div>
+    <div slot="video-mobile" data-vimeo-id="1162544372"></div>
+    <h1 slot="title">ОчеВИДНАЯ выгода Раннего бронирования</h1>
+    <p slot="text">
+       Скидки до 50% скидки и предоплата 20% от стоимости
+      </p>
+    <div slot="actions">
+      <sunmar-button type="primary">Подобрать тур</sunmar-button>
+    </div>
+  </sunmar-kv>
+</section>
+<section class="sunmarino">
+  <div class="container">
+    <sunmar-lid>
+      <h2 class="sunmar-h2" slot="title">Лид текст</h2>
+      <p class="sunmar-text" slot="text">
+        Анапа – одно из популярных летних направлений для российских туристов. Из-за того, что отдых там временно невозможен, многие задаются вопросом: куда теперь отправляться на море? В России можно найти отдых на любой вкус, в том числе и пляжный. Приморские курорты привлекают туристов со всей страны и даже из зарубежья. Каждый из них имеет яркую индивидуальность, и сейчас мы расскажем, куда можно отправиться в отпуск вместо Анапы.
+      </p>
+      <sunmar-button>Я кнопка</sunmar-button>
+    </sunmar-lid>
+  </div>
+</section>
+<sunmar-sticky-nav top-offset="81">
+  <a slot="nav-link" href="#">О проекте</a>
+  <a slot="nav-link" href="#">Детали</a>
+  <a slot="nav-link" href="#">FAQ</a>
+  <a slot="nav-link" href="#">Еще</a>
+</sunmar-sticky-nav>

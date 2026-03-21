@@ -1,124 +1,91 @@
 import { LitElement, css, html, nothing, unsafeCSS } from 'lit';
+import { state } from 'lit/decorators.js';
+import { componentBaseStyles } from '../../styles/component-base';
+import { observeMinWidth } from '../../utils/dom/observe-media';
 import { vimeoAutoPlay } from '../../utils/video/vimeo-auto-play';
 import styles from './sunmar-kv.scss?inline';
 
 export const SUNMAR_KV_TAG_NAME = 'sunmar-kv';
 
-export class SunmarKv extends LitElement {
-  static properties = {
-    vimeoId: { type: String, reflect: true, attribute: 'vimeo-id' },
-    vimeoIdDesktop: { type: String, reflect: true, attribute: 'vimeo-id-desktop' },
-    vimeoIdMobile: { type: String, reflect: true, attribute: 'vimeo-id-mobile' },
-    isMobileViewport: { type: Boolean, state: true },
-    videoReady: { type: Boolean, state: true }
+const DESKTOP_VIDEO_MIN_WIDTH = 768;
+
+type KvVideoConfigElement = HTMLElement & {
+  dataset: DOMStringMap & {
+    vimeoId?: string;
   };
+};
 
-  static styles = css`
+export class SunmarKv extends LitElement {
+  static styles = [componentBaseStyles, css`
     ${unsafeCSS(styles)}
-  `;
+  `];
 
-  vimeoId = '';
-  vimeoIdDesktop = '';
-  vimeoIdMobile = '';
-  private isMobileViewport = false;
+  @state()
+  private isDesktopViewport = false;
+
+  @state()
   private videoReady = false;
+
+  @state()
+  private videoSlotsVersion = 0;
+
   private stopVimeoAutoPlay: (() => void) | null = null;
+  private stopDesktopViewportObserver: (() => void) | null = null;
   private vimeoIframePartObserver: MutationObserver | null = null;
   private vimeoSetupToken = 0;
-  private mobileViewportQuery: MediaQueryList | null = null;
-  private readonly onViewportQueryChange = (event: MediaQueryListEvent): void => {
-    this.isMobileViewport = event.matches;
-  };
-
-  connectedCallback(): void {
-    super.connectedCallback();
-    this.videoReady = false;
-
-    if (typeof window !== 'undefined' && 'matchMedia' in window) {
-      this.mobileViewportQuery = window.matchMedia('(max-width: 767px)');
-      this.isMobileViewport = this.mobileViewportQuery.matches;
-      this.mobileViewportQuery.addEventListener('change', this.onViewportQueryChange);
-    }
-  }
-
-  disconnectedCallback(): void {
-    this.teardownVimeoAutoPlay();
-    this.mobileViewportQuery?.removeEventListener('change', this.onViewportQueryChange);
-    this.mobileViewportQuery = null;
-    super.disconnectedCallback();
-  }
-
-  updated(changedProperties: Map<string, unknown>): void {
-    if (
-      !changedProperties.has('vimeoId') &&
-      !changedProperties.has('vimeoIdDesktop') &&
-      !changedProperties.has('vimeoIdMobile') &&
-      !changedProperties.has('isMobileViewport')
-    ) {
-      return;
-    }
-
-    this.videoReady = false;
-    void this.setupVimeoAutoPlay();
-  }
-
-  protected render() {
-    const activeVimeoId = this.activeVimeoId;
-    const hasVideo = activeVimeoId.length > 0;
-    const pictureClass = `picture${hasVideo && this.videoReady ? ' picture--hidden' : ''}`;
-
-    return html`
-      <div class="root" part="root">
-        <div class="media" part="media" aria-hidden="true">
-          <div class=${pictureClass} part="picture">
-            <slot name="image"></slot>
-          </div>
-          ${hasVideo
-            ? html`
-                <div class="video vimeo-video-box" part="video">
-                  <div
-                    class="video-frame"
-                    part="video-frame"
-                    data-vimeo-vid=${activeVimeoId}
-                  ></div>
-                </div>
-              `
-            : nothing}
-        </div>
-
-        <div class="content" part="content">
-          <div class="content-inner" part="content-inner">
-            <div class="eyebrow" part="eyebrow">
-              <slot class="eyebrow-slot" name="eyebrow"></slot>
-            </div>
-            <h1 class="title" part="title">
-              <slot name="title"></slot>
-            </h1>
-            <slot class="text" name="text"></slot>
-            <div class="actions" part="actions">
-              <slot class="actions-slot" name="actions"></slot>
-            </div>
-          </div>
-        </div>
-      </div>
-    `;
-  }
 
   private get hasVideo(): boolean {
     return this.activeVimeoId.length > 0;
   }
 
   private get activeVimeoId(): string {
-    const fallbackId = this.vimeoId.trim();
-    const desktopId = this.vimeoIdDesktop.trim();
-    const mobileId = this.vimeoIdMobile.trim();
+    const desktopId = this.getVideoIdFromSlot('video-desktop');
+    const mobileId = this.getVideoIdFromSlot('video-mobile');
 
-    if (this.isMobileViewport) {
-      return mobileId || fallbackId || desktopId;
+    if (this.isDesktopViewport) {
+      return desktopId || mobileId;
     }
 
-    return desktopId || fallbackId || mobileId;
+    return mobileId || desktopId;
   }
+
+  private getAssignedVideoElement(slotName: 'video-desktop' | 'video-mobile'): KvVideoConfigElement | null {
+    const slot = this.renderRoot.querySelector<HTMLSlotElement>(`slot[name="${slotName}"]`);
+    if (!slot) {
+      return null;
+    }
+
+    const [element] = slot.assignedElements({ flatten: true });
+    if (!(element instanceof HTMLElement)) {
+      return null;
+    }
+
+    return element as KvVideoConfigElement;
+  }
+
+  private getVideoIdFromSlot(slotName: 'video-desktop' | 'video-mobile'): string {
+    return this.getAssignedVideoElement(slotName)?.dataset.vimeoId?.trim() ?? '';
+  }
+
+  private startViewportObserver(): void {
+    if (this.stopDesktopViewportObserver) {
+      return;
+    }
+
+    this.stopDesktopViewportObserver = observeMinWidth(DESKTOP_VIDEO_MIN_WIDTH, (matches) => {
+      this.isDesktopViewport = matches;
+    });
+  }
+
+  private stopViewportObserver(): void {
+    this.stopDesktopViewportObserver?.();
+    this.stopDesktopViewportObserver = null;
+  }
+
+  private handleVideoSlotChange = (): void => {
+    this.videoReady = false;
+    this.videoSlotsVersion += 1;
+  };
 
   private async setupVimeoAutoPlay(): Promise<void> {
     this.teardownVimeoAutoPlay();
@@ -148,7 +115,6 @@ export class SunmarKv extends LitElement {
 
       this.stopVimeoAutoPlay = cleanup;
     } catch {
-      // Keep image visible as a stable fallback when Vimeo script/player fails.
       this.videoReady = false;
     }
   }
@@ -159,6 +125,7 @@ export class SunmarKv extends LitElement {
     this.stopVimeoAutoPlay = null;
     this.vimeoIframePartObserver?.disconnect();
     this.vimeoIframePartObserver = null;
+    this.renderRoot.querySelector('.video')?.classList.remove('playback');
   }
 
   private setupVimeoIframePartObserver(): void {
@@ -186,7 +153,76 @@ export class SunmarKv extends LitElement {
       return;
     }
 
-    iframe.setAttribute('part', this.isMobileViewport ? 'iframe-mob' : 'iframe');
+    iframe.setAttribute('part', this.isDesktopViewport ? 'iframe' : 'iframe-mob');
+  }
+
+  protected render() {
+    return html`
+      <section class="root" part="root">
+        <slot class="video-config-slot" name="video-desktop" @slotchange=${this.handleVideoSlotChange}></slot>
+        <slot class="video-config-slot" name="video-mobile" @slotchange=${this.handleVideoSlotChange}></slot>
+
+        <div class="media" part="media">
+          <div class="picture" part="picture">
+            <slot name="image"></slot>
+          </div>
+          ${this.hasVideo
+            ? html`
+                <div class="video vimeo-video-box" part="video" aria-hidden="true">
+                  <div
+                    class="video-frame"
+                    part="video-frame"
+                    data-vimeo-vid=${this.activeVimeoId}
+                  ></div>
+                </div>
+              `
+            : nothing}
+        </div>
+
+        <div class="content" part="content">
+          <div class="content-inner" part="content-inner">
+            <div class="eyebrow" part="eyebrow">
+              <slot name="eyebrow"></slot>
+            </div>
+            <div class="title" part="title">
+              <slot name="title"></slot>
+            </div>
+            <div class="text" part="text">
+              <slot name="text"></slot>
+            </div>
+            <slot class="actions-slot" name="actions"></slot>
+          </div>
+        </div>
+      </section>
+    `;
+  }
+
+  connectedCallback(): void {
+    super.connectedCallback();
+    this.videoReady = false;
+    this.startViewportObserver();
+  }
+
+  firstUpdated(): void {
+    this.handleVideoSlotChange();
+  }
+
+  updated(changedProperties: Map<string, unknown>): void {
+    if (
+      !changedProperties.has('isDesktopViewport') &&
+      !changedProperties.has('videoSlotsVersion')
+    ) {
+      return;
+    }
+
+    this.videoReady = false;
+    void this.setupVimeoAutoPlay();
+  }
+
+  disconnectedCallback(): void {
+    this.teardownVimeoAutoPlay();
+    this.stopViewportObserver();
+    super.disconnectedCallback();
   }
 }
 

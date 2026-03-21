@@ -19,8 +19,6 @@
 }
 
 .container {
-  container-type: inline-size;
-  container-name: sunmar-shell;
   border: 1px solid var(--shell-border);
   background: var(--shell-bg);
   border-radius: 14px;
@@ -29,7 +27,7 @@
 
 .header {
   padding-block: calc(var(--sunmar-padding-s) + var(--sunmar-padding-3xs));
-  padding-inline: var(--sunmar-padding-n);
+  padding-inline: calc(var(--sunmar-padding-n) + var(--sunmar-padding-3xs));
   border-bottom: 1px solid var(--shell-border);
   color: var(--shell-title);
   font-size: 14px;
@@ -38,7 +36,8 @@
 }
 
 .content {
-  padding: var(--sunmar-padding-n);
+  padding-block: var(--sunmar-padding-n);
+  padding-inline: calc(var(--sunmar-padding-n) + var(--sunmar-padding-3xs));
   color: var(--shell-text);
   font-size: 14px;
   line-height: 1.4;
@@ -53,15 +52,7 @@
   border-top: 1px dashed var(--shell-border);
 }
 
-@include mixins.container-named-min(sunmar-shell, bp-396) {
-  .header,
-  .content {
-    padding-left: calc(var(--sunmar-padding-n) + var(--sunmar-padding-3xs));
-    padding-right: calc(var(--sunmar-padding-n) + var(--sunmar-padding-3xs));
-  }
-}
-
-@include mixins.container-named-min(sunmar-shell, bp-768) {
+@include mixins.media-min(bp-768) {
   .header {
     font-size: 16px;
   }
