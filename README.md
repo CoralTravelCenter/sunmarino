@@ -86,6 +86,14 @@
 
 - после загрузки скрипта компоненты зарегистрированы автоматически
 
+## Глобальный layout
+
+- для light DOM-разметки используем namespaced контейнер `.sunmarino-container`, а не generic `.container`
+- `sunmarino-container` держит глобальные внешние отступы:
+  - `padding-block: 32px`
+  - `>= 768px`: `padding-block: 40px`
+  - mobile `padding-inline: 16px`
+
 ## Компоненты
 
 - `sunmar-button`
@@ -156,13 +164,19 @@
 
 ## Sticky Nav API
 
-- `sunmar-sticky-nav` attributes: `top-offset` (number, optional override для отступа sticky-блока от верхней границы viewport)
-- `sunmar-sticky-nav` slots: `nav-link` (например, ссылки/кнопки/`sunmar-link`)
-- `sunmar-sticky-nav` parts: `root`, `items`
+- `sunmar-sticky-nav` attributes:
+  - `top-offset` (number, optional override для отступа sticky-блока от верхней границы viewport)
+  - `disable-relocate` (boolean, отключает автоматический перенос компонента в DOM)
+- `sunmar-sticky-nav` slots:
+  - `nav-link` (рекомендуемый consumer contract: `<a href="#section-id">...</a>`)
+- `sunmar-sticky-nav` parts: `root`
 - компонент реализован через нативный `position: sticky`
 - есть минимальная JS-логика:
   - в `connectedCallback()` компонент переносится сразу за ближайший `.row-outer-container`, если он найден
+  - `disable-relocate` отключает этот DOM-side effect
   - если `top-offset` не задан, верхний offset вычисляется реактивно через `matchMedia`: mobile `81px`, tablet `65px`, desktop `16px`
+  - active-state ссылок синхронизируется по `IntersectionObserver` на основе `href="#section-id"` и реальных `section[id]`
+  - если `href` пустой/битый или целевая секция не найдена, компонент безопасно игнорирует такую ссылку и не ломает скрипты
 - CSS custom properties:
   - `--sunmar-sticky-nav-z-index`
   - `--sunmar-sticky-nav-bg`
@@ -172,11 +186,15 @@
 Пример:
 
 ```html
-<sunmar-sticky-nav top-offset="12">
+<sunmar-sticky-nav disable-relocate top-offset="12">
   <a slot="nav-link" href="#about">О проекте</a>
   <a slot="nav-link" href="#details">Детали</a>
   <a slot="nav-link" href="#faq">FAQ</a>
 </sunmar-sticky-nav>
+
+<section id="about">...</section>
+<section id="details">...</section>
+<section id="faq">...</section>
 ```
 
 Ограничения sticky-поведения:
