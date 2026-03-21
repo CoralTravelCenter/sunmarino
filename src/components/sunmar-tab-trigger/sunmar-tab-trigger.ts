@@ -1,5 +1,6 @@
 import { LitElement, css, html, unsafeCSS } from 'lit';
 import { property } from 'lit/decorators.js';
+import { ifDefined } from 'lit/directives/if-defined.js';
 import { componentBaseStyles } from '../../styles/component-base';
 import styles from './sunmar-tab-trigger.scss?inline';
 
@@ -20,6 +21,9 @@ export class SunmarTabTrigger extends LitElement {
   @property({ type: Boolean, reflect: true })
   disabled = false;
 
+  @property({ attribute: false })
+  panelId = '';
+
   protected render() {
     return html`
       <div class="root" part="root">
@@ -29,6 +33,7 @@ export class SunmarTabTrigger extends LitElement {
           type="button"
           role="tab"
           aria-selected=${String(this.selected)}
+          aria-controls=${ifDefined(this.panelId || undefined)}
           tabindex=${this.selected ? '0' : '-1'}
           ?disabled=${this.disabled}
           @click=${this.onClick}
@@ -41,6 +46,10 @@ export class SunmarTabTrigger extends LitElement {
         </button>
       </div>
     `;
+  }
+
+  focus(options?: FocusOptions): void {
+    this.renderRoot.querySelector<HTMLButtonElement>('.control')?.focus(options);
   }
 
   private readonly onClick = (): void => {

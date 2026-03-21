@@ -270,6 +270,8 @@
 - `sunmar-tab-trigger` parts: `root`, `control`, `content`, `label`
 - поддерживаются любые `data-*` атрибуты на хосте (например `data-personaj="Заяц"`) для внешней аналитики/метрик
 - `value` — стабильный технический идентификатор вкладки (не завязываемся на текст)
+- клавиатурная навигация: `ArrowLeft/ArrowRight`, `ArrowUp/ArrowDown`, `Home`, `End`
+- при активном `sunmar-tabs` компонент сам синхронизирует `aria-controls` и `aria-labelledby` между trigger и panel
 
 - `sunmar-tab-panel` attributes: `value`, `active`
 - `sunmar-tab-panel` slots: `default`

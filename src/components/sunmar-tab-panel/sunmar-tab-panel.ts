@@ -18,6 +18,7 @@ export class SunmarTabPanel extends LitElement {
 
   connectedCallback(): void {
     super.connectedCallback();
+    this.setAttribute('role', 'tabpanel');
     this.hidden = !this.active;
   }
 
@@ -30,7 +31,7 @@ export class SunmarTabPanel extends LitElement {
   protected render() {
     return html`
       <div class="root" part="root">
-        <div class="panel" part="panel" role="tabpanel">
+        <div class="panel" part="panel">
           <div class="content" part="content">
             <slot></slot>
           </div>
