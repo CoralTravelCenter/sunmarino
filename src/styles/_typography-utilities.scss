@@ -36,3 +36,28 @@
     padding-top: 0;
   }
 }
+
+body:not(:has(section.hero)) sunmar-kv > h1[slot='title'],
+body:not(:has(section.hero)) sunmar-kv > h2[slot='title'],
+body:not(:has(section.hero)) sunmar-kv > h3[slot='title'] {
+  font-weight: 400 !important;
+  font-size: 40px !important;
+  line-height: 1.1 !important;
+}
+
+@media (max-width: 768px) {
+  body:not(:has(section.hero)) sunmar-kv > h1[slot='title'],
+  body:not(:has(section.hero)) sunmar-kv > h2[slot='title'],
+  body:not(:has(section.hero)) sunmar-kv > h3[slot='title'] {
+    font-size: 40px !important;
+  }
+}
+
+@media (min-width: 1440px) {
+  body:not(:has(section.hero)) sunmar-kv > h1[slot='title'],
+  body:not(:has(section.hero)) sunmar-kv > h2[slot='title'],
+  body:not(:has(section.hero)) sunmar-kv > h3[slot='title'] {
+    font-size: 56px !important;
+    line-height: 1.1 !important;
+  }
+}

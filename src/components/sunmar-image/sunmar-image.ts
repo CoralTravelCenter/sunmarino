@@ -1,5 +1,6 @@
 import { LitElement, css, html, nothing, unsafeCSS } from 'lit';
 import { ifDefined } from 'lit/directives/if-defined.js';
+import { componentBaseStyles } from '../../styles/component-base';
 import styles from './sunmar-image.scss?inline';
 
 export const SUNMAR_IMAGE_TAG_NAME = 'sunmar-image';
@@ -12,9 +13,9 @@ export class SunmarImage extends LitElement {
     alt: { type: String }
   };
 
-  static styles = css`
+  static styles = [componentBaseStyles, css`
     ${unsafeCSS(styles)}
-  `;
+  `];
 
   src = '';
   srcset = '';

@@ -1,5 +1,6 @@
 import { LitElement, css, html, unsafeCSS } from 'lit';
 import { ifDefined } from 'lit/directives/if-defined.js';
+import { componentBaseStyles } from '../../styles/component-base';
 import styles from './sunmar-link.scss?inline';
 
 export type SunmarLinkType = 'primary' | 'secondary' | 'neutral';
@@ -16,9 +17,9 @@ export class SunmarLink extends LitElement {
     download: { type: String, reflect: true }
   };
 
-  static styles = css`
+  static styles = [componentBaseStyles, css`
     ${unsafeCSS(styles)}
-  `;
+  `];
 
   type: SunmarLinkType = 'primary';
   disabled = false;

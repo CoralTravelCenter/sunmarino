@@ -1,5 +1,6 @@
 import { LitElement, css, html, unsafeCSS } from 'lit';
 import { property, state } from 'lit/decorators.js';
+import { componentBaseStyles } from '../../styles/component-base';
 import { observeMinWidth } from '../../utils/dom/observe-media';
 import styles from './sunmar-sticky-nav.scss?inline';
 
@@ -13,9 +14,9 @@ const TABLET_TOP_OFFSET = 65;
 const DESKTOP_TOP_OFFSET = 16;
 
 export class SunmarStickyNav extends LitElement {
-  static styles = css`
+  static styles = [componentBaseStyles, css`
     ${unsafeCSS(styles)}
-  `;
+  `];
 
   @property({ type: Number, reflect: true, attribute: 'top-offset' })
   topOffset: number | null = null;

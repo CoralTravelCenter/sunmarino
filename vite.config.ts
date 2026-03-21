@@ -17,6 +17,11 @@ export default defineConfig(({ command }) => {
   const libraryEntry = fileURLToPath(new URL('./src/index.ts', import.meta.url));
 
   return {
+    server: {
+      host: '127.0.0.1',
+      port: 5173,
+      strictPort: true
+    },
     css: {
       preprocessorOptions: {
         scss: {

@@ -1,4 +1,5 @@
 import { LitElement, css, html, unsafeCSS } from 'lit';
+import { componentBaseStyles } from '../../styles/component-base';
 import styles from './sunmar-accordion-item.scss?inline';
 
 export const SUNMAR_ACCORDION_ITEM_TAG_NAME = 'sunmar-accordion-item';
@@ -12,9 +13,9 @@ export class SunmarAccordionItem extends LitElement {
     disabled: { type: Boolean, reflect: true }
   };
 
-  static styles = css`
+  static styles = [componentBaseStyles, css`
     ${unsafeCSS(styles)}
-  `;
+  `];
 
   open = false;
   disabled = false;

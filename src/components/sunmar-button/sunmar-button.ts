@@ -1,4 +1,5 @@
 import { LitElement, css, html, unsafeCSS } from 'lit';
+import { componentBaseStyles } from '../../styles/component-base';
 import styles from './sunmar-button.scss?inline';
 
 export type SunmarButtonType = 'primary' | 'secondary' | 'neutral';
@@ -14,9 +15,9 @@ export class SunmarButton extends LitElement {
     fullWidth: { type: Boolean, reflect: true, attribute: 'full-width' }
   };
 
-  static styles = css`
+  static styles = [componentBaseStyles, css`
     ${unsafeCSS(styles)}
-  `;
+  `];
 
   type: SunmarButtonType = 'primary';
   disabled = false;

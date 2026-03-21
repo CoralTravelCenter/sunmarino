@@ -1,3 +1,10 @@
+<style>
+  sunmar-kv::part(iframe-mob) {
+    width: 140%;
+    height: 140%;
+  }
+</style>
+
 <section class="sunmarino kv">
   <sunmar-kv
   >
@@ -8,10 +15,12 @@
             src="https://b2ccdn.sunmar.ru/content/landing-pages/rb-summer/rb-kv-mo.jpg"
             alt=""
     ></sunmar-image>
-    <span slot="title">ОчеВИДНАЯ выгода Раннего бронирования</span>
-    <span slot="text">
+    <div slot="video-desktop" data-vimeo-id="1162544497"></div>
+    <div slot="video-mobile" data-vimeo-id="1162544372"></div>
+    <h1 slot="title">ОчеВИДНАЯ выгода Раннего бронирования</h1>
+    <p slot="text">
        Скидки до 50% скидки и предоплата 20% от стоимости
-      </span>
+      </p>
     <div slot="actions">
       <sunmar-button type="primary">Подобрать тур</sunmar-button>
     </div>

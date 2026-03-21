@@ -1,4 +1,5 @@
 import { LitElement, css, html, unsafeCSS } from 'lit';
+import { componentBaseStyles } from '../../styles/component-base';
 import styles from './sunmar-tab-trigger.scss?inline';
 
 export const SUNMAR_TAB_TRIGGER_TAG_NAME = 'sunmar-tab-trigger';
@@ -11,9 +12,9 @@ export class SunmarTabTrigger extends LitElement {
     disabled: { type: Boolean, reflect: true }
   };
 
-  static styles = css`
+  static styles = [componentBaseStyles, css`
     ${unsafeCSS(styles)}
-  `;
+  `];
 
   value = '';
   selected = false;

@@ -1,4 +1,5 @@
 import { LitElement, css, html, unsafeCSS } from 'lit';
+import { componentBaseStyles } from '../../styles/component-base';
 import styles from './sunmar-shell.scss?inline';
 
 type ShellTone = 'neutral' | 'accent';
@@ -10,9 +11,9 @@ export class SunmarShell extends LitElement {
     isLoading: { type: Boolean, reflect: true, attribute: 'is-loading' }
   };
 
-  static styles = css`
+  static styles = [componentBaseStyles, css`
     ${unsafeCSS(styles)}
-  `;
+  `];
 
   tone: ShellTone = 'neutral';
   isLoading = false;
