@@ -5,24 +5,23 @@
 - `Lit + TypeScript`
 - `SCSS` стили импортируются в компоненты (`*.scss?inline`)
 - `vite-plugin-monkey` используется только в `dev`
-- production build собирается как библиотека (`es` + `iife`) для подключения через `<script src="...">`
+- production build собирается как библиотека в формате `iife` для подключения через `<script src="...">`
 - единый префикс для компонентов: `sunmar-*`
 - модалка `sunmar-modal` блокирует скролл через `@fluejs/noscroll`
 
 ## Скрипты
 
 - `npm run dev` - локальный dev сервер
-- `npm run build` - production build JS (`auto` + `manual`) и `.d.ts` в `dist/`
-- `npm run build:js` - только JS-бандлы (`sunmarino.es.js`, `sunmarino.iife.js`, `sunmarino.manual.es.js`)
+- `npm run build` - production build JS (`sunmarino.iife.js`) и `.d.ts` в `dist/`
+- `npm run build:js` - только JS-бандл `sunmarino.iife.js`
 - `npm run build:types` - только TypeScript declaration files в `dist/types/`
-- `npm run build:external` - сборка с external vendor deps (`dayjs`, `@fluejs/noscroll`) для уменьшения размера бандла
+- `npm run build:external` - сборка с external vendor deps (`@fluejs/noscroll`) для уменьшения размера бандла
 - `npm run preview` - просмотр production сборки
 - `npm run typecheck` - проверка TypeScript
 
 ## Точки входа
 
 - Библиотека (auto register + runtime tokens): `src/index.ts`
-- Библиотека (manual, без авто-регистрации): `src/manual.ts`
 - Общие re-exports без side effects: `src/exports.ts`
 - Dev preview (локально + monkey): `src/dev/playground.ts`
 - Scroll util для общих блокировок скролла: `src/utils/scroll/no-scroll.ts`
@@ -75,30 +74,8 @@
 - `src/index.ts` вызывает регистрацию автоматически (удобно для `<script src="...">`)
 - `src/index.ts` также один раз инжектит `:root` CSS variables дизайн-токенов
 - при необходимости можно вызывать регистрацию вручную через экспорт `registerSunmarComponents`
-- для bundler-сценария без авто-регистрации используем subpath `sunmarino-web-components/manual`
 
 ## Подключение пакета
-
-### Bundler (auto register)
-
-```ts
-import 'sunmarino-web-components';
-```
-
-- автоматически регистрирует компоненты
-- автоматически подключает runtime токены (`:root` CSS custom properties)
-
-### Bundler (manual register)
-
-```ts
-import 'sunmarino-web-components/styles.css';
-import { registerSunmarComponents } from 'sunmarino-web-components/manual';
-
-registerSunmarComponents();
-```
-
-- не выполняет авто-регистрацию при импорте `manual`
-- runtime токены подключаем отдельно через `sunmarino-web-components/styles.css`
 
 ### Script tag (IIFE)
 

@@ -1,11 +1,9 @@
 import { fileURLToPath } from 'node:url';
-import { defineConfig, type LibraryFormats } from 'vite';
+import { defineConfig } from 'vite';
 import monkey from 'vite-plugin-monkey';
 
 export default defineConfig(({ command }) => {
   const isDev = command === 'serve';
-  const libraryEntryMode = process.env.SUNMAR_LIBRARY_ENTRY?.trim() === 'manual' ? 'manual' : 'auto';
-  const isManualLibraryEntry = libraryEntryMode === 'manual';
   const externalDepsEnv = process.env.SUNMAR_EXTERNAL_VENDOR_DEPS?.trim();
   const defaultExternalDeps = ['@fluejs/noscroll'];
   const externalVendorDeps = externalDepsEnv
@@ -16,10 +14,7 @@ export default defineConfig(({ command }) => {
           .map((dep) => dep.trim())
           .filter(Boolean)
     : [];
-  const libraryEntry = fileURLToPath(
-    new URL(isManualLibraryEntry ? './src/manual.ts' : './src/index.ts', import.meta.url)
-  );
-  const libraryFormats: LibraryFormats[] = isManualLibraryEntry ? ['es'] : ['es', 'iife'];
+  const libraryEntry = fileURLToPath(new URL('./src/index.ts', import.meta.url));
 
   return {
     css: {
@@ -49,7 +44,7 @@ export default defineConfig(({ command }) => {
     ],
     build: {
       outDir: 'dist',
-      emptyOutDir: !isManualLibraryEntry,
+      emptyOutDir: true,
       sourcemap: false,
       target: 'es2018',
       minify: 'esbuild',
@@ -57,13 +52,8 @@ export default defineConfig(({ command }) => {
       lib: {
         entry: libraryEntry,
         name: 'SunmarinoComponents',
-        formats: [...libraryFormats],
-        fileName: (format) =>
-          isManualLibraryEntry
-            ? 'sunmarino.manual.es.js'
-            : format === 'iife'
-              ? 'sunmarino.iife.js'
-              : 'sunmarino.es.js'
+        formats: ['iife'],
+        fileName: () => 'sunmarino.iife.js'
       },
       rollupOptions: {
         external: externalVendorDeps,
