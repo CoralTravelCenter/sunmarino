@@ -14,7 +14,8 @@ export class SunmarLink extends LitElement {
     href: { type: String, reflect: true },
     target: { type: String, reflect: true },
     rel: { type: String, reflect: true },
-    download: { type: String, reflect: true }
+    download: { type: String, reflect: true },
+    fullWidth: { type: Boolean, reflect: true, attribute: 'full-width' }
   };
 
   static styles = [componentBaseStyles, css`
@@ -27,6 +28,7 @@ export class SunmarLink extends LitElement {
   target = '';
   rel = '';
   download?: string;
+  fullWidth = false;
 
   protected render() {
     const target = this.target.trim() || undefined;
