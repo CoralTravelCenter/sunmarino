@@ -23,12 +23,6 @@ export class SunmarKv extends LitElement {
   @state()
   private isDesktopViewport = false;
 
-  @state()
-  private videoReady = false;
-
-  @state()
-  private videoSlotsVersion = 0;
-
   private stopVimeoAutoPlay: (() => void) | null = null;
   private stopDesktopViewportObserver: (() => void) | null = null;
   private vimeoIframePartObserver: MutationObserver | null = null;
@@ -83,8 +77,7 @@ export class SunmarKv extends LitElement {
   }
 
   private handleVideoSlotChange = (): void => {
-    this.videoReady = false;
-    this.videoSlotsVersion += 1;
+    void this.setupVimeoAutoPlay();
   };
 
   private async setupVimeoAutoPlay(): Promise<void> {
@@ -104,7 +97,6 @@ export class SunmarKv extends LitElement {
         selector: '.vimeo-video-box [data-vimeo-vid]',
         onPlaybackStart: () => {
           this.syncVimeoIframePart();
-          this.videoReady = true;
         }
       });
 
@@ -114,9 +106,7 @@ export class SunmarKv extends LitElement {
       }
 
       this.stopVimeoAutoPlay = cleanup;
-    } catch {
-      this.videoReady = false;
-    }
+    } catch {}
   }
 
   private teardownVimeoAutoPlay(): void {
@@ -199,23 +189,18 @@ export class SunmarKv extends LitElement {
 
   connectedCallback(): void {
     super.connectedCallback();
-    this.videoReady = false;
     this.startViewportObserver();
   }
 
   firstUpdated(): void {
-    this.handleVideoSlotChange();
+    void this.setupVimeoAutoPlay();
   }
 
   updated(changedProperties: Map<string, unknown>): void {
-    if (
-      !changedProperties.has('isDesktopViewport') &&
-      !changedProperties.has('videoSlotsVersion')
-    ) {
+    if (!changedProperties.has('isDesktopViewport')) {
       return;
     }
 
-    this.videoReady = false;
     void this.setupVimeoAutoPlay();
   }
 
