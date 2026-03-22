@@ -1,0 +1,56 @@
+@use '../../styles/action-control' as action-control;
+
+:host {
+  display: flex;
+  flex: 1 1 auto;
+}
+
+.root {
+  width: 100%;
+}
+
+.control {
+  @include action-control.control;
+  width: 100%;
+  background-color: var(--sunmar-color-btn-bg-light-default);
+  color: var(--sunmar-color-btn-text-dark);
+  border-color: var(--sunmar-color-btn-stroke-light);
+}
+
+.content {
+  @include action-control.content;
+  width: 100%;
+}
+
+.label {
+  @include action-control.label;
+  white-space: normal;
+  text-align: center;
+}
+
+.control:hover {
+  background-color: var(--sunmar-color-btn-bg-light-hover);
+}
+
+.control:active {
+  background-color: var(--sunmar-color-btn-bg-light-pressed);
+}
+
+:host([selected]) .control {
+  background-color: var(--sunmar-color-btn-bg-secondary-default);
+  border-color: var(--sunmar-color-btn-bg-secondary-default);
+  color: var(--sunmar-color-btn-text-light);
+}
+
+:host([selected]) .control:hover {
+  background-color: var(--sunmar-color-btn-bg-secondary-hover);
+  border-color: var(--sunmar-color-btn-bg-secondary-hover);
+}
+
+:host([selected]) .control:active {
+  background-color: var(--sunmar-color-btn-bg-secondary-pressed);
+  border-color: var(--sunmar-color-btn-bg-secondary-pressed);
+}
+
+@include action-control.disabled;
+@include action-control.focus;

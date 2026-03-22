@@ -267,19 +267,12 @@ export class SunmarTabs extends LitElement {
   }
 
   private getTriggers(): TabTriggerLike[] {
-    const navRoots = this.getNavSlotAssignedElements();
-    const collected: TabTriggerLike[] = [];
-
-    for (const root of navRoots) {
-      if (root.tagName.toLowerCase() === TAB_TRIGGER_TAG_NAME) {
-        collected.push(root as TabTriggerLike);
-      }
-
-      const descendants = Array.from(root.querySelectorAll<TabTriggerLike>(TAB_TRIGGER_TAG_NAME));
-      collected.push(...descendants);
+    const navRoot = this.getNavRoot();
+    if (!navRoot) {
+      return [];
     }
 
-    return Array.from(new Set(collected));
+    return Array.from(navRoot.querySelectorAll<TabTriggerLike>(TAB_TRIGGER_TAG_NAME));
   }
 
   private getNavigableTriggers(): TabTriggerLike[] {
@@ -306,16 +299,17 @@ export class SunmarTabs extends LitElement {
       .filter((el): el is TabPanelLike => el.tagName.toLowerCase() === TAB_PANEL_TAG_NAME);
   }
 
-  private getNavSlotAssignedElements(): Element[] {
+  private getNavRoot(): HTMLElement | null {
     const navSlot = this.renderRoot.querySelector<HTMLSlotElement>('slot[name="nav"]');
     if (!navSlot) {
-      return [];
+      return null;
     }
 
-    return navSlot.assignedElements({ flatten: true }).filter((el) => {
-      const tag = el.tagName.toLowerCase();
-      return tag === TABS_NAV_TAG_NAME || tag === TAB_TRIGGER_TAG_NAME;
-    });
+    const navRoot = navSlot
+      .assignedElements({ flatten: true })
+      .find((el) => el.tagName.toLowerCase() === TABS_NAV_TAG_NAME);
+
+    return navRoot instanceof HTMLElement ? navRoot : null;
   }
 
   private isTriggerInNav(trigger: TabTriggerLike): boolean {

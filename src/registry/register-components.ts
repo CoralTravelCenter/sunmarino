@@ -1,8 +1,4 @@
 import {
-  SUNMAR_SHELL_TAG_NAME,
-  SunmarShell
-} from '../components/sunmar-shell/sunmar-shell';
-import {
   SUNMAR_MODAL_TAG_NAME,
   SunmarModal
 } from '../components/sunmar-modal/sunmar-modal';
@@ -45,22 +41,21 @@ import {
 import {
   SUNMAR_TABS_NAV_TAG_NAME,
   SunmarTabsNav
-} from '../components/sunmar-tabs-nav/sunmar-tabs-nav';
+} from '../components/sunmar-tabs/sunmar-tabs-nav';
 import {
   SUNMAR_TAB_TRIGGER_TAG_NAME,
   SunmarTabTrigger
-} from '../components/sunmar-tab-trigger/sunmar-tab-trigger';
+} from '../components/sunmar-tabs/sunmar-tab-trigger';
 import {
   SUNMAR_TAB_PANEL_TAG_NAME,
   SunmarTabPanel
-} from '../components/sunmar-tab-panel/sunmar-tab-panel';
+} from '../components/sunmar-tabs/sunmar-tab-panel';
 import {
   SUNMAR_STICKY_NAV_TAG_NAME,
   SunmarStickyNav
 } from '../components/sunmar-sticky-nav/sunmar-sticky-nav';
 
 const sunmarComponentRegistryEntries = [
-  [SUNMAR_SHELL_TAG_NAME, SunmarShell],
   [SUNMAR_MODAL_TAG_NAME, SunmarModal],
   [SUNMAR_BUTTON_TAG_NAME, SunmarButton],
   [SUNMAR_BUTTON_GROUP_TAG_NAME, SunmarButtonGroup],
