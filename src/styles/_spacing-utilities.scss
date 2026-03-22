@@ -1,0 +1,67 @@
+$sunmar-spacing-scale: (
+  0: 0,
+  1: var(--sunmar-space-2xs),
+  2: var(--sunmar-space-xs),
+  3: var(--sunmar-space-s),
+  4: var(--sunmar-space-n),
+  5: var(--sunmar-space-l),
+  6: var(--sunmar-space-xl),
+  7: var(--sunmar-space-2xl),
+  8: var(--sunmar-space-3xl),
+);
+
+:root {
+  @each $step, $value in $sunmar-spacing-scale {
+    --sunmar-util-space-#{$step}: #{$value};
+  }
+}
+
+@each $step, $value in $sunmar-spacing-scale {
+  :where(.sunmar-mt-#{$step}) {
+    margin-top: var(--sunmar-util-space-#{$step});
+  }
+
+  :where(.sunmar-mb-#{$step}) {
+    margin-bottom: var(--sunmar-util-space-#{$step});
+  }
+
+  :where(.sunmar-ml-#{$step}) {
+    margin-left: var(--sunmar-util-space-#{$step});
+  }
+
+  :where(.sunmar-mr-#{$step}) {
+    margin-right: var(--sunmar-util-space-#{$step});
+  }
+
+  :where(.sunmar-mx-#{$step}) {
+    margin-inline: var(--sunmar-util-space-#{$step});
+  }
+
+  :where(.sunmar-my-#{$step}) {
+    margin-block: var(--sunmar-util-space-#{$step});
+  }
+
+  :where(.sunmar-pt-#{$step}) {
+    padding-top: var(--sunmar-util-space-#{$step});
+  }
+
+  :where(.sunmar-pb-#{$step}) {
+    padding-bottom: var(--sunmar-util-space-#{$step});
+  }
+
+  :where(.sunmar-pl-#{$step}) {
+    padding-left: var(--sunmar-util-space-#{$step});
+  }
+
+  :where(.sunmar-pr-#{$step}) {
+    padding-right: var(--sunmar-util-space-#{$step});
+  }
+
+  :where(.sunmar-px-#{$step}) {
+    padding-inline: var(--sunmar-util-space-#{$step});
+  }
+
+  :where(.sunmar-py-#{$step}) {
+    padding-block: var(--sunmar-util-space-#{$step});
+  }
+}
