@@ -5,3 +5,6 @@ dist
 .idea
 *storybook.log
 storybook-static
+.DS_Store
+Thumbs.db
+Desktop.ini
