@@ -1,11 +1,10 @@
 import { LitElement, css, html, unsafeCSS } from 'lit';
-import { property } from 'lit/decorators.js';
+import { property, state } from 'lit/decorators.js';
 import { componentBaseStyles } from '../../styles/component-base';
 import styles from './sunmar-sticky-nav.scss?inline';
 
 export const SUNMAR_STICKY_NAV_TAG_NAME = 'sunmar-sticky-nav';
 
-const ROW_OUTER_CONTAINER_SELECTOR = '.row-outer-container';
 const TABLET_MIN_WIDTH = 768;
 const DESKTOP_MIN_WIDTH = 993;
 const MOBILE_TOP_OFFSET = 81;
@@ -20,41 +19,21 @@ export class SunmarStickyNav extends LitElement {
   @property({ type: Number, reflect: true, attribute: 'top-offset' })
   topOffset: number | null = null;
 
-  @property({ type: Boolean, reflect: true, attribute: 'disable-relocate' })
-  disableRelocate = false;
+  @state()
+  private isStuck = false;
 
   private responsiveTopOffset = MOBILE_TOP_OFFSET;
-
-  private isRelocating = false;
   private navLinks: HTMLAnchorElement[] = [];
   private sectionLinkMap = new Map<HTMLElement, HTMLAnchorElement>();
   private activeSections = new Set<HTMLElement>();
   private sectionObserver: IntersectionObserver | null = null;
+  private stickyObserver: IntersectionObserver | null = null;
   private currentActiveLink: HTMLAnchorElement | null = null;
-
-  private readonly handleWindowResize = (): void => {
-    this.syncResponsiveTopOffset();
-    this.syncStickyOffset();
-    this.setupSectionObserver();
-  };
 
   private readonly handleNavLinksSlotChange = (event: Event): void => {
     const slot = event.target as HTMLSlotElement;
     this.syncNavLinks(slot);
   };
-
-  private relocateForSticky(): boolean {
-    const rowOuterContainer = this.closest<HTMLElement>(ROW_OUTER_CONTAINER_SELECTOR);
-
-    if (rowOuterContainer && rowOuterContainer.nextElementSibling !== this) {
-      this.isRelocating = true;
-      rowOuterContainer.insertAdjacentElement('afterend', this);
-      this.isRelocating = false;
-      return true;
-    }
-
-    return false;
-  }
 
   private syncResponsiveTopOffset(): void {
     this.responsiveTopOffset = this.getResponsiveTopOffset();
@@ -130,8 +109,9 @@ export class SunmarStickyNav extends LitElement {
     this.activeSections.clear();
   }
 
-  private getActivationOffset(): number {
-    return this.resolvedTopOffset + this.offsetHeight;
+  private teardownStickyObserver(): void {
+    this.stickyObserver?.disconnect();
+    this.stickyObserver = null;
   }
 
   private clearActiveNavLinks(): void {
@@ -187,8 +167,6 @@ export class SunmarStickyNav extends LitElement {
       return;
     }
 
-    const topRootMargin = -this.getActivationOffset();
-
     this.sectionObserver = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
@@ -209,7 +187,6 @@ export class SunmarStickyNav extends LitElement {
       },
       {
         root: null,
-        rootMargin: `${topRootMargin}px 0px 0px 0px`,
         threshold: 0.3,
       }
     );
@@ -219,6 +196,37 @@ export class SunmarStickyNav extends LitElement {
     }
     
     this.syncActiveNavLink();
+  }
+
+  private setupStickyObserver(): void {
+    this.teardownStickyObserver();
+
+    const sentinel = this.renderRoot.querySelector<HTMLElement>('.sentinel');
+
+    if (!sentinel || typeof IntersectionObserver === 'undefined') {
+      return;
+    }
+
+    this.stickyObserver = new IntersectionObserver(
+      ([entry]) => {
+        const nextIsStuck = Boolean(
+          entry &&
+          !entry.isIntersecting &&
+          entry.boundingClientRect.top <= this.resolvedTopOffset
+        );
+
+        if (this.isStuck !== nextIsStuck) {
+          this.isStuck = nextIsStuck;
+          this.classList.toggle('sunmar-sticky-nav--stuck', nextIsStuck);
+        }
+      },
+      {
+        root: null,
+        threshold: 0,
+      }
+    );
+
+    this.stickyObserver.observe(sentinel);
   }
 
   private getResponsiveTopOffset(): number {
@@ -242,8 +250,17 @@ export class SunmarStickyNav extends LitElement {
   }
 
   protected render() {
+    const sentinelMarginTop = -this.resolvedTopOffset;
+    const sentinelMarginBottom = Math.max(0, this.resolvedTopOffset - 1);
+
     return html`
-      <nav class="root" part="root">
+      <div
+        class="sentinel"
+        aria-hidden="true"
+        style=${`margin-top: ${sentinelMarginTop}px; margin-bottom: ${sentinelMarginBottom}px;`}
+      ></div>
+
+      <nav class=${this.isStuck ? 'root root--stuck' : 'root'} part="root">
         <slot
           name="nav-link"
           @slotchange=${this.handleNavLinksSlotChange}
@@ -255,15 +272,6 @@ export class SunmarStickyNav extends LitElement {
   connectedCallback(): void {
     super.connectedCallback();
 
-    if (!this.id) {
-      this.id = `${SUNMAR_STICKY_NAV_TAG_NAME}-${crypto.randomUUID()}`;
-    }
-
-    if (!this.disableRelocate && this.relocateForSticky()) {
-      return;
-    }
-
-    window.addEventListener('resize', this.handleWindowResize);
     this.syncResponsiveTopOffset();
     this.syncStickyOffset();
 
@@ -275,19 +283,17 @@ export class SunmarStickyNav extends LitElement {
   updated(changedProperties: Map<string, unknown>): void {
     if (changedProperties.has('topOffset')) {
       this.syncStickyOffset();
-      this.setupSectionObserver();
     }
   }
 
   firstUpdated(): void {
+    this.setupStickyObserver();
     this.syncNavLinks();
   }
 
   disconnectedCallback(): void {
-    if (!this.isRelocating) {
-      window.removeEventListener('resize', this.handleWindowResize);
-      this.teardownSectionObserver();
-    }
+    this.teardownSectionObserver();
+    this.teardownStickyObserver();
 
     super.disconnectedCallback();
   }

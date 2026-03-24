@@ -6,17 +6,19 @@
   --sunmar-sticky-nav-top-offset: 0px;
 
   display: block;
-  position: sticky;
-  max-width: 1530px;
-  margin: 0 auto;
-  top: var(--sunmar-sticky-nav-top-offset);
   width: 100%;
   box-sizing: border-box;
-  z-index: var(--sunmar-sticky-nav-z-index);
+}
+
+.sentinel {
+  display: block;
+  height: 1px;
+  pointer-events: none;
+  visibility: hidden;
 }
 
 .root {
-  width: calc(100% - 24px);
+  max-width: 1370px;
   display: flex;
   margin: 0 auto;
   flex-wrap: wrap;
@@ -28,6 +30,21 @@
   background: var(--sunmar-sticky-nav-bg);
 }
 
+.root--stuck {
+  position: fixed;
+  inset-inline: 0;
+  top: var(--sunmar-sticky-nav-top-offset);
+  z-index: var(--sunmar-sticky-nav-z-index);
+  width: calc(100% - 32px);
+
+  @media (min-width: 992px) {
+    width: calc(100% - 48px);
+  }
+
+  @media (min-width: 1201px) {
+    width: calc(100% - 160px);
+  }
+}
 
 ::slotted([slot="nav-link"]) {
   flex: 1 1 auto;
@@ -74,17 +91,6 @@
   border-color: var(--sunmar-color-btn-bg-secondary-pressed);
 }
 
-@media (min-width: 992px) {
-  .root {
-    width: calc(100% - 48px);
-  }
-}
-
-@media (min-width: 1201px) {
-  .root {
-    width: calc(100% - 160px);
-  }
-}
 
 @media (min-width: 1024px) {
   .root{

@@ -1,14 +1,14 @@
 {
   "name": "sunmarino-web-components",
-  "version": "0.1.0",
+  "version": "0.1.3",
   "description": "Web Components library based on Lit + TypeScript + SCSS",
   "type": "module",
-  "main": "./dist/sunmarino.iife.js",
+  "main": "./dist/sunmarino-0.1.3.iife.js",
   "types": "./dist/types/exports.d.ts",
   "exports": {
     ".": {
       "types": "./dist/types/exports.d.ts",
-      "default": "./dist/sunmarino.iife.js"
+      "default": "./dist/sunmarino-0.1.3.iife.js"
     },
     "./styles.css": "./dist/index.css",
     "./package.json": "./package.json"
@@ -18,11 +18,12 @@
     "README.md"
   ],
   "sideEffects": [
-    "./dist/sunmarino.iife.js",
+    "./dist/sunmarino-0.1.3.iife.js",
     "./dist/index.css"
   ],
   "scripts": {
     "dev": "vite",
+    "prebuild": "node ./scripts/sync-package-versioned-entry.mjs",
     "build": "npm run build:js && npm run build:types",
     "build:js": "vite build",
     "build:types": "tsc -p tsconfig.build.json",

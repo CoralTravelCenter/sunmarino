@@ -1,9 +1,13 @@
+import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { defineConfig } from 'vite';
 import monkey from 'vite-plugin-monkey';
 
 export default defineConfig(({ command }) => {
   const isDev = command === 'serve';
+  const packageJson = JSON.parse(
+    readFileSync(new URL('./package.json', import.meta.url), 'utf-8')
+  ) as { version: string };
   const externalDepsEnv = process.env.SUNMAR_EXTERNAL_VENDOR_DEPS?.trim();
   const defaultExternalDeps = ['@fluejs/noscroll'];
   const externalVendorDeps = externalDepsEnv
@@ -15,6 +19,7 @@ export default defineConfig(({ command }) => {
           .filter(Boolean)
     : [];
   const libraryEntry = fileURLToPath(new URL('./src/index.ts', import.meta.url));
+  const bundleFileName = `sunmarino-${packageJson.version}.iife.js`;
 
   return {
     server: {
@@ -58,7 +63,7 @@ export default defineConfig(({ command }) => {
         entry: libraryEntry,
         name: 'SunmarinoComponents',
         formats: ['iife'],
-        fileName: () => 'sunmarino.iife.js'
+        fileName: () => bundleFileName
       },
       rollupOptions: {
         external: externalVendorDeps,
