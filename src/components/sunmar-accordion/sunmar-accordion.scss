@@ -18,46 +18,7 @@
 }
 
 @include mixins.media-min(bp-768) {
-  .root {
-  }
-
-  .items-slot {
-  }
-
   ::slotted(sunmar-accordion-item) {
     margin-block-end: var(--sunmar-space-n);
-  }
-}
-
-@include mixins.media-min(bp-1024) {
-  .root {
-  }
-
-  .items-slot {
-  }
-
-  ::slotted(sunmar-accordion-item) {
-  }
-}
-
-@include mixins.media-min(bp-1280) {
-  .root {
-  }
-
-  .items-slot {
-  }
-
-  ::slotted(sunmar-accordion-item) {
-  }
-}
-
-@include mixins.media-min(bp-1440) {
-  .root {
-  }
-
-  .items-slot {
-  }
-
-  ::slotted(sunmar-accordion-item) {
   }
 }

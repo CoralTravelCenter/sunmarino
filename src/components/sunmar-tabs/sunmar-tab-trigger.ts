@@ -26,7 +26,7 @@ export class SunmarTabTrigger extends LitElement {
 
   protected render() {
     return html`
-      <div class="root" part="root">
+      <div class="root">
         <button
           class="control"
           part="control"
@@ -38,8 +38,8 @@ export class SunmarTabTrigger extends LitElement {
           ?disabled=${this.disabled}
           @click=${this.onClick}
         >
-          <span class="content" part="content">
-            <span class="label" part="label">
+          <span class="content">
+            <span class="label">
               <slot></slot>
             </span>
           </span>

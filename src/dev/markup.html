@@ -129,3 +129,58 @@
     </sunmar-tabs>
   </div>
 </section>
+<section class="sunmarino">
+  <div class="sunmarino-container">
+    <h2 class="sunmar-h2">Accordion — multiple</h2>
+    <sunmar-accordion class="sunmar-mt-4">
+      <sunmar-accordion-item open>
+        <h3 slot="header">Какие документы нужны?</h3>
+        <p>
+          Это тестовый контент для проверки базового сценария multiple. Здесь можно проверить открытие и закрытие item независимо друг от друга.
+        </p>
+      </sunmar-accordion-item>
+
+      <sunmar-accordion-item>
+        <h3 slot="header">Можно ли перенести тур?</h3>
+        <p>
+          Вторая секция нужна для проверки обычного переключения и визуального контракта trigger/content.
+        </p>
+      </sunmar-accordion-item>
+
+      <sunmar-accordion-item>
+        <h3 slot="header">Что входит в стоимость?</h3>
+        <p>
+          Третий item нужен для ручной проверки отступов, иконки и общего поведения family в playground.
+        </p>
+      </sunmar-accordion-item>
+    </sunmar-accordion>
+  </div>
+</section>
+
+<section class="sunmarino">
+  <div class="sunmarino-container">
+    <h2 class="sunmar-h2">Accordion — single</h2>
+    <sunmar-accordion class="sunmar-mt-4" mode="single">
+      <sunmar-accordion-item open>
+        <h3 slot="header">Почему открыт только один item?</h3>
+        <p>
+          В режиме single контейнер сам нормализует состояние и не позволяет держать открытыми несколько пунктов одновременно.
+        </p>
+      </sunmar-accordion-item>
+
+      <sunmar-accordion-item>
+        <h3 slot="header">Что происходит при повторном клике?</h3>
+        <p>
+          Этот пункт нужен для проверки, что в single-режиме активный item можно закрыть повторным кликом по trigger.
+        </p>
+      </sunmar-accordion-item>
+
+      <sunmar-accordion-item disabled>
+        <h3 slot="header">Disabled item</h3>
+        <p>
+          Disabled-сценарий нужен для ручной проверки визуального состояния и блокировки взаимодействия.
+        </p>
+      </sunmar-accordion-item>
+    </sunmar-accordion>
+  </div>
+</section>

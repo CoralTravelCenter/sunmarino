@@ -57,7 +57,7 @@ export class SunmarAccordion extends LitElement {
 
   protected render() {
     return html`
-      <div class="root" part="root">
+      <div class="root">
         <slot class="items-slot" @slotchange=${this.onSlotChange}></slot>
       </div>
     `;

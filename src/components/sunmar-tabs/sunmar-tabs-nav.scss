@@ -1,0 +1,26 @@
+:host {
+  --sunmar-tabs-nav-bg: var(--Base-color_Base_Light_Gray, #F5F5F8);
+  --sunmar-tabs-nav-border: none;
+  --sunmar-tabs-nav-gap: 8px;
+
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.root {
+  width: 100%;
+}
+
+.list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--sunmar-tabs-nav-gap);
+}
+
+@media (min-width: 1024px) {
+  .list {
+    flex-wrap: nowrap;
+  }
+}

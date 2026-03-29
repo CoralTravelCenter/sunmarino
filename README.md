@@ -238,21 +238,22 @@
 
 - `sunmar-accordion` attributes: `mode="single|multiple"` (по умолчанию `multiple`)
 - `sunmar-accordion` slots: `default` (ожидаются `sunmar-accordion-item`)
-- `sunmar-accordion` parts: `root`
+- `sunmar-accordion` parts: нет
 - внешний API у accordion минимальный: управляем только `mode`, без отдельного reactive value
 
 - `sunmar-accordion-item` attributes: `open`, `disabled`
 - `sunmar-accordion-item` slots: `header`, `default`
-- `sunmar-accordion-item` parts: `root`, `trigger`, `trigger-content`, `icon`, `panel`, `content`
+- `sunmar-accordion-item` parts: `trigger`, `icon`, `content`
+- `sunmar-accordion-item` внутри использует нативные `details/summary`, а контейнер сверху координирует group behavior для `mode="single"`
 - состояние `open` используется компонентом для логики и стилизации; в `mode="single"` контейнер сам закрывает остальные пункты
 
 ## Tabs API
 
 - `sunmar-tabs` attributes/properties: `value` (reactive текущее значение вкладки)
 - `sunmar-tabs` slots:
-  - `nav` (обычно `sunmar-tabs-nav`, но можно передать и `sunmar-tab-trigger` напрямую)
+  - `nav` (ожидается `sunmar-tabs-nav`)
   - `default` (ожидаются `sunmar-tab-panel`)
-- `sunmar-tabs` parts: `root`, `nav`, `panels`
+- `sunmar-tabs` parts: нет
 - `sunmar-tabs` dispatches `sunmar-tabs-change` только при пользовательском переключении:
   - `detail: { value, previousValue }`
 - это позволяет:
@@ -261,11 +262,11 @@
 
 - `sunmar-tabs-nav` attributes: нет
 - `sunmar-tabs-nav` slots: `default` (ожидаются `sunmar-tab-trigger`)
-- `sunmar-tabs-nav` parts: `root`, `list`
+- `sunmar-tabs-nav` parts: `list`
 
 - `sunmar-tab-trigger` attributes: `value`, `selected`, `disabled`
 - `sunmar-tab-trigger` slots: `default`
-- `sunmar-tab-trigger` parts: `root`, `control`, `content`, `label`
+- `sunmar-tab-trigger` parts: `control`
 - поддерживаются любые `data-*` атрибуты на хосте (например `data-personaj="Заяц"`) для внешней аналитики/метрик
 - `value` — стабильный технический идентификатор вкладки (не завязываемся на текст)
 - клавиатурная навигация: `ArrowLeft/ArrowRight`, `ArrowUp/ArrowDown`, `Home`, `End`
@@ -273,7 +274,7 @@
 
 - `sunmar-tab-panel` attributes: `value`, `active`
 - `sunmar-tab-panel` slots: `default`
-- `sunmar-tab-panel` parts: `root`, `panel`, `content`
+- `sunmar-tab-panel` parts: `content`
 
 Пример tabs с `data-*` на trigger:
 

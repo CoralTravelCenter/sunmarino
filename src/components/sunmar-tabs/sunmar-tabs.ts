@@ -38,14 +38,16 @@ export class SunmarTabs extends LitElement {
     ${unsafeCSS(styles)}
   `];
 
+  private instanceId = '';
+
   @property({ type: String, reflect: true })
   value = '';
 
   connectedCallback(): void {
     super.connectedCallback();
 
-    if (!this.id) {
-      this.id = `${SUNMAR_TABS_TAG_NAME}-${crypto.randomUUID()}`;
+    if (!this.instanceId) {
+      this.instanceId = `${SUNMAR_TABS_TAG_NAME}-${crypto.randomUUID()}`;
     }
 
     this.addEventListener(TAB_TRIGGER_ACTIVATE_EVENT, this.onTriggerActivate as EventListener);
@@ -70,11 +72,11 @@ export class SunmarTabs extends LitElement {
 
   protected render() {
     return html`
-      <div class="root" part="root">
-        <div class="nav" part="nav">
+      <div class="root">
+        <div class="nav">
           <slot name="nav" class="nav-slot" @slotchange=${this.onNavSlotChange}></slot>
         </div>
-        <div class="panels" part="panels">
+        <div class="panels">
           <slot class="panels-slot" @slotchange=${this.onPanelsSlotChange}></slot>
         </div>
       </div>
@@ -205,7 +207,6 @@ export class SunmarTabs extends LitElement {
     }
 
     this.value = nextValue;
-    this.syncTabsState();
 
     if (!emitChange) {
       return;
@@ -263,7 +264,7 @@ export class SunmarTabs extends LitElement {
       .replace(/^-+|-+$/g, '');
 
     const suffix = normalizedValue || crypto.randomUUID();
-    return `${this.id}-${type}-${suffix}`;
+    return `${this.instanceId}-${type}-${suffix}`;
   }
 
   private getTriggers(): TabTriggerLike[] {

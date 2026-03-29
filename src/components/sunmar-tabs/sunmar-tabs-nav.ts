@@ -11,7 +11,7 @@ export class SunmarTabsNav extends LitElement {
 
   protected render() {
     return html`
-      <div class="root" part="root">
+      <div class="root">
         <div class="list" part="list" role="tablist" aria-orientation="horizontal">
           <slot class="items-slot"></slot>
         </div>

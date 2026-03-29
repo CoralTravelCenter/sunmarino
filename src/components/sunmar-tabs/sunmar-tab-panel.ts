@@ -30,8 +30,8 @@ export class SunmarTabPanel extends LitElement {
 
   protected render() {
     return html`
-      <div class="root" part="root">
-        <div class="panel" part="panel">
+      <div class="root">
+        <div class="panel">
           <div class="content" part="content">
             <slot></slot>
           </div>

@@ -12,9 +12,12 @@
 .control {
   @include action-control.control;
   width: 100%;
+  font-size: 14px;
+  padding: 8px 15px;
   background-color: var(--sunmar-color-btn-bg-light-default);
   color: var(--sunmar-color-btn-text-dark);
   border-color: var(--sunmar-color-btn-stroke-light);
+  border-radius: 100px;
 }
 
 .content {
@@ -45,7 +48,7 @@
 
 @media (hover: hover) and (pointer: fine) {
   .control:hover {
-    background-color: var(--sunmar-color-btn-bg-light-hover);
+    background-color: var(--sunmar-color-btn-bg-light-default);
   }
 
   :host([selected]) .control:hover {
@@ -56,3 +59,15 @@
 
 @include action-control.disabled;
 @include action-control.focus;
+
+@media (min-width: 1024px) {
+  :host {
+    flex: 1;
+  }
+
+  .control {
+    border: none;
+    font-size: 16px;
+    padding: 16px 30px;
+  }
+}

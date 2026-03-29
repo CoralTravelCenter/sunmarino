@@ -31,7 +31,7 @@ export class SunmarAccordionItem extends LitElement {
     const panelId = `sunmar-accordion-panel-${this.itemUid}`;
 
     return html`
-      <div class="root" part="root">
+      <div class="root">
         <button
           id=${triggerId}
           class="trigger"
@@ -42,7 +42,7 @@ export class SunmarAccordionItem extends LitElement {
           ?disabled=${this.disabled}
           @click=${this.onTriggerClick}
         >
-          <span class="trigger-content" part="trigger-content">
+          <span class="trigger-content">
             <slot class="header-slot" name="header"></slot>
           </span>
           <span class="icon" part="icon" aria-hidden="true"></span>
@@ -51,13 +51,15 @@ export class SunmarAccordionItem extends LitElement {
         <div
           id=${panelId}
           class="panel"
-          part="panel"
           role="region"
           aria-labelledby=${triggerId}
-          ?hidden=${!this.open}
+          aria-hidden=${String(!this.open)}
+          ?inert=${!this.open}
         >
-          <div class="content" part="content">
-            <slot></slot>
+          <div class="panel-inner">
+            <div class="content" part="content">
+              <slot></slot>
+            </div>
           </div>
         </div>
       </div>
