@@ -101,7 +101,6 @@
 - `sunmar-accordion`
 - `sunmar-accordion-item`
 - `sunmar-image`
-- `sunmar-lid`
 - `sunmar-kv`
 - `sunmar-link`
 - `sunmar-modal`
@@ -142,25 +141,6 @@
 - CSS custom properties:
   - `--sunmar-image-object-fit` (default `cover`)
   - `--sunmar-image-object-position` (default `center center`)
-
-## Lid API
-
-- `sunmar-lid` attributes: нет
-- `sunmar-lid` slots: `title`, `text`, `default`
-- `sunmar-lid` ожидает семантический контент в light DOM:
-  - `title` — обычно `h2`
-  - `text` — обычно `p`
-  - `default` — CTA или дополнительный контент
-- `sunmar-lid` parts: `root`, `title`, `text`, `actions`
-
-Пример:
-
-```html
-<sunmar-lid>
-  <h2 slot="title">Заголовок блока</h2>
-  <p slot="text">Описание блока с обычным текстом.</p>
-</sunmar-lid>
-```
 
 ## Sticky Nav API
 

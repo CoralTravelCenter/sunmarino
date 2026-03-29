@@ -15,10 +15,6 @@ import {
   SunmarLink
 } from '../components/sunmar-link/sunmar-link';
 import {
-  SUNMAR_LID_TAG_NAME,
-  SunmarLid
-} from '../components/sunmar-lid/sunmar-lid';
-import {
   SUNMAR_IMAGE_TAG_NAME,
   SunmarImage
 } from '../components/sunmar-image/sunmar-image';
@@ -60,7 +56,6 @@ const sunmarComponentRegistryEntries = [
   [SUNMAR_BUTTON_TAG_NAME, SunmarButton],
   [SUNMAR_BUTTON_GROUP_TAG_NAME, SunmarButtonGroup],
   [SUNMAR_LINK_TAG_NAME, SunmarLink],
-  [SUNMAR_LID_TAG_NAME, SunmarLid],
   [SUNMAR_IMAGE_TAG_NAME, SunmarImage],
   [SUNMAR_KV_TAG_NAME, SunmarKv],
   [SUNMAR_ACCORDION_TAG_NAME, SunmarAccordion],

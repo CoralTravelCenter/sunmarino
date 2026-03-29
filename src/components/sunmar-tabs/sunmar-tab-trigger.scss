@@ -28,10 +28,6 @@
   text-align: center;
 }
 
-.control:hover {
-  background-color: var(--sunmar-color-btn-bg-light-hover);
-}
-
 .control:active {
   background-color: var(--sunmar-color-btn-bg-light-pressed);
 }
@@ -42,14 +38,20 @@
   color: var(--sunmar-color-btn-text-light);
 }
 
-:host([selected]) .control:hover {
-  background-color: var(--sunmar-color-btn-bg-secondary-hover);
-  border-color: var(--sunmar-color-btn-bg-secondary-hover);
-}
-
 :host([selected]) .control:active {
   background-color: var(--sunmar-color-btn-bg-secondary-pressed);
   border-color: var(--sunmar-color-btn-bg-secondary-pressed);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .control:hover {
+    background-color: var(--sunmar-color-btn-bg-light-hover);
+  }
+
+  :host([selected]) .control:hover {
+    background-color: var(--sunmar-color-btn-bg-secondary-hover);
+    border-color: var(--sunmar-color-btn-bg-secondary-hover);
+  }
 }
 
 @include action-control.disabled;

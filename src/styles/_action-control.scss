@@ -86,36 +86,38 @@
     border-color: var(--sunmar-color-btn-stroke-light);
   }
 
-  :host(:not([disabled])[type='primary']) .control:hover {
-    background-image: var(
-      --gradient_Primary_Hover,
-      linear-gradient(
-        245deg,
-        var(--Gradient-color_Gradient_Primary_First, var(--sunmar-color-gradient-primary-first)) 15.84%,
-        var(--Gradient-color_Gradinet_Primary_Second, var(--sunmar-color-gradient-primary-second)) 84.16%
-      )
-    );
-  }
-
   :host(:not([disabled])[type='primary']) .control:active {
     background-color: var(--sunmar-color-btn-bg-primary-pressed);
     background-image: none;
-  }
-
-  :host(:not([disabled])[type='secondary']) .control:hover {
-    background-color: var(--sunmar-color-btn-bg-secondary-hover);
   }
 
   :host(:not([disabled])[type='secondary']) .control:active {
     background-color: var(--sunmar-color-btn-bg-secondary-pressed);
   }
 
-  :host(:not([disabled])[type='neutral']) .control:hover {
-    background-color: var(--sunmar-color-btn-bg-light-hover);
-  }
-
   :host(:not([disabled])[type='neutral']) .control:active {
     background-color: var(--sunmar-color-btn-bg-light-pressed);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    :host(:not([disabled])[type='primary']) .control:hover {
+      background-image: var(
+        --gradient_Primary_Hover,
+        linear-gradient(
+          245deg,
+          var(--Gradient-color_Gradient_Primary_First, var(--sunmar-color-gradient-primary-first)) 15.84%,
+          var(--Gradient-color_Gradinet_Primary_Second, var(--sunmar-color-gradient-primary-second)) 84.16%
+        )
+      );
+    }
+
+    :host(:not([disabled])[type='secondary']) .control:hover {
+      background-color: var(--sunmar-color-btn-bg-secondary-hover);
+    }
+
+    :host(:not([disabled])[type='neutral']) .control:hover {
+      background-color: var(--sunmar-color-btn-bg-light-hover);
+    }
   }
 }
 
