@@ -25,20 +25,14 @@ export class SunmarButton extends LitElement {
   protected render() {
     return html`
       <button class="control" part="control" type=${this.nativeType} ?disabled=${this.disabled}>
-        ${this.renderInnerContent()}
-      </button>
-    `;
-  }
-
-  private renderInnerContent() {
-    return html`
-      <span class="content" part="content">
-        <slot class="prefix-slot" name="prefix" part="prefix"></slot>
-        <span class="label" part="label">
-          <slot>Узнать больше</slot>
+        <span class="content" part="content">
+          <slot class="prefix-slot" name="prefix" part="prefix"></slot>
+          <span class="label" part="label">
+            <slot>Узнать больше</slot>
+          </span>
+          <slot class="suffix-slot" name="suffix" part="suffix"></slot>
         </span>
-        <slot class="suffix-slot" name="suffix" part="suffix"></slot>
-      </span>
+      </button>
     `;
   }
 }

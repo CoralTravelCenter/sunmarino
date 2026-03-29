@@ -9,12 +9,6 @@ export const SUNMAR_KV_TAG_NAME = 'sunmar-kv';
 
 const DESKTOP_VIDEO_MIN_WIDTH = 768;
 
-type KvVideoConfigElement = HTMLElement & {
-  dataset: DOMStringMap & {
-    vimeoId?: string;
-  };
-};
-
 export class SunmarKv extends LitElement {
   static styles = [componentBaseStyles, css`
     ${unsafeCSS(styles)}
@@ -43,22 +37,18 @@ export class SunmarKv extends LitElement {
     return mobileId || desktopId;
   }
 
-  private getAssignedVideoElement(slotName: 'video-desktop' | 'video-mobile'): KvVideoConfigElement | null {
+  private getVideoIdFromSlot(slotName: 'video-desktop' | 'video-mobile'): string {
     const slot = this.renderRoot.querySelector<HTMLSlotElement>(`slot[name="${slotName}"]`);
     if (!slot) {
-      return null;
+      return '';
     }
 
     const [element] = slot.assignedElements({ flatten: true });
     if (!(element instanceof HTMLElement)) {
-      return null;
+      return '';
     }
 
-    return element as KvVideoConfigElement;
-  }
-
-  private getVideoIdFromSlot(slotName: 'video-desktop' | 'video-mobile'): string {
-    return this.getAssignedVideoElement(slotName)?.dataset.vimeoId?.trim() ?? '';
+    return element.dataset.vimeoId?.trim() ?? '';
   }
 
   private startViewportObserver(): void {
