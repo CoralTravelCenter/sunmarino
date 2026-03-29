@@ -104,7 +104,6 @@
 - `sunmar-kv`
 - `sunmar-link`
 - `sunmar-modal`
-- `sunmar-shell`
 - `sunmar-sticky-nav`
 - `sunmar-tabs`
 - `sunmar-tabs-nav`
