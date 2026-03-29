@@ -4,10 +4,15 @@
   --sunmar-sticky-nav-border: none;
   --sunmar-sticky-nav-gap: 8px;
   --sunmar-sticky-nav-top-offset: 0px;
+  --sunmar-sticky-nav-reserved-height: 0px;
 
   display: block;
   width: 100%;
   box-sizing: border-box;
+}
+
+:host(.sunmar-sticky-nav--stuck) {
+  min-height: var(--sunmar-sticky-nav-reserved-height);
 }
 
 .sentinel {
@@ -48,7 +53,8 @@
 
 ::slotted([slot="nav-link"]) {
   flex: 1 1 auto;
-  padding: 16px 30px;
+  font-size: 14px;
+  padding: 8px 15px;
   border: 1px solid var(--sunmar-color-btn-stroke-light);
   border-radius: 100px;
   background: transparent;
@@ -60,10 +66,6 @@
     background-color 160ms ease,
     color 160ms ease,
     border-color 160ms ease;
-}
-
-::slotted([slot="nav-link"]:not(.active):hover) {
-  background-color: var(--sunmar-color-btn-bg-light-default);
 }
 
 ::slotted([slot="nav-link"]:not(.active):active) {
@@ -81,14 +83,20 @@
   color: var(--sunmar-color-btn-text-light);
 }
 
-::slotted([slot="nav-link"].active:hover) {
-  background-color: var(--sunmar-color-btn-bg-secondary-hover);
-  border-color: var(--sunmar-color-btn-bg-secondary-hover);
-}
-
 ::slotted([slot="nav-link"].active:active) {
   background-color: var(--sunmar-color-btn-bg-secondary-pressed);
   border-color: var(--sunmar-color-btn-bg-secondary-pressed);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  ::slotted([slot="nav-link"]:not(.active):hover) {
+    background-color: var(--sunmar-color-btn-bg-light-default);
+  }
+
+  ::slotted([slot="nav-link"].active:hover) {
+    background-color: var(--sunmar-color-btn-bg-secondary-hover);
+    border-color: var(--sunmar-color-btn-bg-secondary-hover);
+  }
 }
 
 
@@ -99,5 +107,8 @@
 
   ::slotted([slot="nav-link"]) {
     flex: 1;
+    border: none;
+    font-size: 16px;
+    padding: 16px 30px;
   }
 }
