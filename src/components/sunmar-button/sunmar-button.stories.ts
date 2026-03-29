@@ -11,13 +11,13 @@ const meta: Meta = {
         component: `
 Базовый action-компонент на нативном \`button\`.
 
-**Semantic contract**
+**Семантический контракт**
 - внутри всегда рендерится нативный \`<button>\`
-- компонент отвечает за visual contract и slot layout, а не за внешний layout страницы
+- компонент отвечает за визуальный контракт и раскладку слотов, а не за внешний layout страницы
 
 **Attributes**
-- \`type\` — visual variant: \`primary\`, \`secondary\`, \`neutral\`
-- \`disabled\` — переводит control в disabled-состояние
+- \`type\` — визуальный вариант: \`primary\`, \`secondary\`, \`neutral\`
+- \`disabled\` — переводит компонент в disabled-состояние
 - \`native-type\` — нативный \`button\` type: \`button\`, \`submit\`, \`reset\`
 
 **Slots**
@@ -31,12 +31,12 @@ const meta: Meta = {
 - \`label\` — зона текстовой подписи
 - \`prefix\`, \`suffix\` — слоты для иконок и вспомогательного inline-контента
 
-**Behavior**
+**Поведение**
 - disabled-состояние прокидывается на нативный \`button\`
 - компонент не управляет шириной, позиционированием и внешними отступами
 - для layout нескольких action-элементов рекомендуется \`sunmar-button-group\`
 
-**Constraints**
+**Ограничения**
 - prefix/suffix рассчитаны на короткий inline-контент
 - если нужен переход по ссылке, используйте \`sunmar-link\`, а не \`sunmar-button\`
 `

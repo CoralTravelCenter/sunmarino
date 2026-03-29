@@ -14,20 +14,20 @@ const meta: Meta = {
         component: `
 Hero/KV-компонент с SEO-friendly light DOM контентом.
 
-**Semantic contract**
+**Семантический контракт**
 - \`slot="title"\` — ожидается семантический заголовок \`h1|h2|h3\`
 - \`slot="text"\` — ожидается \`p\`
 - \`slot="actions"\` — CTA-контент
 
-**Media contract**
+**Медиаконтракт**
 - \`slot="image"\` — baseline media, остается главным fallback
 - \`slot="video-desktop"\` и \`slot="video-mobile"\` — опциональные config-узлы с \`data-vimeo-id\`
 - видео проявляется только после успешного playback и не заменяет fallback-картинку до загрузки
 
-**Styling API**
+**API стилизации**
 - CSS variables: \`--sunmar-kv-video-width\`, \`--sunmar-kv-video-height\`
 - image positioning: \`--sunmar-image-object-position\`
-- доступны \`::part(root|media|picture|video|video-frame|content|content-inner|eyebrow|title|text|actions)\`
+- доступны \`Parts\`: \`root\`, \`media\`, \`picture\`, \`video\`, \`video-frame\`, \`content\`, \`content-inner\`, \`eyebrow\`, \`title\`, \`text\`, \`actions\`
 `
       }
     }

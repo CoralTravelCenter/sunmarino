@@ -1,0 +1,61 @@
+import { Meta, Canvas, Story, Source } from '@storybook/addon-docs/blocks';
+import * as ButtonGroupStories from './sunmar-button-group.stories';
+
+<Meta of={ButtonGroupStories} title="Components/Button Group/Docs" />
+
+# Группа кнопок
+
+Layout-компонент для action-layer.
+
+## Назначение
+
+- группирует несколько action-элементов в один визуальный блок
+- держит единый `gap` и `wrap` на уровне visual contract
+
+## Семантический контракт
+
+- рендерит внутренний контейнер с `role="group"`
+- сам не добавляет интерактивности и не меняет поведение дочерних action-элементов
+
+## Slots
+
+- только default slot
+- внутрь рекомендуется передавать `sunmar-button` и `sunmar-link`
+
+## Parts
+
+- `group` — внутренний layout-контейнер
+
+## Поведение
+
+- элементы располагаются через `inline-flex`
+- при нехватке места переносятся на новую строку
+- spacing между элементами централизован и не зависит от самих кнопок
+
+## Что компонент не делает
+
+- не управляет активным состоянием
+- не является переключаемой группой
+- не синхронизирует `selected` / `pressed` состояние детей
+- не задает внешнюю ширину родительского контейнера
+
+## Как использовать?
+
+- используйте компонент там, где нужен единый блок CTA, например внутри `slot="actions"` у `sunmar-kv`
+
+## Пример
+
+<Canvas>
+  <Story of={ButtonGroupStories.Preview} />
+</Canvas>
+
+## Разметка
+
+<Source
+  language="html"
+  code={`<sunmar-button-group>
+  <sunmar-button type="primary">Подобрать тур</sunmar-button>
+  <sunmar-button type="neutral">В избранное</sunmar-button>
+  <sunmar-button type="secondary">Подробнее</sunmar-button>
+</sunmar-button-group>`}
+/>
