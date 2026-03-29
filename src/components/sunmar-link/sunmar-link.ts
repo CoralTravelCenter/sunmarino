@@ -42,7 +42,7 @@ export class SunmarLink extends LitElement {
         class="control"
         part="control"
         href=${ifDefined(href)}
-        target=${ifDefined(target || undefined)}
+        target=${ifDefined(target)}
         rel=${ifDefined(rel)}
         download=${ifDefined(download)}
         aria-disabled=${ifDefined(this.disabled ? 'true' : undefined)}
