@@ -1,3 +1,4 @@
+import './suppress-lit-dev-warnings';
 import '../index';
 import { hostReactAppReady } from '../utils/dom/host-react-app-ready';
 import PREVIEW_HTML from './markup.html?raw'

@@ -1,3 +1,4 @@
+import '../src/dev/suppress-lit-dev-warnings';
 import type { Preview } from '@storybook/web-components-vite';
 import '../src/styles/sunmar-tokens-runtime.scss';
 import { registerSunmarComponents } from '../src/registry/register-components';

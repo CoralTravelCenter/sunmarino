@@ -4,7 +4,7 @@ import { defineConfig } from 'vite';
 import monkey from 'vite-plugin-monkey';
 
 export default defineConfig(({ command }) => {
-  const isDev = command === 'serve';
+  const isMonkeyDev = command === 'serve' && process.env.SUNMAR_ENABLE_MONKEY === 'true';
   const packageJson = JSON.parse(
     readFileSync(new URL('./package.json', import.meta.url), 'utf-8')
   ) as { version: string };
@@ -25,20 +25,17 @@ export default defineConfig(({ command }) => {
     server: {
       host: '127.0.0.1',
       port: 5173,
-      strictPort: true
+      strictPort: true,
+      open: isMonkeyDev ? '/__vite-plugin-monkey.install.user.js' : false
     },
     css: {
       preprocessorOptions: {
-        scss: {
-          api: 'modern-compiler'
-        },
-        sass: {
-          api: 'modern-compiler'
-        }
+        scss: {},
+        sass: {}
       }
     },
     plugins: [
-      ...(isDev
+      ...(isMonkeyDev
         ? [
             monkey({
               entry: 'src/dev/playground.ts',
@@ -57,7 +54,7 @@ export default defineConfig(({ command }) => {
       emptyOutDir: true,
       sourcemap: false,
       target: 'es2018',
-      minify: 'esbuild',
+      minify: 'oxc',
       cssCodeSplit: true,
       lib: {
         entry: libraryEntry,
@@ -65,14 +62,12 @@ export default defineConfig(({ command }) => {
         formats: ['iife'],
         fileName: () => bundleFileName
       },
-      rollupOptions: {
+      rolldownOptions: {
         external: externalVendorDeps,
         output: {
           globals: {
             '@fluejs/noscroll': 'NoScroll'
-          },
-          compact: true,
-          inlineDynamicImports: true
+          }
         }
       }
     }
