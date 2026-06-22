@@ -4,7 +4,7 @@
 
 - `Lit + TypeScript`
 - `SCSS` стили импортируются в компоненты (`*.scss?inline`)
-- `vite-plugin-monkey` используется только в `dev`
+- `vite-plugin-monkey` используется только в `dev:monkey`
 - production build собирается как библиотека в формате `iife` для подключения через `<script src="...">`
 - единый префикс для компонентов: `sunmar-*`
 - модалка `sunmar-modal` блокирует скролл через `@fluejs/noscroll`
@@ -12,6 +12,7 @@
 ## Скрипты
 
 - `npm run dev` - локальный dev сервер
+- `npm run dev:monkey` - локальный dev сервер (с tampermonkey)
 - `npm run build` - production build JS (`sunmarino.iife.js`) и `.d.ts` в `dist/`
 - `npm run build:js` - только JS-бандл `sunmarino.iife.js`
 - `npm run build:types` - только TypeScript declaration files в `dist/types/`
