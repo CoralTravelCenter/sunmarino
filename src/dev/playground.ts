@@ -1,10 +1,25 @@
 import './suppress-lit-dev-warnings';
 import '../index';
 import { hostReactAppReady } from '../utils/dom/host-react-app-ready';
+
 import PREVIEW_HTML from './markup.html?raw'
 
+const htmlModules = import.meta.glob('./components-envs/*.html', {
+  query: '?raw', 
+  import: 'default',
+  eager: true,
+});
+
+const USE_COMPONENTS_ENVS = false; 
+// если true - использует markup из соответствующего файла
+// если false - берет markup из папки components-envs
+
 function renderPreview(target: HTMLElement): void {
-  target.innerHTML = PREVIEW_HTML;
+  if (USE_COMPONENTS_ENVS) {
+    const combinedHTML = Object.values(htmlModules).join('\n');
+    target.innerHTML = combinedHTML;
+  } else 
+    target.innerHTML = PREVIEW_HTML;
   setupTabsSync(target);
 }
 

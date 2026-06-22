@@ -28,7 +28,16 @@
     max-width: 720px;
   }
 </style>
-
+<sunmar-modal id="test-modal">
+  <p slot="title">Модалочка</p>
+  <div>
+    Lorem ipsum dolor sit amet consectetur adipisicing elit. Magnam voluptas soluta non laudantium iste harum similique ex hic at, natus placeat sapiente error corporis alias molestias dolorum nisi quas! Quo, cupiditate nihil! Enim rem perferendis saepe alias quia, unde voluptatibus!
+  </div>
+  <sunmar-button-group slot="actions">
+    <sunmar-button type="primary" onclick="document.querySelector('#test-modal').hide()">Убрать модалку</sunmar-button>
+    <sunmar-link type="secondary" href="https://www.sunmar.ru/">Еще ссылка</sunmar-link>
+  </sunmar-button-group>
+</sunmar-modal>
 <section class="sunmarino kv">
   <sunmar-kv
   >
@@ -41,13 +50,14 @@
     ></sunmar-image>
 <!--    <div slot="video-desktop" data-vimeo-id="1162544497"></div>-->
 <!--    <div slot="video-mobile" data-vimeo-id="1162544372"></div>-->
-    <h1 slot="title">ОчеВИДНАЯ выгода Раннего бронирования</h1>
+    <h1 slot="title">ОчеВИДНАЯ выгода<br>Раннего бронирования</h1>
     <p slot="text">
        Скидки до 50% скидки и предоплата 20% от стоимости
       </p>
     <div slot="actions">
       <sunmar-button-group>
-        <sunmar-button type="primary">Подобрать тур</sunmar-button>
+        <sunmar-button type="primary" onclick="document.querySelector('#test-modal').show()">Показать модалку</sunmar-button>
+        <sunmar-link type="secondary" href="https://www.sunmar.ru/idei-otdykha/gostevye-doma/">Пример компонента</sunmar-link>
       </sunmar-button-group>
     </div>
   </sunmar-kv>
@@ -97,6 +107,7 @@
     Последняя тестовая секция. По ней удобно проверить финальное active-состояние ближе к нижней части страницы.
   </p>
 </section>
+
 <section class="sunmarino">
   <div class="sunmarino-container">
     <sunmar-tabs value="turkey">
@@ -109,7 +120,7 @@
       <sunmar-tab-panel value="april">
         <h2 class="sunmar-h2">Почему апрель?</h2>
         <p class="sunmar-text">
-          Тестовый контент панели для проверки базовой логики tabs в playground.
+          Тестовый контент панели для проверки базовой логики tabs в playground. Табы можно найти здесь https://www.sunmar.ru/familyholiday/
         </p>
       </sunmar-tab-panel>
 

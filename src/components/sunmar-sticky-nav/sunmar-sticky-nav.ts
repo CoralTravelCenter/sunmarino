@@ -188,7 +188,7 @@ export class SunmarStickyNav extends LitElement {
 
     defaultView.scrollTo({
       top: nextTop,
-      behavior: 'smooth',
+      behavior: "smooth",
     });
 
     defaultView.history.pushState(null, '', hash);

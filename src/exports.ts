@@ -10,7 +10,7 @@ export { SunmarTabs } from './components/sunmar-tabs/sunmar-tabs';
 export { SunmarTabsNav } from './components/sunmar-tabs/sunmar-tabs-nav';
 export { SunmarTabTrigger } from './components/sunmar-tabs/sunmar-tab-trigger';
 export { SunmarTabPanel } from './components/sunmar-tabs/sunmar-tab-panel';
-export { SunmarStickyNav } from './components/sunmar-sticky-nav/sunmar-sticky-nav';
+// export { SunmarStickyNav } from './components/sunmar-sticky-nav/sunmar-sticky-nav';
 export { hostReactAppReady } from './utils/dom/host-react-app-ready';
 export { preloadScript } from './utils/dom/preload-script';
 export { vimeoAutoPlay } from './utils/video/vimeo-auto-play';

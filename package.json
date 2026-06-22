@@ -22,12 +22,12 @@
     "./dist/index.css"
   ],
   "scripts": {
-    "dev": "SUNMAR_ENABLE_MONKEY=true vite",
+    "dev": "cross-env SUNMAR_ENABLE_MONKEY=true vite",
     "prebuild": "node ./scripts/sync-package-versioned-entry.mjs",
     "build": "npm run build:js && npm run build:types",
     "build:js": "vite build",
     "build:types": "tsc -p tsconfig.build.json",
-    "build:external": "SUNMAR_EXTERNAL_VENDOR_DEPS=@fluejs/noscroll npm run build",
+    "build:external": "cross-env SUNMAR_EXTERNAL_VENDOR_DEPS=@fluejs/noscroll npm run build",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
     "storybook": "storybook dev -p 6006",
@@ -50,6 +50,7 @@
     "@storybook/addon-docs": "^10.4.4",
     "@storybook/web-components-vite": "^10.4.4",
     "@types/node": "^25.9.3",
+    "cross-env": "^10.1.0",
     "sass": "^1.101.0",
     "storybook": "^10.4.4",
     "typescript": "^6.0.3",
