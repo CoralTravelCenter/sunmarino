@@ -24,7 +24,6 @@
   "scripts": {
     "dev:monkey": "cross-env SUNMAR_ENABLE_MONKEY=true vite",
     "dev": "cross-env SUNMAR_ENABLE_MONKEY=false vite",
-    "dev:ngrok": "concurrently \"cross-env SUNMAR_ENABLE_MONKEY=false vite --host 0.0.0.0\" \"ngrok http 5173\"",
     "prebuild": "node ./scripts/sync-package-versioned-entry.mjs",
     "build": "npm run build:js && npm run build:types",
     "build:js": "vite build",
@@ -54,7 +53,6 @@
     "@types/node": "^25.9.3",
     "concurrently": "^10.0.3",
     "cross-env": "^10.1.0",
-    "ngrok": "^5.0.0-beta.2",
     "sass": "^1.101.0",
     "storybook": "^10.4.4",
     "typescript": "^6.0.3",
