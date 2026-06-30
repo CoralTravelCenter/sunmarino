@@ -10,9 +10,9 @@ const htmlModules = import.meta.glob('./components-envs/*.html', {
   eager: true,
 });
 
-const USE_COMPONENTS_ENVS = false; 
-// если true - использует markup из соответствующего файла
-// если false - берет markup из папки components-envs
+const USE_COMPONENTS_ENVS = true; 
+// если true - использует все html-файлы из папки components-envs
+// если false - берет markup из папки dev
 
 function renderPreview(target: HTMLElement): void {
   if (USE_COMPONENTS_ENVS) {

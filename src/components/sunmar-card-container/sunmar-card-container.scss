@@ -1,0 +1,55 @@
+@use '../../styles/mixins' as mixins;
+
+:host {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  color: var(--sunmar-color-text-dark);
+}
+
+.root {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+}
+
+.cards {
+  display: grid;
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+  gap: var(--sunmar-space-n);
+}
+
+::slotted(*) {
+  min-width: 0;
+}
+
+@include mixins.media-min(bp-768) {
+  .cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  ::slotted(:last-child) {
+    grid-column: 1 / -1;
+    width: min(100%, 296px);
+    justify-self: center;
+  }
+}
+
+@include mixins.media-min(bp-1280) {
+  .cards {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--sunmar-space-xl);
+  }
+
+  ::slotted(*) {
+    --sunmar-card-body-min-height: 188px;
+  }
+
+  ::slotted(:last-child) {
+    grid-column: auto;
+    width: auto;
+    justify-self: auto;
+  }
+}

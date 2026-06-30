@@ -1,0 +1,70 @@
+:host {
+  display: block;
+  color: var(--sunmar-color-text-dark);
+}
+
+.card {
+  display: flex;
+  overflow: hidden;
+  height: 100%;
+  flex-direction: column;
+  border-radius: var(--sunmar-card-radius, var(--sunmar-radius-base));
+  background: var(--sunmar-card-background, #f5f5f8);
+}
+
+.media {
+  height: var(--sunmar-card-media-height, 200px);
+  overflow: hidden;
+  flex: 0 0 auto;
+}
+
+.media ::slotted(*) {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: var(--sunmar-card-image-fit, cover);
+  object-position: var(--sunmar-card-image-position, center center);
+}
+
+.body {
+  display: flex;
+  min-height: var(--sunmar-card-body-min-height, 188px);
+  flex: 1 1 auto;
+  flex-direction: column;
+  align-items: var(--sunmar-card-body-align, center);
+  justify-content: var(--sunmar-card-body-justify, center);
+  gap: var(--sunmar-card-body-gap, var(--sunmar-space-n));
+  padding: var(--sunmar-card-body-padding, var(--sunmar-padding-l));
+  text-align: var(--sunmar-card-text-align, center);
+}
+
+.header,
+.content,
+.footer {
+  width: 100%;
+}
+
+.header ::slotted(*) {
+  margin: 0;
+  font-family: var(--sunmar-font-family);
+  font-size: var(--sunmar-card-header-font-size, var(--sunmar-heading-h5-font-size));
+  font-weight: var(--sunmar-card-header-font-weight, var(--sunmar-heading-h5-font-weight));
+  line-height: var(--sunmar-card-header-line-height, var(--sunmar-heading-h5-line-height));
+}
+
+.content ::slotted(*) {
+  margin: 0;
+  font-family: var(--sunmar-font-family);
+  font-size: var(--sunmar-card-content-font-size, var(--sunmar-type-n-font-size));
+  font-weight: var(--sunmar-card-content-font-weight, 400);
+  line-height: var(--sunmar-card-content-line-height, var(--sunmar-type-n-line-height));
+}
+
+.footer {
+  display: flex;
+  justify-content: var(--sunmar-card-footer-justify, center);
+}
+
+.footer.empty {
+  display: none;
+}

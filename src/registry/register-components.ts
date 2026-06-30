@@ -19,6 +19,14 @@ import {
   SunmarImage
 } from '../components/sunmar-image/sunmar-image';
 import {
+  SUNMAR_CARD_TAG_NAME,
+  SunmarCard
+} from '../components/sunmar-card/sunmar-card';
+import {
+  SUNMAR_LONG_CARD_TAG_NAME,
+  SunmarLongCard
+} from '../components/sunmar-long-card/sunmar-long-card';
+import {
   SUNMAR_KV_TAG_NAME,
   SunmarKv
 } from '../components/sunmar-kv/sunmar-kv';
@@ -50,6 +58,18 @@ import {
   SUNMAR_STICKY_NAV_TAG_NAME,
   SunmarStickyNav
 } from '../components/sunmar-sticky-nav/sunmar-sticky-nav';
+import {
+  SUNMAR_SLIDER_TAG_NAME,
+  SunmarSlider
+} from '../components/sunmar-slider/sunmar-slider';
+import {
+  SUNMAR_TOPICS_TAG_NAME,
+  SunmarTopics
+} from '../components/sunmar-topics/sunmar-topics';
+import {
+  SUNMAR_CARD_CONTAINER_TAG_NAME,
+  SunmarCardContainer
+} from '../components/sunmar-card-container/sunmar-card-container';
 
 const sunmarComponentRegistryEntries = [
   [SUNMAR_MODAL_TAG_NAME, SunmarModal],
@@ -57,6 +77,8 @@ const sunmarComponentRegistryEntries = [
   [SUNMAR_BUTTON_GROUP_TAG_NAME, SunmarButtonGroup],
   [SUNMAR_LINK_TAG_NAME, SunmarLink],
   [SUNMAR_IMAGE_TAG_NAME, SunmarImage],
+  [SUNMAR_CARD_TAG_NAME, SunmarCard],
+  [SUNMAR_LONG_CARD_TAG_NAME, SunmarLongCard],
   [SUNMAR_KV_TAG_NAME, SunmarKv],
   [SUNMAR_ACCORDION_TAG_NAME, SunmarAccordion],
   [SUNMAR_ACCORDION_ITEM_TAG_NAME, SunmarAccordionItem],
@@ -64,7 +86,10 @@ const sunmarComponentRegistryEntries = [
   [SUNMAR_TABS_NAV_TAG_NAME, SunmarTabsNav],
   [SUNMAR_TAB_TRIGGER_TAG_NAME, SunmarTabTrigger],
   [SUNMAR_TAB_PANEL_TAG_NAME, SunmarTabPanel],
-  [SUNMAR_STICKY_NAV_TAG_NAME, SunmarStickyNav]
+  [SUNMAR_STICKY_NAV_TAG_NAME, SunmarStickyNav],
+  [SUNMAR_SLIDER_TAG_NAME, SunmarSlider],
+  [SUNMAR_TOPICS_TAG_NAME, SunmarTopics],
+  [SUNMAR_CARD_CONTAINER_TAG_NAME, SunmarCardContainer]
 ] as const;
 
 export function registerSunmarComponents(registry?: CustomElementRegistry): void {

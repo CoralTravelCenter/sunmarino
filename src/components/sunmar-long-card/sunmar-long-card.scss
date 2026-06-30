@@ -1,0 +1,100 @@
+@use '../../styles/mixins' as mixins;
+
+:host {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  color: var(--sunmar-color-text-dark);
+}
+
+.root {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+}
+
+.card {
+  display: grid;
+  overflow: hidden;
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+  border-radius: var(--sunmar-long-card-radius, var(--sunmar-radius-base));
+  background: var(--sunmar-long-card-background, var(--sunmar-color-base-light-gray));
+}
+
+.media {
+  height: var(--sunmar-long-card-media-height, 250px);
+  overflow: hidden;
+}
+
+.media ::slotted(*) {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: var(--sunmar-long-card-image-fit, cover);
+  object-position: var(--sunmar-long-card-image-position, center center);
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sunmar-long-card-body-gap, var(--sunmar-space-l));
+  padding: var(--sunmar-long-card-body-padding, var(--sunmar-padding-l));
+}
+
+.header,
+.content,
+.footer {
+  width: 100%;
+}
+
+.header ::slotted(*) {
+  margin: 0;
+  font-family: var(--sunmar-font-family);
+  font-size: var(--sunmar-long-card-header-font-size, var(--sunmar-heading-h4-font-size));
+  font-weight: var(--sunmar-long-card-header-font-weight, var(--sunmar-heading-h4-font-weight));
+  line-height: var(--sunmar-long-card-header-line-height, var(--sunmar-heading-h4-line-height));
+}
+
+.content ::slotted(*) {
+  margin: 0;
+  font-family: var(--sunmar-font-family);
+  font-size: var(--sunmar-long-card-content-font-size, var(--sunmar-type-n-font-size));
+  font-weight: var(--sunmar-long-card-content-font-weight, 400);
+  line-height: var(--sunmar-long-card-content-line-height, var(--sunmar-type-n-line-height));
+}
+
+.footer {
+  display: flex;
+}
+
+.footer.empty {
+  display: none;
+}
+
+@include mixins.media-min(bp-1024) {
+  .body {
+    padding: var(--sunmar-long-card-body-padding-desktop, var(--sunmar-padding-xl));
+  }
+}
+
+@include mixins.media-min(bp-1280) {
+  .card {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .media {
+    height: auto;
+    min-height: 100%;
+  }
+
+  :host([order='reverse']) .media {
+    order: 2;
+  }
+
+  .body {
+    justify-content: center;
+    gap: var(--sunmar-long-card-body-gap-desktop, var(--sunmar-space-xl));
+  }
+}
