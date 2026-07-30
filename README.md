@@ -251,7 +251,7 @@
 
 - `sunmar-accordion-item` attributes: `open`, `disabled`
 - `sunmar-accordion-item` slots: `header`, `default`
-- `sunmar-accordion-item` parts: `trigger`, `icon`, `content`
+- `sunmar-accordion-item` parts: `root`, `trigger`, `icon`, `panel`, `content`
 - `sunmar-accordion-item` внутри использует нативные `details/summary`, а контейнер сверху координирует group behavior для `mode="single"`
 - состояние `open` используется компонентом для логики и стилизации; в `mode="single"` контейнер сам закрывает остальные пункты
 

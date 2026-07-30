@@ -86,6 +86,8 @@ export class SunmarAccordion extends LitElement {
       return;
     }
 
+    event.stopPropagation();
+
     if (this.mode !== 'single' || !item.open) {
       return;
     }
