@@ -13,10 +13,18 @@ type AccordionItemToggleRequestEvent = CustomEvent<{
 }>;
 
 const normalizeText = (value: string): string => value.replace(/\s+/g, ' ').trim();
+const normalizeMode = (value: unknown): SunmarAccordionMode =>
+  value === 'single' ? 'single' : 'multiple';
 
 export class SunmarAccordion extends LitElement {
   static properties = {
-    mode: { type: String },
+    mode: {
+      reflect: true,
+      converter: {
+        fromAttribute: normalizeMode,
+        toAttribute: normalizeMode
+      }
+    },
     faq: { type: Boolean }
   };
 
@@ -44,6 +52,11 @@ export class SunmarAccordion extends LitElement {
 
   updated(changedProperties: Map<string, unknown>): void {
     if (changedProperties.has('mode')) {
+      const normalizedMode = normalizeMode(this.mode);
+      if (this.mode !== normalizedMode) {
+        this.mode = normalizedMode;
+      }
+
       this.normalizeItems();
     }
 

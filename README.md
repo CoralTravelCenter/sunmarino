@@ -241,10 +241,13 @@
 
 ## Accordion API
 
-- `sunmar-accordion` attributes: `mode="single|multiple"` (по умолчанию `multiple`)
+- `sunmar-accordion` attributes:
+  - `mode="single|multiple"` (по умолчанию `multiple`; отсутствующее или некорректное значение нормализуется в `multiple`)
+  - `faq` — добавляет рядом с компонентом JSON-LD-разметку `FAQPage`
 - `sunmar-accordion` slots: `default` (ожидаются `sunmar-accordion-item`)
 - `sunmar-accordion` parts: нет
 - внешний API у accordion минимальный: управляем только `mode`, без отдельного reactive value
+- при `faq` текст элемента из `slot="header"` становится `Question`, остальной light DOM-контент item становится `acceptedAnswer`; пустые пары в JSON-LD не включаются
 
 - `sunmar-accordion-item` attributes: `open`, `disabled`
 - `sunmar-accordion-item` slots: `header`, `default`
