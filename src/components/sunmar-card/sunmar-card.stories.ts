@@ -23,8 +23,8 @@ export const Mobile: Story = {
       ></sunmar-image>
       <h3 slot="title">Турция</h3>
       <p slot="text">Семейные отели и отдых у моря.</p>
-      <sunmar-link slot="actions" type="primary"><a href="#tour">Купить тур</a></sunmar-link>
-      <sunmar-link slot="actions" type="neutral"><a href="#hot">Горящие туры</a></sunmar-link>
+      <sunmar-button slot="actions" type="primary"><a href="#tour">Купить тур</a></sunmar-button>
+      <sunmar-button slot="actions" type="neutral"><a href="#hot">Горящие туры</a></sunmar-button>
     </sunmar-card>
   `
 };
