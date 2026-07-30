@@ -20,14 +20,11 @@ Hero/KV-компонент с SEO-friendly light DOM контентом.
 - \`slot="actions"\` — CTA-контент
 
 **Медиаконтракт**
-- \`slot="image"\` — baseline media, остается главным fallback
-- \`slot="video-desktop"\` и \`slot="video-mobile"\` — опциональные config-узлы с \`data-vimeo-id\`
-- видео проявляется только после успешного playback и не заменяет fallback-картинку до загрузки
+- \`slot="image"\` — медиаконтент компонента
 
 **API стилизации**
-- CSS variables: \`--sunmar-kv-video-width\`, \`--sunmar-kv-video-height\`
 - image positioning: \`--sunmar-image-object-position\`
-- доступны \`Parts\`: \`root\`, \`media\`, \`picture\`, \`video\`, \`video-frame\`, \`content\`, \`content-inner\`, \`eyebrow\`, \`title\`, \`text\`, \`actions\`
+- доступны \`Parts\`: \`root\`, \`media\`, \`picture\`, \`content\`, \`content-inner\`, \`eyebrow\`, \`title\`, \`text\`, \`actions\`
 `
       }
     }
@@ -51,7 +48,9 @@ export const Default: Story = {
       <h1 slot="title">ОчеВИДНАЯ выгода Раннего бронирования</h1>
       <p slot="text">Скидки до 50% и предоплата 20% от стоимости.</p>
       <div slot="actions">
-        <sunmar-button type="primary">Подобрать тур</sunmar-button>
+        <sunmar-button type="primary">
+          <button type="button">Подобрать тур</button>
+        </sunmar-button>
       </div>
     </sunmar-kv>
   `

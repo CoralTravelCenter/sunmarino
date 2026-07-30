@@ -1,162 +1,21 @@
-import { LitElement, css, html, nothing, unsafeCSS } from 'lit';
-import { state } from 'lit/decorators.js';
+import { LitElement, css, html, unsafeCSS } from 'lit';
 import { componentBaseStyles } from '../../styles/component-base';
-import { observeMinWidth } from '../../utils/dom/observe-media';
-import { vimeoAutoPlay } from '../../utils/video/vimeo-auto-play';
 import styles from './sunmar-kv.scss?inline';
 
 export const SUNMAR_KV_TAG_NAME = 'sunmar-kv';
-
-const DESKTOP_VIDEO_MIN_WIDTH = 768;
 
 export class SunmarKv extends LitElement {
   static styles = [componentBaseStyles, css`
     ${unsafeCSS(styles)}
   `];
 
-  @state()
-  private isDesktopViewport = false;
-
-  private stopVimeoAutoPlay: (() => void) | null = null;
-  private stopDesktopViewportObserver: (() => void) | null = null;
-  private vimeoIframePartObserver: MutationObserver | null = null;
-  private vimeoSetupToken = 0;
-
-  private get hasVideo(): boolean {
-    return this.activeVimeoId.length > 0;
-  }
-
-  private get activeVimeoId(): string {
-    const desktopId = this.getVideoIdFromSlot('video-desktop');
-    const mobileId = this.getVideoIdFromSlot('video-mobile');
-
-    if (this.isDesktopViewport) {
-      return desktopId || mobileId;
-    }
-
-    return mobileId || desktopId;
-  }
-
-  private getVideoIdFromSlot(slotName: 'video-desktop' | 'video-mobile'): string {
-    const slot = this.renderRoot.querySelector<HTMLSlotElement>(`slot[name="${slotName}"]`);
-    if (!slot) {
-      return '';
-    }
-
-    const [element] = slot.assignedElements({ flatten: true });
-    if (!(element instanceof HTMLElement)) {
-      return '';
-    }
-
-    return element.dataset.vimeoId?.trim() ?? '';
-  }
-
-  private startViewportObserver(): void {
-    if (this.stopDesktopViewportObserver) {
-      return;
-    }
-
-    this.stopDesktopViewportObserver = observeMinWidth(DESKTOP_VIDEO_MIN_WIDTH, (matches) => {
-      this.isDesktopViewport = matches;
-    });
-  }
-
-  private stopViewportObserver(): void {
-    this.stopDesktopViewportObserver?.();
-    this.stopDesktopViewportObserver = null;
-  }
-
-  private handleVideoSlotChange = (): void => {
-    void this.setupVimeoAutoPlay();
-  };
-
-  private async setupVimeoAutoPlay(): Promise<void> {
-    this.teardownVimeoAutoPlay();
-
-    if (!this.isConnected || !this.hasVideo) {
-      return;
-    }
-
-    this.setupVimeoIframePartObserver();
-
-    const setupToken = ++this.vimeoSetupToken;
-
-    try {
-      const cleanup = await vimeoAutoPlay({
-        root: this.renderRoot,
-        selector: '.vimeo-video-box [data-vimeo-vid]',
-        onPlaybackStart: () => {
-          this.syncVimeoIframePart();
-        }
-      });
-
-      if (setupToken !== this.vimeoSetupToken) {
-        cleanup();
-        return;
-      }
-
-      this.stopVimeoAutoPlay = cleanup;
-    } catch {}
-  }
-
-  private teardownVimeoAutoPlay(): void {
-    this.vimeoSetupToken += 1;
-    this.stopVimeoAutoPlay?.();
-    this.stopVimeoAutoPlay = null;
-    this.vimeoIframePartObserver?.disconnect();
-    this.vimeoIframePartObserver = null;
-    this.renderRoot.querySelector('.video')?.classList.remove('playback');
-  }
-
-  private setupVimeoIframePartObserver(): void {
-    this.vimeoIframePartObserver?.disconnect();
-    this.vimeoIframePartObserver = null;
-
-    const videoFrame = this.renderRoot.querySelector<HTMLElement>('.video-frame');
-    if (!videoFrame) {
-      return;
-    }
-
-    this.syncVimeoIframePart();
-
-    const observer = new MutationObserver(() => {
-      this.syncVimeoIframePart();
-    });
-
-    observer.observe(videoFrame, { childList: true, subtree: true });
-    this.vimeoIframePartObserver = observer;
-  }
-
-  private syncVimeoIframePart(): void {
-    const iframe = this.renderRoot.querySelector<HTMLIFrameElement>('.video-frame iframe');
-    if (!iframe) {
-      return;
-    }
-
-    iframe.setAttribute('part', this.isDesktopViewport ? 'iframe' : 'iframe-mob');
-  }
-
   protected render() {
     return html`
       <section class="root" part="root">
-        <slot class="video-config-slot" name="video-desktop" @slotchange=${this.handleVideoSlotChange}></slot>
-        <slot class="video-config-slot" name="video-mobile" @slotchange=${this.handleVideoSlotChange}></slot>
-
         <div class="media" part="media">
           <div class="picture" part="picture">
             <slot name="image"></slot>
           </div>
-          ${this.hasVideo
-            ? html`
-                <div class="video vimeo-video-box" part="video" aria-hidden="true">
-                  <div
-                    class="video-frame"
-                    part="video-frame"
-                    data-vimeo-vid=${this.activeVimeoId}
-                  ></div>
-                </div>
-              `
-            : nothing}
         </div>
 
         <div class="content" part="content">
@@ -175,29 +34,6 @@ export class SunmarKv extends LitElement {
         </div>
       </section>
     `;
-  }
-
-  connectedCallback(): void {
-    super.connectedCallback();
-    this.startViewportObserver();
-  }
-
-  firstUpdated(): void {
-    void this.setupVimeoAutoPlay();
-  }
-
-  updated(changedProperties: Map<string, unknown>): void {
-    if (!changedProperties.has('isDesktopViewport')) {
-      return;
-    }
-
-    void this.setupVimeoAutoPlay();
-  }
-
-  disconnectedCallback(): void {
-    this.teardownVimeoAutoPlay();
-    this.stopViewportObserver();
-    super.disconnectedCallback();
   }
 }
 

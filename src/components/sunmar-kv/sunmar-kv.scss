@@ -16,41 +16,12 @@
   inset: 0;
 }
 
-.video-config-slot {
-  display: none;
-}
-
 .picture {
   position: relative;
   width: 100%;
   height: 100%;
   overflow: clip;
   z-index: 1;
-}
-
-.video {
-  @include mixins.absolute-content();
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 1s ease;
-  z-index: 2;
-}
-
-.video.playback {
-  opacity: 1;
-}
-
-.video-frame {
-  @include mixins.absolute-content();
-}
-
-.video-frame iframe {
-  position: absolute;
-  width: var(--sunmar-kv-video-width, 100%);
-  height: var(--sunmar-kv-video-height, 100%);
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
 }
 
 .content {

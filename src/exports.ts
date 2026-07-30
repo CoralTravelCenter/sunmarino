@@ -13,5 +13,4 @@ export { SunmarTabPanel } from './components/sunmar-tabs/sunmar-tab-panel';
 export { SunmarStickyNav } from './components/sunmar-sticky-nav/sunmar-sticky-nav';
 export { hostReactAppReady } from './utils/dom/host-react-app-ready';
 export { preloadScript } from './utils/dom/preload-script';
-export { vimeoAutoPlay } from './utils/video/vimeo-auto-play';
 export { registerSunmarComponents } from './registry/register-components';
