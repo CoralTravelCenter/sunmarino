@@ -4,14 +4,6 @@
   display: block;
 }
 
-.root {
-  display: block;
-}
-
-.items-slot {
-  display: block;
-}
-
 ::slotted(sunmar-accordion-item) {
   display: block;
   margin-block-end: var(--sunmar-space-s);
