@@ -1,334 +1,192 @@
 import { LitElement, css, html, unsafeCSS } from 'lit';
 import { property } from 'lit/decorators.js';
+import { ifDefined } from 'lit/directives/if-defined.js';
 import { componentBaseStyles } from '../../styles/component-base';
 import styles from './sunmar-tabs.scss?inline';
 
 export const SUNMAR_TABS_TAG_NAME = 'sunmar-tabs';
-const TABS_NAV_TAG_NAME = 'sunmar-tabs-nav';
-const TAB_TRIGGER_TAG_NAME = 'sunmar-tab-trigger';
-const TAB_PANEL_TAG_NAME = 'sunmar-tab-panel';
-const TAB_TRIGGER_ACTIVATE_EVENT = 'sunmar-tab-trigger-activate';
+const TAB_TAG_NAME = 'sunmar-tab';
+const TAB_CONTENT_TAG_NAME = 'sunmar-tab-content';
 const TABS_CHANGE_EVENT = 'sunmar-tabs-change';
 
-type TabTriggerLike = HTMLElement & {
-  value?: string;
-  disabled?: boolean;
-  selected?: boolean;
-  panelId?: string;
-  focus?: (options?: FocusOptions) => void;
-};
-
-type TabPanelLike = HTMLElement & {
-  value?: string;
-  active?: boolean;
-};
-
-type TabTriggerActivateEvent = CustomEvent<{
-  value: string;
-  trigger: TabTriggerLike;
-}>;
+type TabElement = HTMLElement & { value?: string; disabled?: boolean; forced?: boolean };
+type TabContentElement = HTMLElement & { value?: string };
 
 export type SunmarTabsChangeDetail = {
   value: string;
   previousValue: string | null;
 };
 
-export class SunmarTabs extends LitElement {
-  static styles = [componentBaseStyles, css`
-    ${unsafeCSS(styles)}
-  `];
+let tabsInstance = 0;
 
-  private instanceId = '';
+export class SunmarTabs extends LitElement {
+  static styles = [componentBaseStyles, css`${unsafeCSS(styles)}`];
+
+  private readonly instanceId = `${SUNMAR_TABS_TAG_NAME}-${++tabsInstance}`;
+  private initialized = false;
 
   @property({ type: String, reflect: true })
   value = '';
 
-  connectedCallback(): void {
-    super.connectedCallback();
-
-    if (!this.instanceId) {
-      this.instanceId = `${SUNMAR_TABS_TAG_NAME}-${crypto.randomUUID()}`;
-    }
-
-    this.addEventListener(TAB_TRIGGER_ACTIVATE_EVENT, this.onTriggerActivate as EventListener);
-    this.addEventListener('keydown', this.onTriggerKeyDown as EventListener);
-  }
-
-  disconnectedCallback(): void {
-    this.removeEventListener(TAB_TRIGGER_ACTIVATE_EVENT, this.onTriggerActivate as EventListener);
-    this.removeEventListener('keydown', this.onTriggerKeyDown as EventListener);
-    super.disconnectedCallback();
-  }
-
-  firstUpdated(): void {
-    this.syncTabsState();
-  }
-
-  updated(changedProperties: Map<string, unknown>): void {
-    if (changedProperties.has('value')) {
-      this.syncTabsState();
-    }
-  }
+  @property({ attribute: 'aria-label' })
+  label = '';
 
   protected render() {
     return html`
-      <div class="root">
-        <div class="nav">
-          <slot name="nav" class="nav-slot" @slotchange=${this.onNavSlotChange}></slot>
+      <div class="root" part="root" @click=${this.onClick} @keydown=${this.onKeyDown}>
+        <div
+          class="nav"
+          part="nav"
+          role="tablist"
+          aria-label=${ifDefined(this.label || undefined)}
+          aria-orientation="horizontal"
+        >
+          <slot name="tab" @slotchange=${this.sync}></slot>
         </div>
-        <div class="panels">
-          <slot class="panels-slot" @slotchange=${this.onPanelsSlotChange}></slot>
+        <div class="panels" part="panels">
+          <slot name="panel" @slotchange=${this.sync}></slot>
         </div>
       </div>
     `;
   }
 
-  private readonly onNavSlotChange = (): void => {
-    this.syncTabsState();
-  };
-
-  private readonly onPanelsSlotChange = (): void => {
-    this.syncTabsState();
-  };
-
-  private readonly onTriggerActivate = (event: TabTriggerActivateEvent): void => {
-    const { trigger, value } = event.detail;
-    if (!this.isTriggerInNav(trigger)) {
-      return;
-    }
-
-    this.activateValue(value, true);
-  };
-
-  private readonly onTriggerKeyDown = (event: KeyboardEvent): void => {
-    const trigger = this.getTriggerFromEvent(event);
-    if (!trigger || !this.isTriggerInNav(trigger)) {
-      return;
-    }
-
-    const navigableTriggers = this.getNavigableTriggers();
-    if (!navigableTriggers.length) {
-      return;
-    }
-
-    const currentIndex = navigableTriggers.indexOf(trigger);
-    if (currentIndex === -1) {
-      return;
-    }
-
-    let nextIndex = currentIndex;
-
-    switch (event.key) {
-      case 'ArrowRight':
-      case 'ArrowDown':
-        nextIndex = (currentIndex + 1) % navigableTriggers.length;
-        break;
-      case 'ArrowLeft':
-      case 'ArrowUp':
-        nextIndex = (currentIndex - 1 + navigableTriggers.length) % navigableTriggers.length;
-        break;
-      case 'Home':
-        nextIndex = 0;
-        break;
-      case 'End':
-        nextIndex = navigableTriggers.length - 1;
-        break;
-      default:
-        return;
-    }
-
-    event.preventDefault();
-
-    const nextTrigger = navigableTriggers[nextIndex];
-    nextTrigger.focus?.();
-    this.activateValue(nextTrigger.value ?? '', true);
-  };
-
-  private syncTabsState(): void {
-    const triggers = this.getTriggers();
-    const panels = this.getPanels();
-
-    const resolvedValue = this.resolveValue(triggers, panels);
-
-    if (resolvedValue !== this.value) {
-      this.value = resolvedValue;
-    }
-
-    this.syncTabsAccessibility(triggers, panels);
-
-    for (const trigger of triggers) {
-      trigger.selected = Boolean(resolvedValue) && trigger.value?.trim() === resolvedValue;
-    }
-
-    for (const panel of panels) {
-      panel.active = Boolean(resolvedValue) && panel.value?.trim() === resolvedValue;
-    }
+  protected firstUpdated(): void {
+    this.distributeChildren();
+    this.sync();
   }
 
-  private resolveValue(triggers: TabTriggerLike[], panels: TabPanelLike[]): string {
-    const panelValues = new Set(
-      panels
-        .map((panel) => panel.value?.trim() ?? '')
-        .filter((value): value is string => value.length > 0)
-    );
-
-    const preferredValue = this.value.trim();
-    if (preferredValue && panelValues.has(preferredValue)) {
-      const matchedTrigger = triggers.find((trigger) => trigger.value?.trim() === preferredValue);
-      if (matchedTrigger && !matchedTrigger.disabled) {
-        return preferredValue;
-      }
-    }
-
-    for (const trigger of triggers) {
-      const triggerValue = trigger.value?.trim() ?? '';
-      if (!triggerValue || trigger.disabled) {
-        continue;
-      }
-
-      if (panelValues.has(triggerValue)) {
-        return triggerValue;
-      }
-    }
-
-    return '';
+  protected updated(changed: Map<string, unknown>): void {
+    if (changed.has('value')) this.sync();
   }
 
-  private activateValue(value: string, emitChange: boolean): void {
+  forced(value: string): void {
     const nextValue = value.trim();
-    if (!nextValue) {
-      return;
-    }
-
-    const previousValue = this.value.trim() || null;
-    if (previousValue === nextValue) {
-      this.syncTabsState();
-      return;
-    }
+    if (!this.canActivate(nextValue)) return;
 
     this.value = nextValue;
-
-    if (!emitChange) {
-      return;
-    }
-
-    this.dispatchEvent(
-      new CustomEvent<SunmarTabsChangeDetail>(TABS_CHANGE_EVENT, {
-        detail: { value: nextValue, previousValue },
-        bubbles: true,
-        composed: true,
-      })
-    );
   }
 
-  private syncTabsAccessibility(triggers: TabTriggerLike[], panels: TabPanelLike[]): void {
-    for (const panel of panels) {
-      const panelValue = panel.value?.trim() ?? '';
-
-      if (panelValue && !panel.id) {
-        panel.id = this.createScopedId('panel', panelValue);
-      }
-    }
-
-    const triggersByValue = new Map(
-      triggers
-        .map((trigger) => [trigger.value?.trim() ?? '', trigger] as const)
-        .filter(([value]) => value.length > 0)
+  private readonly sync = (): void => {
+    const tabs = this.tabs;
+    const panels = this.panels;
+    const panelsByValue = new Map(
+      panels.map((panel) => [panel.value?.trim() ?? '', panel] as const).filter(([value]) => value)
     );
+    const isAvailable = (tab: TabElement): boolean =>
+      !this.isDisabled(tab) && panelsByValue.has(tab.value?.trim() ?? '');
+    const forcedValue = this.initialized
+      ? ''
+      : tabs.find((tab) => tab.forced && isAvailable(tab))?.value?.trim() ?? '';
+    const requestedValue = this.value.trim();
+    const activeValue = forcedValue
+      || tabs.find((tab) => tab.value?.trim() === requestedValue && isAvailable(tab))?.value?.trim()
+      || tabs.find(isAvailable)?.value?.trim()
+      || '';
 
-    for (const trigger of triggers) {
-      const triggerValue = trigger.value?.trim() ?? '';
-      if (triggerValue && !trigger.id) {
-        trigger.id = this.createScopedId('tab', triggerValue);
-      }
+    this.initialized = true;
 
-      const panel = panels.find((item) => item.value?.trim() === triggerValue);
-      trigger.panelId = panel?.id ?? '';
-    }
+    if (activeValue !== this.value) this.value = activeValue;
 
     for (const panel of panels) {
       const panelValue = panel.value?.trim() ?? '';
-      const trigger = triggersByValue.get(panelValue);
-      if (trigger?.id) {
-        panel.setAttribute('aria-labelledby', trigger.id);
-      } else {
-        panel.removeAttribute('aria-labelledby');
+      panel.id ||= this.idFor('panel', panelValue);
+      panel.setAttribute('role', 'tabpanel');
+      panel.toggleAttribute('active', panelValue === activeValue);
+    }
+
+    for (const tab of tabs) {
+      const tabValue = tab.value?.trim() ?? '';
+      const button = tab.querySelector('button');
+      const panel = panelsByValue.get(tabValue);
+      const tabId = button?.id || tab.id || this.idFor('tab', tabValue);
+      tab.toggleAttribute('selected', tabValue === activeValue);
+      if (!button) continue;
+      button.id ||= tabId;
+      button.setAttribute('role', 'tab');
+      button.setAttribute('aria-disabled', String(this.isDisabled(tab)));
+      button.setAttribute('aria-selected', String(tabValue === activeValue));
+      button.setAttribute('tabindex', tabValue === activeValue ? '0' : '-1');
+      if (panel?.id) {
+        button.setAttribute('aria-controls', panel.id);
+        panel.setAttribute('aria-labelledby', button.id);
       }
     }
-  }
+  };
 
-  private createScopedId(type: 'tab' | 'panel', value: string): string {
-    const normalizedValue = value
-      .toLowerCase()
-      .replace(/[^a-z0-9_-]+/g, '-')
-      .replace(/^-+|-+$/g, '');
+  private readonly onClick = (event: Event): void => {
+    const tab = this.tabFromEvent(event);
+    const button = tab?.querySelector('button');
+    if (!tab || !button || !event.composedPath().includes(button)) return;
+    this.activate(tab.value?.trim() ?? '');
+  };
 
-    const suffix = normalizedValue || crypto.randomUUID();
-    return `${this.instanceId}-${type}-${suffix}`;
-  }
-
-  private getTriggers(): TabTriggerLike[] {
-    const navRoot = this.getNavRoot();
-    if (!navRoot) {
-      return [];
-    }
-
-    return Array.from(navRoot.querySelectorAll<TabTriggerLike>(TAB_TRIGGER_TAG_NAME));
-  }
-
-  private getNavigableTriggers(): TabTriggerLike[] {
-    const panelValues = new Set(
-      this.getPanels()
-        .map((panel) => panel.value?.trim() ?? '')
-        .filter((value): value is string => value.length > 0)
+  private readonly onKeyDown = (event: KeyboardEvent): void => {
+    const tab = this.tabFromEvent(event);
+    if (!tab) return;
+    const tabs = this.tabs.filter((item) =>
+      item.querySelector('button') && this.canActivate(item.value?.trim() ?? '')
     );
+    const index = tabs.indexOf(tab);
+    if (index < 0) return;
 
-    return this.getTriggers().filter((trigger) => {
-      const value = trigger.value?.trim() ?? '';
-      return Boolean(value) && !trigger.disabled && panelValues.has(value);
-    });
+    const next = event.key === 'Home' ? 0
+      : event.key === 'End' ? tabs.length - 1
+      : ['ArrowRight', 'ArrowDown'].includes(event.key) ? (index + 1) % tabs.length
+      : ['ArrowLeft', 'ArrowUp'].includes(event.key) ? (index - 1 + tabs.length) % tabs.length
+      : -1;
+    if (next < 0) return;
+    event.preventDefault();
+    tabs[next].querySelector('button')?.focus();
+    this.activate(tabs[next].value?.trim() ?? '');
+  };
+
+  private activate(value: string): void {
+    if (!value || value === this.value || !this.canActivate(value)) return;
+    const previousValue = this.value || null;
+    this.value = value;
+    this.dispatchEvent(new CustomEvent<SunmarTabsChangeDetail>(TABS_CHANGE_EVENT, {
+      detail: { value, previousValue }, bubbles: true, composed: true,
+    }));
   }
 
-  private getPanels(): TabPanelLike[] {
-    const panelsSlot = this.renderRoot.querySelector<HTMLSlotElement>('slot:not([name])');
-    if (!panelsSlot) {
-      return [];
+  private distributeChildren(): void {
+    for (const child of Array.from(this.children)) {
+      if (child.matches(TAB_TAG_NAME)) child.slot = 'tab';
+      if (child.matches(TAB_CONTENT_TAG_NAME)) child.slot = 'panel';
     }
-
-    return panelsSlot
-      .assignedElements({ flatten: true })
-      .filter((el): el is TabPanelLike => el.tagName.toLowerCase() === TAB_PANEL_TAG_NAME);
   }
 
-  private getNavRoot(): HTMLElement | null {
-    const navSlot = this.renderRoot.querySelector<HTMLSlotElement>('slot[name="nav"]');
-    if (!navSlot) {
-      return null;
-    }
-
-    const navRoot = navSlot
-      .assignedElements({ flatten: true })
-      .find((el) => el.tagName.toLowerCase() === TABS_NAV_TAG_NAME);
-
-    return navRoot instanceof HTMLElement ? navRoot : null;
+  private tabFromEvent(event: Event): TabElement | undefined {
+    return event.composedPath().find((item): item is TabElement =>
+      item instanceof HTMLElement && item.matches(TAB_TAG_NAME)
+    );
   }
 
-  private isTriggerInNav(trigger: TabTriggerLike): boolean {
-    return this.getTriggers().includes(trigger);
+  private isDisabled(tab: TabElement): boolean {
+    return Boolean(tab.disabled || tab.querySelector('button')?.disabled);
   }
 
-  private getTriggerFromEvent(event: KeyboardEvent): TabTriggerLike | null {
-    if (!(event.target instanceof Element)) {
-      return null;
-    }
+  private canActivate(value: string): boolean {
+    const tab = this.tabs.find((item) => item.value?.trim() === value);
+    return Boolean(
+      tab && !this.isDisabled(tab) && this.panels.some((panel) => panel.value?.trim() === value)
+    );
+  }
 
-    const trigger = event.target.closest<TabTriggerLike>(TAB_TRIGGER_TAG_NAME);
-    return trigger ?? null;
+  private idFor(type: 'tab' | 'panel', value: string): string {
+    const suffix = value.toLowerCase().replace(/[^a-z0-9_-]+/g, '-').replace(/^-+|-+$/g, '');
+    return `${this.instanceId}-${type}-${suffix || 'item'}`;
+  }
+
+  private get tabs(): TabElement[] {
+    return Array.from(this.querySelectorAll(`:scope > ${TAB_TAG_NAME}`));
+  }
+
+  private get panels(): TabContentElement[] {
+    return Array.from(this.querySelectorAll(`:scope > ${TAB_CONTENT_TAG_NAME}`));
   }
 }
 
 declare global {
-  interface HTMLElementTagNameMap {
-    [SUNMAR_TABS_TAG_NAME]: SunmarTabs;
-  }
+  interface HTMLElementTagNameMap { [SUNMAR_TABS_TAG_NAME]: SunmarTabs }
 }

@@ -1,0 +1,15 @@
+:host {
+  --sunmar-tabs-gap: 8px;
+  display: block;
+}
+
+.nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--sunmar-tabs-gap);
+}
+
+@media (min-width: 1024px) {
+  .nav { flex-wrap: nowrap; }
+}
