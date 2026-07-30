@@ -132,7 +132,8 @@
 </sunmar-button>
 ```
 - `sunmar-button-group` attributes: нет (layout управляется стилями; по умолчанию `flex-wrap: wrap`)
-- `sunmar-button-group` parts: `group`
+- `sunmar-button-group` parts: нет
+- расстояние между элементами настраивается через `--sunmar-button-group-gap` (по умолчанию `--sunmar-space-s`)
 
 ## Modal API
 

@@ -10,7 +10,7 @@ export class SunmarButtonGroup extends LitElement {
   `];
 
   protected render() {
-    return html`<slot part="root"></slot>`;
+    return html`<slot></slot>`;
   }
 }
 
