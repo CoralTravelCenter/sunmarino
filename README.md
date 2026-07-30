@@ -135,6 +135,18 @@
 - `sunmar-button-group` parts: нет
 - расстояние между элементами настраивается через `--sunmar-button-group-gap` (по умолчанию `--sunmar-space-s`)
 
+## Card API
+
+- `sunmar-card` attributes:
+  - `vertical` — сохраняет вертикальную раскладку на всех ширинах
+  - `reversed` — меняет местами media и content в горизонтальной раскладке от `1024px`
+- при одновременном использовании `vertical` и `reversed` приоритет имеет `vertical`
+- обязательные slots: `media`, `title`, `text`
+- необязательный slot: `actions`; пустой actions-контейнер не занимает место
+- parts: `root`, `media`, `content`, `title`, `text`, `actions`
+- фон content настраивается через `--sunmar-card-background`
+- компонент рендерит `article`, а семантический уровень заголовка задаёт потребитель в light DOM
+
 ## Modal API
 
 - `sunmar-modal` attributes: `open`, `close-on-backdrop`, `close-on-esc`, `aria-label`, `aria-labelledby`
