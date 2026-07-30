@@ -1,7 +1,6 @@
 export { SunmarModal } from './components/sunmar-modal/sunmar-modal';
 export { SunmarButton } from './components/sunmar-button/sunmar-button';
 export { SunmarButtonGroup } from './components/sunmar-button-group/sunmar-button-group';
-export { SunmarLink } from './components/sunmar-link/sunmar-link';
 export { SunmarImage } from './components/sunmar-image/sunmar-image';
 export { SunmarKv } from './components/sunmar-kv/sunmar-kv';
 export { SunmarAccordion } from './components/sunmar-accordion/sunmar-accordion';
