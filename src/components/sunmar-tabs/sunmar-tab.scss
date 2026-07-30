@@ -1,0 +1,37 @@
+@use '../../styles/action-control' as action-control;
+
+:host { display: flex; flex: 1 1 auto; }
+
+::slotted(button) {
+  @include action-control.control;
+  width: 100%;
+  padding: 8px 15px;
+  font-size: 14px;
+  white-space: normal;
+  text-align: center;
+  background-color: var(--sunmar-color-btn-bg-light-default);
+  color: var(--sunmar-color-btn-text-dark);
+  border-color: var(--sunmar-color-btn-stroke-light);
+  border-radius: 100px;
+}
+
+:host([selected]) ::slotted(button) {
+  background-color: var(--sunmar-color-btn-bg-secondary-default);
+  border-color: var(--sunmar-color-btn-bg-secondary-default);
+  color: var(--sunmar-color-btn-text-light);
+}
+
+::slotted(button:focus-visible) { outline: 2px solid currentColor; outline-offset: 2px; }
+::slotted(button:disabled) { cursor: not-allowed; opacity: .5; }
+
+@media (hover: hover) and (pointer: fine) {
+  :host([selected]) ::slotted(button:hover) {
+    background-color: var(--sunmar-color-btn-bg-secondary-hover);
+    border-color: var(--sunmar-color-btn-bg-secondary-hover);
+  }
+}
+
+@media (min-width: 1024px) {
+  :host { flex: 1; }
+  ::slotted(button) { border: none; padding: 16px 30px; font-size: 16px; }
+}
