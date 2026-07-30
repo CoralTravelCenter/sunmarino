@@ -1,0 +1,192 @@
+import { LitElement, css, html, nothing, unsafeCSS } from 'lit';
+import { componentBaseStyles } from '../../styles/component-base';
+import { type EmblaApi, type EmblaOptions, loadEmbla } from './embla-loader';
+import styles from './sunmar-slider.scss?inline';
+
+export const SUNMAR_SLIDER_TAG_NAME = 'sunmar-slider';
+
+export class SunmarSlider extends LitElement {
+  static properties = {
+    slidesPerView: { type: Number, attribute: 'slides-per-view' },
+    slidesPerView768: { type: Number, attribute: 'slides-per-view-768' },
+    slidesPerView1024: { type: Number, attribute: 'slides-per-view-1024' },
+    slidesPerView1280: { type: Number, attribute: 'slides-per-view-1280' },
+    slidesPerView1440: { type: Number, attribute: 'slides-per-view-1440' },
+    slidesToScroll: { type: String, attribute: 'slides-to-scroll' },
+    disabledFrom: { type: Number, attribute: 'disabled-from' },
+    align: { type: String },
+    dragFree: { type: Boolean, attribute: 'drag-free' },
+    loop: { type: Boolean },
+    gap: { type: Number },
+    activeIndex: { state: true },
+    snapCount: { state: true }
+  };
+
+  static styles = [componentBaseStyles, css`${unsafeCSS(styles)}`];
+
+  slidesPerView = 1;
+  slidesPerView768?: number;
+  slidesPerView1024?: number;
+  slidesPerView1280?: number;
+  slidesPerView1440?: number;
+  slidesToScroll = '1';
+  disabledFrom?: number;
+  align: 'start' | 'center' | 'end' = 'start';
+  dragFree = false;
+  loop = false;
+  gap = 16;
+
+  private activeIndex = 0;
+  private snapCount = 0;
+  private embla?: EmblaApi;
+
+  connectedCallback(): void {
+    super.connectedCallback();
+    if (this.hasUpdated) void this.initEmbla();
+  }
+
+  protected firstUpdated(): void {
+    if (!this.hasAttribute('role')) this.setAttribute('role', 'region');
+    if (!this.hasAttribute('aria-roledescription')) {
+      this.setAttribute('aria-roledescription', 'carousel');
+    }
+
+    void this.initEmbla();
+  }
+
+  protected updated(changed: Map<PropertyKey, unknown>): void {
+    if (!this.embla || changed.has('activeIndex') || changed.has('snapCount')) return;
+    this.embla.reInit(this.getEmblaOptions());
+  }
+
+  disconnectedCallback(): void {
+    this.embla?.destroy();
+    this.embla = undefined;
+    this.removeAttribute('embla-ready');
+    super.disconnectedCallback();
+  }
+
+  private get slides(): HTMLElement[] {
+    return this.renderRoot.querySelector<HTMLSlotElement>('.container')?.assignedElements({ flatten: true })
+      .filter((element): element is HTMLElement => element instanceof HTMLElement) ?? [];
+  }
+
+  private getEmblaOptions(): EmblaOptions {
+    const container = this.renderRoot.querySelector<HTMLSlotElement>('.container');
+    const disabledFrom = this.disabledFrom;
+
+    return {
+      align: this.align,
+      breakpoints: disabledFrom
+        ? { [`(min-width: ${disabledFrom}px)`]: { active: false } }
+        : undefined,
+      container: container ?? undefined,
+      dragFree: this.dragFree,
+      loop: this.loop,
+      slides: this.slides,
+      slidesToScroll: this.slidesToScroll === 'auto'
+        ? 'auto'
+        : Math.max(1, Number.parseInt(this.slidesToScroll, 10) || 1)
+    };
+  }
+
+  private async initEmbla(): Promise<void> {
+    const viewport = this.renderRoot.querySelector<HTMLElement>('.viewport');
+    if (!viewport || !this.isConnected) return;
+
+    try {
+      const EmblaCarousel = await loadEmbla();
+      if (!this.isConnected || this.embla) return;
+
+      this.embla = EmblaCarousel(viewport, this.getEmblaOptions());
+      this.embla.on('select', this.syncState).on('reInit', this.syncState);
+      this.toggleAttribute('embla-ready', true);
+      this.syncState(this.embla);
+    } catch (error) {
+      console.error('[sunmar-slider] Embla failed to load.', error);
+    }
+  }
+
+  private syncState = (api: EmblaApi): void => {
+    this.activeIndex = api.selectedScrollSnap();
+    this.snapCount = api.scrollSnapList().length;
+  };
+
+  private handleSlotChange(): void {
+    this.embla?.reInit(this.getEmblaOptions());
+  }
+
+  protected render() {
+    const slideStyles = [
+      `--sunmar-slider-gap:${Math.max(0, this.gap)}px`,
+      `--sunmar-slider-slides:${Math.max(1, this.slidesPerView)}`,
+      `--sunmar-slider-slides-768:${Math.max(1, this.slidesPerView768 ?? this.slidesPerView)}`,
+      `--sunmar-slider-slides-1024:${Math.max(1, this.slidesPerView1024 ?? this.slidesPerView768 ?? this.slidesPerView)}`,
+      `--sunmar-slider-slides-1280:${Math.max(1, this.slidesPerView1280 ?? this.slidesPerView1024 ?? this.slidesPerView768 ?? this.slidesPerView)}`,
+      `--sunmar-slider-slides-1440:${Math.max(1, this.slidesPerView1440 ?? this.slidesPerView1280 ?? this.slidesPerView1024 ?? this.slidesPerView768 ?? this.slidesPerView)}`
+    ].join(';');
+
+    return html`
+      <div class="viewport" part="viewport">
+        <slot
+          class="container"
+          part="container"
+          style=${slideStyles}
+          @slotchange=${this.handleSlotChange}
+        ></slot>
+      </div>
+
+      <div class="controls" part="controls">
+        <div class="navigation" part="navigation">
+          <button
+            class="button"
+            part="prev-button"
+            type="button"
+            aria-label="Предыдущий слайд"
+            ?disabled=${!this.loop && !this.embla?.canScrollPrev()}
+            @click=${() => this.embla?.scrollPrev()}
+          >
+            <svg viewBox="0 0 32 32" aria-hidden="true">
+              <path d="M27 16H5M13 8l-8 8 8 8" />
+            </svg>
+          </button>
+          <button
+            class="button"
+            part="next-button"
+            type="button"
+            aria-label="Следующий слайд"
+            ?disabled=${!this.loop && !this.embla?.canScrollNext()}
+            @click=${() => this.embla?.scrollNext()}
+          >
+            <svg viewBox="0 0 32 32" aria-hidden="true">
+              <path d="M5 16h22M19 8l8 8-8 8" />
+            </svg>
+          </button>
+        </div>
+
+        <div class="pagination" part="pagination" aria-label="Выбор слайда">
+          ${Array.from({ length: this.snapCount }, (_, index) => html`
+            <button
+              class="dot"
+              part="dot"
+              type="button"
+              aria-label=${`Перейти к слайду ${index + 1}`}
+              aria-current=${index === this.activeIndex ? 'true' : nothing}
+              @click=${() => this.embla?.scrollTo(index)}
+            ></button>
+          `)}
+        </div>
+      </div>
+
+      <span class="status" part="status" aria-live="polite">
+        ${this.snapCount ? `Слайд ${this.activeIndex + 1} из ${this.snapCount}` : nothing}
+      </span>
+    `;
+  }
+}
+
+declare global {
+  interface HTMLElementTagNameMap {
+    [SUNMAR_SLIDER_TAG_NAME]: SunmarSlider;
+  }
+}
