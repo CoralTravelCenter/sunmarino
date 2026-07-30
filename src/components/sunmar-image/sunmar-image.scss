@@ -1,22 +1,20 @@
 :host {
   display: block;
   width: 100%;
-  height: 100%;
+  height: var(--sunmar-image-height, auto);
   position: relative;
 }
 
 .picture {
   display: block;
   width: 100%;
-  height: 100%;
+  height: var(--sunmar-image-height, auto);
 }
 
 .img {
   display: block;
   width: 100%;
-  height: 100%;
+  height: var(--sunmar-image-height, auto);
   object-fit: var(--sunmar-image-object-fit, cover);
   object-position: var(--sunmar-image-object-position, center center);
-  position: absolute;
-  inset: 0;
 }
