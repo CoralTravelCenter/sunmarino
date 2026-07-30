@@ -14,6 +14,7 @@ Layout-компонент для action-layer.
 **Коротко**
 - группирует несколько action-элементов в один визуальный блок
 - держит единый \`gap\` и \`wrap\`
+- при необходимости смысловой группы принимает \`role="group"\` и доступное имя на хосте
 - полная документация вынесена на отдельную MDX-страницу этого компонента
 `
       }
@@ -28,9 +29,9 @@ type Story = StoryObj;
 export const Preview: Story = {
   render: () => html`
     <sunmar-button-group>
-      <sunmar-button type="primary">Подобрать тур</sunmar-button>
-      <sunmar-button type="neutral">В избранное</sunmar-button>
-      <sunmar-button type="secondary">Подробнее</sunmar-button>
+      <sunmar-button type="primary"><button type="button">Подобрать тур</button></sunmar-button>
+      <sunmar-button type="neutral"><button type="button">В избранное</button></sunmar-button>
+      <sunmar-button type="secondary"><button type="button">Подробнее</button></sunmar-button>
     </sunmar-button-group>
   `
 };

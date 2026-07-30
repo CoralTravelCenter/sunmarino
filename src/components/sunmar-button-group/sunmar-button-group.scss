@@ -1,11 +1,7 @@
 :host {
   display: inline-flex;
-}
-
-.group {
-  display: inline-flex;
   align-items: center;
   flex-direction: row;
   flex-wrap: wrap;
-  gap: var(--sunmar-space-s);
+  gap: var(--sunmar-button-group-gap, var(--sunmar-space-s));
 }

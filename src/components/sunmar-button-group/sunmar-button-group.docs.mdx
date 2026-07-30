@@ -14,7 +14,8 @@ Layout-компонент для action-layer.
 
 ## Семантический контракт
 
-- рендерит внутренний контейнер с `role="group"`
+- по умолчанию является нейтральным layout-контейнером без ARIA-role
+- для смысловой группы задайте хосту `role="group"` и доступное имя через `aria-label` или `aria-labelledby`
 - сам не добавляет интерактивности и не меняет поведение дочерних action-элементов
 
 ## Slots
@@ -24,13 +25,13 @@ Layout-компонент для action-layer.
 
 ## Parts
 
-- `group` — внутренний layout-контейнер
+- `root` — default slot
 
 ## Поведение
 
 - элементы располагаются через `inline-flex`
 - при нехватке места переносятся на новую строку
-- spacing между элементами централизован и не зависит от самих кнопок
+- spacing задаётся через `--sunmar-button-group-gap`
 
 ## Что компонент не делает
 
@@ -54,8 +55,8 @@ Layout-компонент для action-layer.
 <Source
   language="html"
   code={`<sunmar-button-group>
-  <sunmar-button type="primary">Подобрать тур</sunmar-button>
-  <sunmar-button type="neutral">В избранное</sunmar-button>
-  <sunmar-button type="secondary">Подробнее</sunmar-button>
+  <sunmar-button type="primary"><button type="button">Подобрать тур</button></sunmar-button>
+  <sunmar-button type="neutral"><button type="button">В избранное</button></sunmar-button>
+  <sunmar-button type="secondary"><button type="button">Подробнее</button></sunmar-button>
 </sunmar-button-group>`}
 />

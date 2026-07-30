@@ -10,11 +10,7 @@ export class SunmarButtonGroup extends LitElement {
   `];
 
   protected render() {
-    return html`
-      <div class="group" part="group" role="group">
-        <slot></slot>
-      </div>
-    `;
+    return html`<slot part="root"></slot>`;
   }
 }
 
