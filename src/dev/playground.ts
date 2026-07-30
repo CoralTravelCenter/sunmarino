@@ -1,6 +1,5 @@
 import './suppress-lit-dev-warnings';
 import '../index';
-import { hostReactAppReady } from '../utils/dom/host-react-app-ready';
 import PREVIEW_HTML from './markup.html?raw'
 
 function renderPreview(target: HTMLElement): void {
@@ -46,15 +45,14 @@ function ensureMonkeyMountPoint(): HTMLElement {
   return host;
 }
 
-async function bootstrapPreview(): Promise<void> {
+function bootstrapPreview(): void {
   const localMount = document.querySelector<HTMLElement>('#app');
   if (localMount) {
     renderPreview(localMount);
     return;
   }
 
-  await hostReactAppReady('#__next > div', 250);
   renderPreview(ensureMonkeyMountPoint());
 }
 
-void bootstrapPreview();
+bootstrapPreview();

@@ -11,6 +11,8 @@ const MOBILE_TOP_OFFSET = 81;
 const TABLET_TOP_OFFSET = 65;
 const DESKTOP_TOP_OFFSET = 16;
 const SCROLL_TARGET_GAP = 12;
+const DEFAULT_TELEPORT_SELECTOR = '.row-outer-container';
+const RELOCATE_TIMEOUT_MS = 5_000;
 
 export class SunmarStickyNav extends LitElement {
   static styles = [componentBaseStyles, css`
@@ -19,6 +21,12 @@ export class SunmarStickyNav extends LitElement {
 
   @property({ type: Number, reflect: true, attribute: 'top-offset' })
   topOffset: number | null = null;
+
+  @property({ type: Boolean, reflect: true, attribute: 'disable-relocate' })
+  disableRelocate = false;
+
+  @property({ type: String })
+  teleport: string | null = null;
 
   @state()
   private isStuck = false;
@@ -30,6 +38,10 @@ export class SunmarStickyNav extends LitElement {
   private sectionObserver: IntersectionObserver | null = null;
   private stickyObserver: IntersectionObserver | null = null;
   private currentActiveLink: HTMLAnchorElement | null = null;
+  private relocateTargetObserver: MutationObserver | null = null;
+  private relocateTimeoutId: ReturnType<typeof setTimeout> | null = null;
+  private isRelocating = false;
+  private relocatedSelector: string | null = null;
 
   private readonly handleNavLinksSlotChange = (event: Event): void => {
     const slot = event.target as HTMLSlotElement;
@@ -72,6 +84,87 @@ export class SunmarStickyNav extends LitElement {
     event.preventDefault();
     this.scrollToSection(targetSection, navLink.hash || `#${sectionId}`, defaultView);
   };
+
+  private startRelocateTargetWait(): void {
+    this.cancelRelocateTargetWait();
+
+    const selector = this.resolvedTeleportSelector;
+    if (this.disableRelocate || this.relocatedSelector === selector || !this.isConnected) {
+      return;
+    }
+
+    if (this.relocateToTarget(selector)) {
+      return;
+    }
+
+    const documentRoot = this.ownerDocument.documentElement;
+    if (!documentRoot || typeof MutationObserver === 'undefined') {
+      return;
+    }
+
+    this.relocateTargetObserver = new MutationObserver(() => {
+      if (selector !== this.resolvedTeleportSelector) {
+        this.startRelocateTargetWait();
+        return;
+      }
+
+      this.relocateToTarget(selector);
+    });
+    this.relocateTargetObserver.observe(documentRoot, { childList: true, subtree: true });
+
+    this.relocateTimeoutId = setTimeout(() => {
+      this.cancelRelocateTargetWait();
+    }, RELOCATE_TIMEOUT_MS);
+  }
+
+  private relocateToTarget(selector: string): boolean {
+    let target: Element | null;
+
+    try {
+      target = this.closest(selector) ?? this.ownerDocument.querySelector(selector);
+    } catch {
+      this.cancelRelocateTargetWait();
+      return true;
+    }
+
+    if (!target) {
+      return false;
+    }
+
+    this.cancelRelocateTargetWait();
+
+    if (target === this || this.contains(target)) {
+      return true;
+    }
+
+    this.relocatedSelector = selector;
+
+    if (target.nextElementSibling === this) {
+      return true;
+    }
+
+    this.isRelocating = true;
+    try {
+      target.insertAdjacentElement('afterend', this);
+    } finally {
+      this.isRelocating = false;
+    }
+    return true;
+  }
+
+  private get resolvedTeleportSelector(): string {
+    return this.teleport?.trim() || DEFAULT_TELEPORT_SELECTOR;
+  }
+
+  private cancelRelocateTargetWait(): void {
+    this.relocateTargetObserver?.disconnect();
+    this.relocateTargetObserver = null;
+
+    if (this.relocateTimeoutId !== null) {
+      clearTimeout(this.relocateTimeoutId);
+      this.relocateTimeoutId = null;
+    }
+  }
 
   private syncResponsiveTopOffset(): void {
     this.responsiveTopOffset = this.getResponsiveTopOffset();
@@ -380,6 +473,8 @@ export class SunmarStickyNav extends LitElement {
   connectedCallback(): void {
     super.connectedCallback();
 
+    this.startRelocateTargetWait();
+
     if (this.hasUpdated) {
       this.initializeAfterRender();
     }
@@ -389,6 +484,14 @@ export class SunmarStickyNav extends LitElement {
     if (changedProperties.has('topOffset')) {
       this.syncStickyOffset();
     }
+
+    if (changedProperties.has('disableRelocate') || changedProperties.has('teleport')) {
+      if (this.disableRelocate) {
+        this.cancelRelocateTargetWait();
+      } else {
+        this.startRelocateTargetWait();
+      }
+    }
   }
 
   firstUpdated(): void {
@@ -396,6 +499,13 @@ export class SunmarStickyNav extends LitElement {
   }
 
   disconnectedCallback(): void {
+    if (this.isRelocating) {
+      super.disconnectedCallback();
+      return;
+    }
+
+    this.cancelRelocateTargetWait();
+    this.relocatedSelector = null;
     this.teardownNavLinkListeners();
     this.teardownSectionObserver();
     this.teardownStickyObserver();

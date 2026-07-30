@@ -37,11 +37,15 @@ const meta: Meta = {
 
 **Attributes**
 - \`top-offset\` — явный override отступа от верхней границы viewport для fixed-состояния
+- \`teleport\` — CSS-селектор целевого узла; по умолчанию \`.row-outer-container\`
+- \`disable-relocate\` — отключает перенос и имеет приоритет над \`teleport\`
 
 **Slots**
 - \`slot="nav-link"\` — рекомендуемый consumer contract: \`<a href="#section-id">...</a>\`
 
 **Поведение**
+- цель из \`teleport\` ожидается через \`MutationObserver\` не более 5 секунд; ожидание отменяется при отключении компонента или смене селектора
+- некорректный CSS-селектор безопасно игнорируется
 - если \`top-offset\` не задан, offset выбирается по текущему брейкпоинту при инициализации: mobile \`81\`, tablet \`65\`, desktop \`16\`
 - при достижении порога компонент переходит в fixed-состояние
 - порог фиксирования определяется через внутренний \`sentinel\`
@@ -71,7 +75,7 @@ export const Default: Story = {
   parameters: {
     docs: {
       source: {
-        code: `<sunmar-sticky-nav top-offset="12">
+        code: `<sunmar-sticky-nav teleport=".header-actions" top-offset="12">
   <a slot="nav-link" href="#april">Почему апрель?</a>
   <a slot="nav-link" href="#turkey">Турция</a>
   <a slot="nav-link" href="#egypt">Египет</a>
@@ -82,7 +86,7 @@ export const Default: Story = {
   render: () => html`
     <div style="background: #ffffff; padding: 24px 16px 120px;">
       <div style="max-width: 1280px; margin: 0 auto; display: grid; gap: 24px;">
-        <section style=${introStyle}>
+        <section class="header-actions" style=${introStyle}>
           <h2 style="margin: 0;">Промо-блок перед навигацией</h2>
           <p style="max-width: 720px; margin: 16px 0 0;">
             Этот блок нужен, чтобы в canvas было видно момент перехода навигации в fixed-состояние.
@@ -90,7 +94,7 @@ export const Default: Story = {
           </p>
         </section>
 
-        <sunmar-sticky-nav top-offset="12">
+        <sunmar-sticky-nav teleport=".header-actions" top-offset="12">
           <a slot="nav-link" href="#april">Почему апрель?</a>
           <a slot="nav-link" href="#turkey">Турция</a>
           <a slot="nav-link" href="#egypt">Египет</a>
