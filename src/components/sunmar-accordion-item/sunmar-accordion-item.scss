@@ -29,7 +29,11 @@
   font-family: inherit;
   margin: 0;
   padding: var(--sunmar-padding-xl);
-  transition: background-color 160ms ease;
+  list-style: none;
+}
+
+.trigger::-webkit-details-marker {
+  display: none;
 }
 
 .trigger-content {
@@ -54,21 +58,10 @@
   border-top: 3px solid currentColor;
   border-right: 3px solid currentColor;
   transform: rotate(-45deg);
-  transition: transform 180ms ease;
 }
 
 .panel {
-  display: grid;
-  grid-template-rows: 0fr;
-  visibility: hidden;
-  pointer-events: none;
-  transition:
-    grid-template-rows 220ms ease,
-    visibility 0s linear 220ms;
-}
-
-.panel-inner {
-  overflow: hidden;
+  display: block;
 }
 
 .content {
@@ -80,8 +73,6 @@
   padding-inline: var(--sunmar-padding-xl);
   padding-top: var(--sunmar-padding-l);
   padding-bottom: var(--sunmar-padding-xl);
-  opacity: 0;
-  transition: opacity 180ms ease;
 }
 
 ::slotted([slot='header']) {
@@ -97,20 +88,7 @@
   @include mixins.text-balance;
 }
 
-:host([open]) .content {
-  opacity: 1;
-}
-
-:host([open]) .panel {
-  grid-template-rows: 1fr;
-  visibility: visible;
-  pointer-events: auto;
-  transition:
-    grid-template-rows 220ms ease,
-    visibility 0s linear 0s;
-}
-
-:host([open]) .icon::before {
+.root[open] .icon::before {
   transform: rotate(-135deg);
 }
 
@@ -125,20 +103,6 @@
 .trigger:focus-visible {
   outline: 2px solid var(--sunmar-color-brand-blue);
   outline-offset: -2px;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .panel {
-    transition: none;
-  }
-
-  .icon::before {
-    transition: none;
-  }
-
-  .content {
-    transition: none;
-  }
 }
 
 @include mixins.media-min(bp-768) {
@@ -158,9 +122,6 @@
   .icon {
     width: var(--sunmar-icon-xl);
     height: var(--sunmar-icon-xl);
-  }
-
-  .panel {
   }
 
   .content {

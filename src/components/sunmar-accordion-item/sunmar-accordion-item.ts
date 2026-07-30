@@ -1,15 +1,13 @@
-import { LitElement, css, html, unsafeCSS } from 'lit';
+import { LitElement, css, html, nothing, unsafeCSS } from 'lit';
 import { componentBaseStyles } from '../../styles/component-base';
 import styles from './sunmar-accordion-item.scss?inline';
 
 export const SUNMAR_ACCORDION_ITEM_TAG_NAME = 'sunmar-accordion-item';
 const ACCORDION_ITEM_TOGGLE_REQUEST_EVENT = 'sunmar-accordion-item-toggle-request';
 
-let accordionItemIdCounter = 0;
-
 export class SunmarAccordionItem extends LitElement {
   static properties = {
-    open: { type: Boolean, reflect: true },
+    open: { type: Boolean, reflect: true, useDefault: true },
     disabled: { type: Boolean, reflect: true }
   };
 
@@ -20,56 +18,52 @@ export class SunmarAccordionItem extends LitElement {
   open = false;
   disabled = false;
 
-  private readonly itemUid = ++accordionItemIdCounter;
-
-  setOpen(next: boolean): void {
-    this.open = next;
-  }
-
   protected render() {
-    const triggerId = `sunmar-accordion-trigger-${this.itemUid}`;
-    const panelId = `sunmar-accordion-panel-${this.itemUid}`;
-
     return html`
-      <div class="root">
-        <button
-          id=${triggerId}
+      <details
+        class="root"
+        part="root"
+        ?open=${this.open}
+        @toggle=${this.onNativeToggle}
+      >
+        <summary
           class="trigger"
           part="trigger"
-          type="button"
-          aria-expanded=${String(this.open)}
-          aria-controls=${panelId}
-          ?disabled=${this.disabled}
-          @click=${this.onTriggerClick}
+          aria-disabled=${this.disabled ? 'true' : nothing}
+          tabindex=${this.disabled ? '-1' : nothing}
+          @click=${this.onSummaryClick}
         >
           <span class="trigger-content">
             <slot class="header-slot" name="header"></slot>
           </span>
           <span class="icon" part="icon" aria-hidden="true"></span>
-        </button>
+        </summary>
 
         <div
-          id=${panelId}
           class="panel"
-          role="region"
-          aria-labelledby=${triggerId}
-          aria-hidden=${String(!this.open)}
-          ?inert=${!this.open}
+          part="panel"
         >
-          <div class="panel-inner">
-            <div class="content" part="content">
-              <slot></slot>
-            </div>
+          <div class="content" part="content">
+            <slot></slot>
           </div>
         </div>
-      </div>
+      </details>
     `;
   }
 
-  private readonly onTriggerClick = (): void => {
+  private readonly onSummaryClick = (event: MouseEvent): void => {
     if (this.disabled) {
+      event.preventDefault();
+    }
+  };
+
+  private readonly onNativeToggle = (event: Event): void => {
+    const details = event.currentTarget;
+    if (!(details instanceof HTMLDetailsElement)) {
       return;
     }
+
+    this.open = details.open;
 
     this.dispatchEvent(
       new CustomEvent(ACCORDION_ITEM_TOGGLE_REQUEST_EVENT, {
