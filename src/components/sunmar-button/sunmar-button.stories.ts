@@ -9,36 +9,25 @@ const meta: Meta = {
     docs: {
       description: {
         component: `
-Базовый action-компонент на нативном \`button\`.
+Стилевая оболочка для нативного \`button\` или \`a\` в light DOM.
 
 **Семантический контракт**
-- внутри всегда рендерится нативный \`<button>\`
-- компонент отвечает за визуальный контракт и раскладку слотов, а не за внешний layout страницы
+- потребитель передает нативный \`<button>\` или \`<a>\` через default slot
+- нативный элемент самостоятельно отвечает за семантику, события, форму или навигацию
+- компонент отвечает только за визуальный контракт
 
 **Attributes**
 - \`type\` — визуальный вариант: \`primary\`, \`secondary\`, \`neutral\`
-- \`disabled\` — переводит компонент в disabled-состояние
-- \`native-type\` — нативный \`button\` type: \`button\`, \`submit\`, \`reset\`
 
 **Slots**
-- default slot — текстовая label
-- \`slot="prefix"\` — ведущая иконка или короткий inline-контент
-- \`slot="suffix"\` — завершающая иконка или короткий inline-контент
-
-**Parts**
-- \`control\` — нативный \`button\`
-- \`content\` — внутренняя flex-обертка контента
-- \`label\` — зона текстовой подписи
-- \`prefix\`, \`suffix\` — слоты для иконок и вспомогательного inline-контента
+- default slot — один нативный \`button\` или \`a\`
 
 **Поведение**
-- disabled-состояние прокидывается на нативный \`button\`
+- \`type/disabled/form/name/value\` задаются непосредственно на slotted \`button\`
+- \`href/target/rel\` задаются непосредственно на slotted \`a\`
+- события подписываются на нативный элемент и не эмулируются компонентом
 - компонент не управляет шириной, позиционированием и внешними отступами
 - для layout нескольких action-элементов рекомендуется \`sunmar-button-group\`
-
-**Ограничения**
-- prefix/suffix рассчитаны на короткий inline-контент
-- если нужен переход по ссылке, используйте \`sunmar-link\`, а не \`sunmar-button\`
 `
       }
     }
@@ -51,27 +40,72 @@ type Story = StoryObj;
 
 export const Primary: Story = {
   render: () => html`
-    <sunmar-button type="primary">Подобрать тур</sunmar-button>
+    <sunmar-button type="primary">
+      <button type="button">Подобрать тур</button>
+    </sunmar-button>
   `
 };
 
 export const Secondary: Story = {
   render: () => html`
-    <sunmar-button type="secondary">Подробнее</sunmar-button>
+    <sunmar-button type="secondary">
+      <a href="#details">Подробнее</a>
+    </sunmar-button>
   `
 };
 
 export const NeutralWithIcon: Story = {
   render: () => html`
     <sunmar-button type="neutral">
-      <span slot="prefix">★</span>
-      Избранное
+      <button type="button"><span aria-hidden="true">★</span> Избранное</button>
     </sunmar-button>
   `
 };
 
 export const Disabled: Story = {
   render: () => html`
-    <sunmar-button type="primary" disabled>Недоступно</sunmar-button>
+    <sunmar-button type="primary">
+      <button type="button" disabled>Недоступно</button>
+    </sunmar-button>
+  `
+};
+
+export const ExternalForm: Story = {
+  render: () => html`
+    <div style="display: grid; gap: 16px; min-width: 320px;">
+      <form
+        id="sunmar-booking-form"
+        @submit=${(event: SubmitEvent) => {
+          event.preventDefault();
+          const form = event.currentTarget as HTMLFormElement;
+          const output = form.parentElement?.querySelector<HTMLOutputElement>(
+            '#sunmar-booking-output'
+          );
+          if (output) {
+            output.value = 'Форма отправлена';
+          }
+        }}
+      >
+        <label>
+          Направление
+          <input name="destination" value="Турция" />
+        </label>
+      </form>
+
+      <sunmar-button type="primary">
+        <button
+          type="submit"
+          form="sunmar-booking-form"
+          name="action"
+          value="search"
+        >
+          Найти тур
+        </button>
+      </sunmar-button>
+      <sunmar-button type="neutral">
+        <button type="reset" form="sunmar-booking-form">Сбросить</button>
+      </sunmar-button>
+      <output id="sunmar-booking-output" aria-live="polite"></output>
+    </div>
   `
 };
