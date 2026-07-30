@@ -111,7 +111,7 @@
 
 - strict API: legacy-атрибуты (`variant`, `state`) и legacy alias-и не поддерживаются
 - `sunmar-button` — только стилевая оболочка; через default slot передается один нативный `<button>` или `<a>`
-- `sunmar-button` attributes: `type="primary|secondary|neutral"`
+- `sunmar-button` attributes: `type="primary|secondary|neutral"` (по умолчанию `primary`; отсутствующее или некорректное значение нормализуется в `primary`)
 - `sunmar-button` slots: `default`
 - `sunmar-button` parts: нет
 - состояния `hover/active` управляются только нативными псевдоклассами `:hover/:active` (без state-атрибутов)
