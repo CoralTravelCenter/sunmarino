@@ -9,5 +9,8 @@ export { SunmarTabs } from './components/sunmar-tabs/sunmar-tabs';
 export { SunmarTab } from './components/sunmar-tabs/sunmar-tab';
 export { SunmarTabContent } from './components/sunmar-tabs/sunmar-tab-content';
 export { SunmarStickyNav } from './components/sunmar-sticky-nav/sunmar-sticky-nav';
+export { SunmarCard } from './components/sunmar-card/sunmar-card';
+export { SunmarSlide } from './components/sunmar-slide/sunmar-slide';
+export { SunmarSlider } from './components/sunmar-slider/sunmar-slider';
 export { preloadScript } from './utils/dom/preload-script';
 export { registerSunmarComponents } from './registry/register-components';

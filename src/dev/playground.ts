@@ -5,6 +5,16 @@ import PREVIEW_HTML from './markup.html?raw'
 function renderPreview(target: HTMLElement): void {
   target.innerHTML = PREVIEW_HTML;
   setupTabsSync(target);
+  setupModalDemo(target);
+}
+
+function setupModalDemo(scope: ParentNode): void {
+  const opener = scope.querySelector<HTMLButtonElement>('#open-modal-demo');
+  const closer = scope.querySelector<HTMLButtonElement>('#close-modal-demo');
+  const modal = scope.querySelector<HTMLElement & { show(): void; hide(): void }>('#modal-demo');
+
+  opener?.addEventListener('click', () => modal?.show());
+  closer?.addEventListener('click', () => modal?.hide());
 }
 
 function setupTabsSync(scope: ParentNode): void {

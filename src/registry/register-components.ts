@@ -42,6 +42,18 @@ import {
   SUNMAR_STICKY_NAV_TAG_NAME,
   SunmarStickyNav
 } from '../components/sunmar-sticky-nav/sunmar-sticky-nav';
+import {
+  SUNMAR_CARD_TAG_NAME,
+  SunmarCard
+} from '../components/sunmar-card/sunmar-card';
+import {
+  SUNMAR_SLIDE_TAG_NAME,
+  SunmarSlide
+} from '../components/sunmar-slide/sunmar-slide';
+import {
+  SUNMAR_SLIDER_TAG_NAME,
+  SunmarSlider
+} from '../components/sunmar-slider/sunmar-slider';
 
 const sunmarComponentRegistryEntries = [
   [SUNMAR_MODAL_TAG_NAME, SunmarModal],
@@ -54,7 +66,10 @@ const sunmarComponentRegistryEntries = [
   [SUNMAR_TABS_TAG_NAME, SunmarTabs],
   [SUNMAR_TAB_TAG_NAME, SunmarTab],
   [SUNMAR_TAB_CONTENT_TAG_NAME, SunmarTabContent],
-  [SUNMAR_STICKY_NAV_TAG_NAME, SunmarStickyNav]
+  [SUNMAR_STICKY_NAV_TAG_NAME, SunmarStickyNav],
+  [SUNMAR_CARD_TAG_NAME, SunmarCard],
+  [SUNMAR_SLIDE_TAG_NAME, SunmarSlide],
+  [SUNMAR_SLIDER_TAG_NAME, SunmarSlider]
 ] as const;
 
 export function registerSunmarComponents(registry?: CustomElementRegistry): void {

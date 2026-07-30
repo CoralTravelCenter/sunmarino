@@ -1,9 +1,4 @@
 <style>
-  sunmar-kv::part(iframe-mob) {
-    width: 140%;
-    height: 140%;
-  }
-
   .sticky-nav-demo-sections {
     display: flex;
     flex-direction: column;
@@ -39,22 +34,38 @@
             src="https://b2ccdn.sunmar.ru/content/landing-pages/rb-summer/rb-kv-mo.jpg"
             alt=""
     ></sunmar-image>
-<!--    <div slot="video-desktop" data-vimeo-id="1162544497"></div>-->
-<!--    <div slot="video-mobile" data-vimeo-id="1162544372"></div>-->
     <h1 slot="title">ОчеВИДНАЯ выгода Раннего бронирования</h1>
     <p slot="text">
        Скидки до 50% скидки и предоплата 20% от стоимости
       </p>
     <div slot="actions">
       <sunmar-button-group>
-        <sunmar-button type="primary">Подобрать тур</sunmar-button>
+        <sunmar-button type="primary">
+          <button type="button">Подобрать тур</button>
+        </sunmar-button>
       </sunmar-button-group>
     </div>
   </sunmar-kv>
 </section>
+
+<section class="sunmarino">
+  <div class="sunmarino-container">
+    <h2 class="sunmar-h2">Modal</h2>
+    <sunmar-button type="primary">
+      <button id="open-modal-demo" type="button">Открыть модальное окно</button>
+    </sunmar-button>
+
+    <sunmar-modal id="modal-demo" aria-label="Проверка доступности модального окна">
+      <span slot="title">Проверка modal</span>
+      <p>Tab и Shift+Tab остаются внутри окна, Escape закрывает его.</p>
+      <button autofocus type="button">Первое действие</button>
+      <button id="close-modal-demo" slot="actions" type="button">Готово</button>
+    </sunmar-modal>
+  </div>
+</section>
 <section class="sunmarino">
     <div class="sunmarino-container">
-      <sunmar-sticky-nav>
+      <sunmar-sticky-nav teleport=".sunmarino-container">
         <a slot="nav-link" href="#april">Почему апрель?</a>
         <a slot="nav-link" href="#turkey">Турция</a>
         <a slot="nav-link" href="#egypt">Египет</a>

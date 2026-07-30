@@ -25,9 +25,7 @@
 - Общие re-exports без side effects: `src/exports.ts`
 - Dev preview (локально + monkey): `src/dev/playground.ts`
 - Scroll util для общих блокировок скролла: `src/utils/scroll/no-scroll.ts`
-- DOM util для ожидания host React app: `src/utils/dom/host-react-app-ready.ts`
 - Script util для ленивой загрузки внешних скриптов: `src/utils/dom/preload-script.ts`
-- Vimeo util (immediate autoplay + cleanup): `src/utils/video/vimeo-auto-play.ts`
 - Реестр регистрации компонентов: `src/registry/register-components.ts`
 - Runtime экспорт `:root` токенов (автоинъекция в `index.ts`): `src/styles/sunmar-tokens-runtime.scss`
 - SCSS mixins (только query helpers + `text-balance`): `src/styles/_mixins.scss`
@@ -102,7 +100,6 @@
 - `sunmar-accordion-item`
 - `sunmar-image`
 - `sunmar-kv`
-- `sunmar-link`
 - `sunmar-modal`
 - `sunmar-sticky-nav`
 - `sunmar-tabs`
@@ -113,24 +110,49 @@
 ## Button API
 
 - strict API: legacy-атрибуты (`variant`, `state`) и legacy alias-и не поддерживаются
-- `sunmar-button` attributes: `type="primary|secondary|neutral"`, `disabled`, `native-type="button|submit|reset"`
-- `sunmar-button` slots: `default`, `prefix`, `suffix`
-- `sunmar-button` parts: `control`, `content`, `label`, `prefix`, `suffix`
+- `sunmar-button` — только стилевая оболочка; через default slot передается один нативный `<button>` или `<a>`
+- `sunmar-button` attributes: `type="primary|secondary|neutral"`
+- `sunmar-button` slots: `default`
+- `sunmar-button` parts: нет
 - состояния `hover/active` управляются только нативными псевдоклассами `:hover/:active` (без state-атрибутов)
-- кастомные JS-действия вешаем на хост: `document.querySelector('sunmar-button')?.addEventListener('click', ...)`
+- для `<button>` атрибуты `type`, `disabled`, `form`, `name`, `value` задаются на самом нативном элементе
+- для `<a>` атрибуты `href`, `target`, `rel` задаются на самой нативной ссылке
+- submit/reset/validation, навигация, disabled и события остаются полностью нативными и не эмулируются компонентом
+- обработчики действий рекомендуется вешать непосредственно на slotted `button` или `a`
+
+```html
+<sunmar-button type="primary">
+  <button type="submit" form="booking-form" name="action" value="search">
+    Найти тур
+  </button>
+</sunmar-button>
+
+<sunmar-button type="secondary">
+  <a href="/offers" target="_blank" rel="noopener noreferrer">Предложения</a>
+</sunmar-button>
+```
 - `sunmar-button-group` attributes: нет (layout управляется стилями; по умолчанию `flex-wrap: wrap`)
 - `sunmar-button-group` parts: `group`
 
-## Link API
+## Modal API
 
-- strict API: используем только атрибуты из документации (legacy alias-и не поддерживаются)
-- `sunmar-link` attributes: `type="primary|secondary|neutral"`, `href`, `target`, `rel`, `download`, `disabled`
-- `sunmar-link` slots: `default`, `prefix`, `suffix`
-- `sunmar-link` parts: `control`, `content`, `label`, `prefix`, `suffix`
-- состояния `hover/active` управляются нативными псевдоклассами `:hover/:active`
-- `disabled` реализуется через `aria-disabled`, `tabindex="-1"` и блокировку `click`
-- при `target="_blank"` автоматически добавляется безопасный `rel` (`noopener noreferrer`), если `rel` не задан
-- обработчики JS также вешаем на хост: `document.querySelector('sunmar-link')?.addEventListener('click', ...)`
+- `sunmar-modal` attributes: `open`, `close-on-backdrop`, `close-on-esc`, `aria-label`, `aria-labelledby`
+- `sunmar-modal` methods: `show()`, `hide()`, `toggle()`
+- `sunmar-modal` events: `sunmar-open`, `sunmar-close`
+- `aria-label` задаёт явное доступное имя; без него dialog использует `aria-labelledby` или внутренний заголовок
+- при открытии фокус переходит внутрь modal и удерживается там по Tab/Shift+Tab
+- Escape закрывает окно, если `close-on-esc` включён
+- после закрытия фокус возвращается на ранее активный элемент
+- фон временно получает `inert`; исходное состояние всех затронутых элементов восстанавливается
+- начальный `open=false` не вызывает `sunmar-close`
+
+```html
+<button id="open-booking-modal" type="button">Открыть</button>
+<sunmar-modal aria-label="Подтверждение бронирования">
+  <span slot="title">Подтверждение бронирования</span>
+  <button autofocus type="button">Изменить параметры</button>
+</sunmar-modal>
+```
 
 ## Image API
 
@@ -145,14 +167,19 @@
 
 - `sunmar-sticky-nav` attributes:
   - `top-offset` (number, optional override для отступа sticky-блока от верхней границы viewport)
+  - `teleport` (CSS-селектор целевого DOM-узла; по умолчанию `.row-outer-container`)
   - `disable-relocate` (boolean, отключает автоматический перенос компонента в DOM)
 - `sunmar-sticky-nav` slots:
   - `nav-link` (рекомендуемый consumer contract: `<a href="#section-id">...</a>`)
 - `sunmar-sticky-nav` parts: `root`
 - компонент реализован через нативный `position: sticky`
 - есть минимальная JS-логика:
-  - в `connectedCallback()` компонент переносится сразу за ближайший `.row-outer-container`, если он найден
-  - `disable-relocate` отключает этот DOM-side effect
+  - компонент переносится сразу после узла, найденного по `teleport`; сначала проверяется ближайший предок, затем весь документ
+  - без `teleport` используется `.row-outer-container` для обратной совместимости
+  - при изменении `teleport` в runtime компонент отменяет предыдущее ожидание и ищет новую цель
+  - некорректный CSS-селектор безопасно игнорируется
+  - `disable-relocate` отключает перенос и имеет приоритет над `teleport`
+  - ожидание целевого узла отменяется при отключении компонента
   - если `top-offset` не задан, верхний offset вычисляется реактивно через `matchMedia`: mobile `81px`, tablet `65px`, desktop `16px`
   - active-state ссылок синхронизируется по `IntersectionObserver` на основе `href="#section-id"` и реальных `section[id]`
   - если `href` пустой/битый или целевая секция не найдена, компонент безопасно игнорирует такую ссылку и не ломает скрипты
@@ -165,7 +192,7 @@
 Пример:
 
 ```html
-<sunmar-sticky-nav disable-relocate top-offset="12">
+<sunmar-sticky-nav teleport=".header-actions" top-offset="12">
   <a slot="nav-link" href="#about">О проекте</a>
   <a slot="nav-link" href="#details">Детали</a>
   <a slot="nav-link" href="#faq">FAQ</a>
@@ -184,20 +211,8 @@
 
 ## KV API
 
-- `sunmar-kv` video API:
-  - видео опционально
-  - источник видео задается не атрибутами, а отдельными slotted config-узлами
-  - если `slot="video-desktop"` и `slot="video-mobile"` отсутствуют, компонент работает только с изображением
-  - ожидаемый контракт config-узла: любой элемент с `slot="video-desktop"` или `slot="video-mobile"` и `data-vimeo-id="..."`
-- выбор видео-источника:
-  - `< 768px`: сначала `video-mobile`, затем fallback на `video-desktop`
-  - `>= 768px`: сначала `video-desktop`, затем fallback на `video-mobile`
-- `sunmar-kv` behavior: если активный Vimeo playback начался, видео плавно проявляется поверх fallback-картинки
-- `sunmar-kv` использует общий util `vimeoAutoPlay(...)` (Vimeo Player API, immediate autoplay без `IntersectionObserver`)
 - `sunmar-kv` media slots:
   - `image` (обычно `sunmar-image`; допустим любой media-узел, который сам умеет корректно заполнять область визуала)
-  - `video-desktop` (config-узел с `data-vimeo-id`, активен от `768px`)
-  - `video-mobile` (config-узел с `data-vimeo-id`, активен до `767px`)
 - `sunmar-kv` content slots:
   - `eyebrow` (контент, лучше `span` или `p`)
   - `title` (ожидается семантический заголовок `h1|h2|h3` в light DOM)
@@ -218,19 +233,10 @@
   - base: `40px`
   - `>= 1440px`: `56px`
 - `text` font-size: `16px`
-- `sunmar-kv` parts: `root`, `media`, `picture`, `video`, `video-frame`, `content`, `content-inner`, `eyebrow`, `title`, `text`, `actions`
-- Vimeo iframe создается SDK динамически; `sunmar-kv` через `MutationObserver` ставит на него `part="iframe"` (desktop) или `part="iframe-mob"` (mobile)
-- CSS custom properties для Vimeo iframe:
-  - `--sunmar-kv-video-width` (default `100%`)
-  - `--sunmar-kv-video-height` (default `100%`)
-- для редких точечных кейсов размеры и позиционирование Vimeo iframe также можно переопределять через `::part(iframe)` и `::part(iframe-mob)`
+- `sunmar-kv` parts: `root`, `media`, `picture`, `content`, `content-inner`, `eyebrow`, `title`, `text`, `actions`
 - SEO-friendly контракт:
   - значимый контент (`title`, `text`, `actions`) должен приходить уже семантическим в light DOM
   - компонент отвечает за layout и styling, а не за генерацию `h1/p` из `span`
-- fallback-модель media:
-  - изображение всегда остается baseline
-  - видео показываем только после успешной загрузки и старта playback
-  - при ошибке Vimeo или медленной сети ничего не делаем — остается изображение
 - для точечного визуального переопределения используем `::part(...)`, если базового контракта недостаточно
 
 ## Accordion API
