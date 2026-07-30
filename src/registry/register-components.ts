@@ -39,9 +39,9 @@ import {
   SunmarTab
 } from '../components/sunmar-tabs/sunmar-tab';
 import {
-  SUNMAR_TAB_PANEL_TAG_NAME,
-  SunmarTabPanel
-} from '../components/sunmar-tabs/sunmar-tab-panel';
+  SUNMAR_TAB_CONTENT_TAG_NAME,
+  SunmarTabContent
+} from '../components/sunmar-tabs/sunmar-tab-content';
 import {
   SUNMAR_STICKY_NAV_TAG_NAME,
   SunmarStickyNav
@@ -58,7 +58,7 @@ const sunmarComponentRegistryEntries = [
   [SUNMAR_ACCORDION_ITEM_TAG_NAME, SunmarAccordionItem],
   [SUNMAR_TABS_TAG_NAME, SunmarTabs],
   [SUNMAR_TAB_TAG_NAME, SunmarTab],
-  [SUNMAR_TAB_PANEL_TAG_NAME, SunmarTabPanel],
+  [SUNMAR_TAB_CONTENT_TAG_NAME, SunmarTabContent],
   [SUNMAR_STICKY_NAV_TAG_NAME, SunmarStickyNav]
 ] as const;
 

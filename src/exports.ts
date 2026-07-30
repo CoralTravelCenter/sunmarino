@@ -8,7 +8,7 @@ export { SunmarAccordion } from './components/sunmar-accordion/sunmar-accordion'
 export { SunmarAccordionItem } from './components/sunmar-accordion-item/sunmar-accordion-item';
 export { SunmarTabs } from './components/sunmar-tabs/sunmar-tabs';
 export { SunmarTab } from './components/sunmar-tabs/sunmar-tab';
-export { SunmarTabPanel } from './components/sunmar-tabs/sunmar-tab-panel';
+export { SunmarTabContent } from './components/sunmar-tabs/sunmar-tab-content';
 export { SunmarStickyNav } from './components/sunmar-sticky-nav/sunmar-sticky-nav';
 export { preloadScript } from './utils/dom/preload-script';
 export { registerSunmarComponents } from './registry/register-components';
