@@ -7,6 +7,14 @@ export const SUNMAR_IMAGE_TAG_NAME = 'sunmar-image';
 
 export type SunmarImageLoading = 'eager' | 'lazy';
 
+const normalizeDimension = (value: number | undefined): number | undefined =>
+  typeof value === 'number' && Number.isFinite(value) && value > 0
+    ? Math.floor(value)
+    : undefined;
+
+const normalizeLoading = (value: string | undefined): SunmarImageLoading | undefined =>
+  value === 'eager' || value === 'lazy' ? value : undefined;
+
 export class SunmarImage extends LitElement {
   static properties = {
     src: { type: String },
@@ -37,6 +45,9 @@ export class SunmarImage extends LitElement {
     const sizes = this.sizes.trim();
     const media = this.media.trim();
     const src = this.src.trim();
+    const width = normalizeDimension(this.width);
+    const height = normalizeDimension(this.height);
+    const loading = normalizeLoading(this.loading);
 
     return html`
       <picture class="picture" part="picture">
@@ -54,9 +65,9 @@ export class SunmarImage extends LitElement {
           part="img"
           src=${ifDefined(src || undefined)}
           alt=${this.alt}
-          width=${ifDefined(this.width)}
-          height=${ifDefined(this.height)}
-          loading=${ifDefined(this.loading)}
+          width=${ifDefined(width)}
+          height=${ifDefined(height)}
+          loading=${ifDefined(loading)}
         />
       </picture>
     `;

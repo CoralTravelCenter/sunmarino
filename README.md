@@ -169,8 +169,16 @@
 
 ## Image API
 
-- `sunmar-image` attributes: `src`, `srcset` (optional), `media` (optional, default `'(min-width: 768px)'`), `alt`
-- `sunmar-image` внутри рендерит `picture` (`source` + fallback `img`) и упрощает использование в `sunmar-kv`
+- `sunmar-image` attributes:
+  - `src` — обязательный fallback-источник для внутреннего `img`
+  - `srcset` — необязательный набор источников для `source` внутри `picture`
+  - `media` — условие для `source` (по умолчанию `'(min-width: 768px)'`)
+  - `sizes` — необязательная подсказка размеров для `source`
+  - `alt` — осмысленное описание либо пустая строка для декоративного изображения
+  - `width`, `height` — положительные размеры внутреннего `img`; некорректные значения не передаются
+  - `loading="eager|lazy"` — необязательный нативный режим загрузки; неизвестное значение не передаётся
+- `sunmar-image` внутри рендерит `picture` (`source` + fallback `img`) и упрощает art direction в `sunmar-kv`
+- когда размеры изображения известны, указывайте `width` и `height`, чтобы браузер заранее резервировал место и уменьшал layout shift
 - `sunmar-image` parts: `picture`, `img`
 - CSS custom properties:
   - `--sunmar-image-object-fit` (default `cover`)
