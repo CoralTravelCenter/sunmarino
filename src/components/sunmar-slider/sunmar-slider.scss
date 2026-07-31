@@ -206,6 +206,7 @@
 
       display: grid;
       grid-template-columns: repeat(var(--slides-per-view), minmax(0, 1fr));
+      grid-auto-rows: 1fr;
       gap: var(--sunmar-slider-gap);
       margin-inline-start: 0;
       transform: none !important;
