@@ -9,11 +9,10 @@ export class SunmarTab extends LitElement {
   static styles = [componentBaseStyles, css`${unsafeCSS(styles)}`];
 
   @property({ type: String }) value = '';
-  @property({ type: Boolean }) disabled = false;
   @property({ type: Boolean }) forced = false;
 
   protected render() {
-    return html`<slot part="control"></slot>`;
+    return html`<slot></slot>`;
   }
 }
 

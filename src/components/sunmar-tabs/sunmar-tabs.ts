@@ -9,7 +9,7 @@ const TAB_TAG_NAME = 'sunmar-tab';
 const TAB_CONTENT_TAG_NAME = 'sunmar-tab-content';
 const TABS_CHANGE_EVENT = 'sunmar-tabs-change';
 
-type TabElement = HTMLElement & { value?: string; disabled?: boolean; forced?: boolean };
+type TabElement = HTMLElement & { value?: string; forced?: boolean };
 type TabContentElement = HTMLElement & { value?: string };
 
 export type SunmarTabsChangeDetail = {
@@ -163,7 +163,7 @@ export class SunmarTabs extends LitElement {
   }
 
   private isDisabled(tab: TabElement): boolean {
-    return Boolean(tab.disabled || tab.querySelector('button')?.disabled);
+    return Boolean(tab.querySelector('button')?.disabled);
   }
 
   private canActivate(value: string): boolean {
