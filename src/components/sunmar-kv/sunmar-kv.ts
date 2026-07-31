@@ -29,7 +29,7 @@ export class SunmarKv extends LitElement {
             <div class="text" part="text">
               <slot name="text"></slot>
             </div>
-            <slot class="actions-slot" name="actions"></slot>
+            <slot name="actions"></slot>
           </div>
         </div>
       </section>

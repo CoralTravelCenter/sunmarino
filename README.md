@@ -232,11 +232,11 @@
 
 ## KV API
 
-- `sunmar-kv` media slots:
+- обязательные slots:
   - `image` (обычно `sunmar-image`; допустим любой media-узел, который сам умеет корректно заполнять область визуала)
-- `sunmar-kv` content slots:
-  - `eyebrow` (контент, лучше `span` или `p`)
   - `title` (ожидается семантический заголовок `h1|h2|h3` в light DOM)
+- необязательные slots:
+  - `eyebrow` (контент, лучше `span` или `p`)
   - `text` (ожидается `p` в light DOM)
   - `actions`
 - размеры `KV`:
@@ -254,7 +254,13 @@
   - base: `40px`
   - `>= 1440px`: `56px`
 - `text` font-size: `16px`
-- `sunmar-kv` parts: `root`, `media`, `picture`, `content`, `content-inner`, `eyebrow`, `title`, `text`, `actions`
+- `sunmar-kv` parts: `root`, `media`, `picture`, `content`, `content-inner`, `eyebrow`, `title`, `text`
+- CSS custom properties:
+  - `--sunmar-kv-content-color`
+  - `--sunmar-kv-content-max-width`
+  - `--sunmar-kv-eyebrow-color`
+  - `--sunmar-kv-title-color`
+  - `--sunmar-kv-text-color`
 - SEO-friendly контракт:
   - значимый контент (`title`, `text`, `actions`) должен приходить уже семантическим в light DOM
   - компонент отвечает за layout и styling, а не за генерацию `h1/p` из `span`
