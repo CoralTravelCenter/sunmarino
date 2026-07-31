@@ -191,6 +191,18 @@
   - `--sunmar-image-object-fit` (default `cover`)
   - `--sunmar-image-object-position` (default `center center`)
 
+## Slide API
+
+- `sunmar-slide` — структурный элемент `sunmar-slider`; собственной логики переключения не содержит
+- использовать компонент следует непосредственным дочерним элементом `sunmar-slider`, чтобы он получил ширину и отступы из CSS-контракта родителя
+- attributes: стандартные глобальные HTML-атрибуты; для доступного имени можно передать `aria-label`
+- slots: default
+- parts: `slide`
+- ширина определяется родительской переменной `--sunmar-slider-slides-per-view`
+- внутренний отступ определяется родительской переменной `--sunmar-slider-slide-padding`
+- компонент по умолчанию получает `role="group"` и `aria-roledescription="slide"`, если потребитель не передал собственные значения
+- высота slotted-контента компонентом не переопределяется; если содержимое должно заполнять слайд по высоте, это явно задаётся самому элементу в light DOM
+
 ## Sticky Nav API
 
 - `sunmar-sticky-nav` attributes:

@@ -9,8 +9,3 @@
 .root {
   height: 100%;
 }
-
-::slotted(*) {
-  display: block;
-  height: 100%;
-}
