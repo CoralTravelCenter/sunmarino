@@ -203,6 +203,24 @@
 - компонент по умолчанию получает `role="group"` и `aria-roledescription="slide"`, если потребитель не передал собственные значения
 - высота slotted-контента компонентом не переопределяется; если содержимое должно заполнять слайд по высоте, это явно задаётся самому элементу в light DOM
 
+## Slider API
+
+- `sunmar-slider` — карусель для непосредственных дочерних элементов `sunmar-slide`
+- для доступного имени карусели потребитель должен передать `aria-label` или `aria-labelledby`
+- attributes:
+  - `slides-per-view`, `slides-per-view-768`, `slides-per-view-1024`, `slides-per-view-1280`, `slides-per-view-1440` — количество видимых слайдов; некорректные значения заменяются безопасным fallback
+  - `slides-to-scroll="auto|number"` — количество слайдов за одно переключение; по умолчанию `1`
+  - `disabled-from="768|1024|1280|1440"` — отключает карусель и переводит содержимое в grid с указанного брейкпоинта; другие значения игнорируются
+  - `align="start|center|end"` — выравнивание Embla; некорректное значение заменяется на `start`
+  - `drag-free`, `loop` — boolean-настройки Embla
+  - `gap` — неотрицательный отступ между слайдами; по умолчанию `16`
+- slots: default
+- parts: `viewport`, `container`, `controls`, `navigation`, `prev-button`, `next-button`, `pagination`, `dot`, `status`
+- CSS custom properties: `--sunmar-slider-control-color`, `--sunmar-slider-navigation-background`, `--sunmar-slider-dot-color`
+- после получения слайдов компонент добавляет им позиционные доступные имена вида «Слайд 1 из 6», не перезаписывая `aria-label`, заданный потребителем
+- до успешной загрузки Embla остаётся нативный горизонтальный scroll fallback, а неработающие controls скрыты
+- Embla загружается лениво по URL, определённому в `embla-loader.ts`
+
 ## Sticky Nav API
 
 - `sunmar-sticky-nav` attributes:

@@ -5,6 +5,9 @@ import styles from './sunmar-slider.scss?inline';
 
 export const SUNMAR_SLIDER_TAG_NAME = 'sunmar-slider';
 
+const SUPPORTED_DISABLED_BREAKPOINTS = [768, 1024, 1280, 1440] as const;
+const SUPPORTED_ALIGNMENTS = ['start', 'center', 'end'] as const;
+
 export class SunmarSlider extends LitElement {
   static properties = {
     slidesPerView: { type: Number, attribute: 'slides-per-view' },
@@ -39,10 +42,15 @@ export class SunmarSlider extends LitElement {
   private activeIndex = 0;
   private snapCount = 0;
   private embla?: EmblaApi;
+  private generatedSlideLabels = new WeakMap<HTMLElement, string>();
+  private labeledSlides = new Set<HTMLElement>();
 
   connectedCallback(): void {
     super.connectedCallback();
-    if (this.hasUpdated) void this.initEmbla();
+    if (this.hasUpdated) {
+      this.syncSlideLabels();
+      void this.initEmbla();
+    }
   }
 
   protected firstUpdated(): void {
@@ -62,6 +70,7 @@ export class SunmarSlider extends LitElement {
   disconnectedCallback(): void {
     this.embla?.destroy();
     this.embla = undefined;
+    this.clearGeneratedSlideLabels();
     this.removeAttribute('embla-ready');
     super.disconnectedCallback();
   }
@@ -73,10 +82,16 @@ export class SunmarSlider extends LitElement {
 
   private getEmblaOptions(): EmblaOptions {
     const container = this.renderRoot.querySelector<HTMLSlotElement>('.container');
-    const disabledFrom = this.disabledFrom;
+    const disabledFrom = SUPPORTED_DISABLED_BREAKPOINTS.find(
+      (breakpoint) => breakpoint === this.disabledFrom
+    );
+    const align = SUPPORTED_ALIGNMENTS.includes(this.align) ? this.align : 'start';
+    const slidesToScroll = this.slidesToScroll === 'auto'
+      ? 'auto'
+      : this.getValidNumber(Number(this.slidesToScroll), 1, 1);
 
     return {
-      align: this.align,
+      align,
       breakpoints: disabledFrom
         ? { [`(min-width: ${disabledFrom}px)`]: { active: false } }
         : undefined,
@@ -84,10 +99,54 @@ export class SunmarSlider extends LitElement {
       dragFree: this.dragFree,
       loop: this.loop,
       slides: this.slides,
-      slidesToScroll: this.slidesToScroll === 'auto'
-        ? 'auto'
-        : Math.max(1, Number.parseInt(this.slidesToScroll, 10) || 1)
+      slidesToScroll
     };
+  }
+
+  private getValidNumber(value: number, fallback: number, minimum: number): number {
+    return Number.isFinite(value) && value >= minimum ? value : fallback;
+  }
+
+  private syncSlideLabels(): void {
+    const slides = this.slides;
+    const currentSlides = new Set(slides);
+
+    for (const slide of this.labeledSlides) {
+      if (currentSlides.has(slide)) continue;
+
+      const generatedLabel = this.generatedSlideLabels.get(slide);
+      if (slide.getAttribute('aria-label') === generatedLabel) {
+        slide.removeAttribute('aria-label');
+      }
+      this.generatedSlideLabels.delete(slide);
+      this.labeledSlides.delete(slide);
+    }
+
+    slides.forEach((slide, index) => {
+      const currentLabel = slide.getAttribute('aria-label');
+      const generatedLabel = this.generatedSlideLabels.get(slide);
+
+      if (currentLabel && currentLabel !== generatedLabel) {
+        this.generatedSlideLabels.delete(slide);
+        this.labeledSlides.delete(slide);
+        return;
+      }
+
+      const nextLabel = `Слайд ${index + 1} из ${slides.length}`;
+      slide.setAttribute('aria-label', nextLabel);
+      this.generatedSlideLabels.set(slide, nextLabel);
+      this.labeledSlides.add(slide);
+    });
+  }
+
+  private clearGeneratedSlideLabels(): void {
+    for (const slide of this.labeledSlides) {
+      const generatedLabel = this.generatedSlideLabels.get(slide);
+      if (slide.getAttribute('aria-label') === generatedLabel) {
+        slide.removeAttribute('aria-label');
+      }
+    }
+    this.labeledSlides.clear();
   }
 
   private async initEmbla(): Promise<void> {
@@ -113,17 +172,18 @@ export class SunmarSlider extends LitElement {
   };
 
   private handleSlotChange(): void {
+    this.syncSlideLabels();
     this.embla?.reInit(this.getEmblaOptions());
   }
 
   protected render() {
     const slideStyles = [
-      `--sunmar-slider-gap:${Math.max(0, this.gap)}px`,
-      `--sunmar-slider-slides:${Math.max(1, this.slidesPerView)}`,
-      `--sunmar-slider-slides-768:${Math.max(1, this.slidesPerView768 ?? this.slidesPerView)}`,
-      `--sunmar-slider-slides-1024:${Math.max(1, this.slidesPerView1024 ?? this.slidesPerView768 ?? this.slidesPerView)}`,
-      `--sunmar-slider-slides-1280:${Math.max(1, this.slidesPerView1280 ?? this.slidesPerView1024 ?? this.slidesPerView768 ?? this.slidesPerView)}`,
-      `--sunmar-slider-slides-1440:${Math.max(1, this.slidesPerView1440 ?? this.slidesPerView1280 ?? this.slidesPerView1024 ?? this.slidesPerView768 ?? this.slidesPerView)}`
+      `--sunmar-slider-gap:${this.getValidNumber(this.gap, 16, 0)}px`,
+      `--sunmar-slider-slides:${this.getValidNumber(this.slidesPerView, 1, 1)}`,
+      `--sunmar-slider-slides-768:${this.getValidNumber(this.slidesPerView768 ?? this.slidesPerView, 1, 1)}`,
+      `--sunmar-slider-slides-1024:${this.getValidNumber(this.slidesPerView1024 ?? this.slidesPerView768 ?? this.slidesPerView, 1, 1)}`,
+      `--sunmar-slider-slides-1280:${this.getValidNumber(this.slidesPerView1280 ?? this.slidesPerView1024 ?? this.slidesPerView768 ?? this.slidesPerView, 1, 1)}`,
+      `--sunmar-slider-slides-1440:${this.getValidNumber(this.slidesPerView1440 ?? this.slidesPerView1280 ?? this.slidesPerView1024 ?? this.slidesPerView768 ?? this.slidesPerView, 1, 1)}`
     ].join(';');
 
     return html`
@@ -164,7 +224,7 @@ export class SunmarSlider extends LitElement {
           </button>
         </div>
 
-        <div class="pagination" part="pagination" aria-label="Выбор слайда">
+        <div class="pagination" part="pagination" role="group" aria-label="Выбор слайда">
           ${Array.from({ length: this.snapCount }, (_, index) => html`
             <button
               class="dot"
