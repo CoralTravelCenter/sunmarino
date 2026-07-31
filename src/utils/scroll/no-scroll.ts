@@ -23,7 +23,3 @@ export function releasePageScrollLock(): void {
     enablePageScroll();
   }
 }
-
-export function getPageScrollLockCount(): number {
-  return lockCount;
-}

@@ -1,4 +1,5 @@
 import { LitElement, css, html, nothing, unsafeCSS } from 'lit';
+import { state } from 'lit/decorators.js';
 import { componentBaseStyles } from '../../styles/component-base';
 import { acquirePageScrollLock, releasePageScrollLock } from '../../utils/scroll/no-scroll';
 import styles from './sunmar-modal.scss?inline';
@@ -18,13 +19,30 @@ const FOCUSABLE_SELECTOR = [
   '[tabindex]:not([tabindex="-1"])'
 ].join(',');
 
+const enabledByDefaultBooleanConverter = {
+  fromAttribute(value: string | null): boolean {
+    return value !== 'false';
+  },
+  toAttribute(value: boolean): string {
+    return value ? '' : 'false';
+  }
+};
+
 let modalIdCounter = 0;
 
 export class SunmarModal extends LitElement {
   static properties = {
     open: { type: Boolean, reflect: true },
-    closeOnBackdrop: { type: Boolean, reflect: true, attribute: 'close-on-backdrop' },
-    closeOnEsc: { type: Boolean, reflect: true, attribute: 'close-on-esc' },
+    closeOnBackdrop: {
+      reflect: true,
+      attribute: 'close-on-backdrop',
+      converter: enabledByDefaultBooleanConverter
+    },
+    closeOnEsc: {
+      reflect: true,
+      attribute: 'close-on-esc',
+      converter: enabledByDefaultBooleanConverter
+    },
     ariaLabel: { type: String, attribute: 'aria-label' },
     ariaLabelledby: { type: String, attribute: 'aria-labelledby' }
   };
@@ -38,6 +56,9 @@ export class SunmarModal extends LitElement {
   closeOnEsc = true;
   ariaLabel: string | null = null;
   ariaLabelledby: string | null = null;
+
+  @state()
+  private hasActions = false;
 
   private hasScrollLock = false;
   private hasDocumentHandlers = false;
@@ -152,8 +173,8 @@ export class SunmarModal extends LitElement {
           <div class="body" part="body">
             <slot></slot>
           </div>
-          <footer class="actions" part="actions">
-            <slot name="actions"></slot>
+          <footer class="actions" part="actions" ?hidden=${!this.hasActions}>
+            <slot name="actions" @slotchange=${this.handleActionsSlotChange}></slot>
           </footer>
         </section>
       </div>
@@ -168,6 +189,13 @@ export class SunmarModal extends LitElement {
 
   private stopPropagation = (event: Event): void => {
     event.stopPropagation();
+  };
+
+  private readonly handleActionsSlotChange = (event: Event): void => {
+    const slot = event.target;
+    if (slot instanceof HTMLSlotElement) {
+      this.hasActions = slot.assignedElements({ flatten: true }).length > 0;
+    }
   };
 
   private toggleDocumentHandlers(enabled: boolean): void {
@@ -286,6 +314,7 @@ export class SunmarModal extends LitElement {
     return (
       !element.hidden &&
       !element.inert &&
+      element.tabIndex >= 0 &&
       element.getAttribute('aria-hidden') !== 'true' &&
       element.getClientRects().length > 0
     );

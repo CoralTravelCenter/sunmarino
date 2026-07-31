@@ -88,6 +88,10 @@
   border-top: 1px solid var(--sunmar-modal-border);
 }
 
+.actions[hidden] {
+  display: none;
+}
+
 @include mixins.media-min(bp-768) {
   .title {
     font-size: 20px;

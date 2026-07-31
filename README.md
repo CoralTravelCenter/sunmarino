@@ -149,9 +149,16 @@
 
 ## Modal API
 
-- `sunmar-modal` attributes: `open`, `close-on-backdrop`, `close-on-esc`, `aria-label`, `aria-labelledby`
+- `sunmar-modal` attributes:
+  - `open`
+  - `close-on-backdrop` — включено по умолчанию; значение `"false"` отключает закрытие по фону
+  - `close-on-esc` — включено по умолчанию; значение `"false"` отключает закрытие по Escape
+  - `aria-label`, `aria-labelledby`
 - `sunmar-modal` methods: `show()`, `hide()`, `toggle()`
 - `sunmar-modal` events: `sunmar-open`, `sunmar-close`
+- slots: `title`, default, `actions` (необязательный; пустой footer не занимает место)
+- parts: `overlay`, `dialog`, `header`, `title`, `close`, `body`, `actions`
+- CSS custom properties: `--sunmar-modal-z-index`, `--sunmar-modal-overlay`, `--sunmar-modal-surface`, `--sunmar-modal-border`, `--sunmar-modal-title`, `--sunmar-modal-text`
 - `aria-label` задаёт явное доступное имя; без него dialog использует `aria-labelledby` или внутренний заголовок
 - при открытии фокус переходит внутрь modal и удерживается там по Tab/Shift+Tab
 - Escape закрывает окно, если `close-on-esc` включён
