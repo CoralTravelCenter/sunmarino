@@ -59,21 +59,30 @@ export class SunmarTabs extends LitElement {
     if (changed.has('value')) this.sync();
   }
 
-  forced(value: string): void {
-    const nextValue = value.trim();
-    if (!this.canActivate(nextValue)) return;
-
-    this.value = nextValue;
-  }
-
   private readonly sync = (): void => {
     const tabs = this.tabs;
     const panels = this.panels;
-    const panelsByValue = new Map(
-      panels.map((panel) => [panel.value?.trim() ?? '', panel] as const).filter(([value]) => value)
-    );
+    const panelsByValue = new Map<string, TabContentElement>();
+    const tabsByValue = new Map<string, TabElement>();
+
+    for (const panel of panels) {
+      const panelValue = panel.value?.trim() ?? '';
+      if (panelValue && !panelsByValue.has(panelValue)) {
+        panelsByValue.set(panelValue, panel);
+      }
+    }
+
+    for (const tab of tabs) {
+      const tabValue = tab.value?.trim() ?? '';
+      if (tabValue && this.getButton(tab) && !tabsByValue.has(tabValue)) {
+        tabsByValue.set(tabValue, tab);
+      }
+    }
+
     const isAvailable = (tab: TabElement): boolean =>
-      !this.isDisabled(tab) && panelsByValue.has(tab.value?.trim() ?? '');
+      tabsByValue.get(tab.value?.trim() ?? '') === tab
+      && !this.isDisabled(tab)
+      && panelsByValue.has(tab.value?.trim() ?? '');
     const forcedValue = this.initialized
       ? ''
       : tabs.find((tab) => tab.forced && isAvailable(tab))?.value?.trim() ?? '';
@@ -87,45 +96,47 @@ export class SunmarTabs extends LitElement {
 
     if (activeValue !== this.value) this.value = activeValue;
 
-    for (const panel of panels) {
+    panels.forEach((panel, index) => {
       const panelValue = panel.value?.trim() ?? '';
-      panel.id ||= this.idFor('panel', panelValue);
+      const isPrimaryPanel = panelsByValue.get(panelValue) === panel;
+      panel.id ||= this.idFor('panel', index);
       panel.setAttribute('role', 'tabpanel');
-      panel.toggleAttribute('active', panelValue === activeValue);
-    }
+      panel.removeAttribute('aria-labelledby');
+      panel.toggleAttribute('active', isPrimaryPanel && panelValue === activeValue);
+    });
 
-    for (const tab of tabs) {
+    tabs.forEach((tab, index) => {
       const tabValue = tab.value?.trim() ?? '';
-      const button = tab.querySelector('button');
+      const button = this.getButton(tab);
       const panel = panelsByValue.get(tabValue);
-      const tabId = button?.id || tab.id || this.idFor('tab', tabValue);
-      tab.toggleAttribute('selected', tabValue === activeValue);
-      if (!button) continue;
-      button.id ||= tabId;
+      const available = isAvailable(tab);
+      const selected = available && tabValue === activeValue;
+      tab.toggleAttribute('selected', selected);
+      if (!button) return;
+      button.id ||= tab.id || this.idFor('tab', index);
       button.setAttribute('role', 'tab');
-      button.setAttribute('aria-disabled', String(this.isDisabled(tab)));
-      button.setAttribute('aria-selected', String(tabValue === activeValue));
-      button.setAttribute('tabindex', tabValue === activeValue ? '0' : '-1');
-      if (panel?.id) {
+      button.setAttribute('aria-disabled', String(!available));
+      button.setAttribute('aria-selected', String(selected));
+      button.setAttribute('tabindex', selected ? '0' : '-1');
+      button.removeAttribute('aria-controls');
+      if (tabsByValue.get(tabValue) === tab && panel?.id) {
         button.setAttribute('aria-controls', panel.id);
         panel.setAttribute('aria-labelledby', button.id);
       }
-    }
+    });
   };
 
   private readonly onClick = (event: Event): void => {
     const tab = this.tabFromEvent(event);
-    const button = tab?.querySelector('button');
-    if (!tab || !button || !event.composedPath().includes(button)) return;
+    const button = tab ? this.getButton(tab) : null;
+    if (!tab || !button || !this.isAvailableTab(tab) || !event.composedPath().includes(button)) return;
     this.activate(tab.value?.trim() ?? '');
   };
 
   private readonly onKeyDown = (event: KeyboardEvent): void => {
     const tab = this.tabFromEvent(event);
     if (!tab) return;
-    const tabs = this.tabs.filter((item) =>
-      item.querySelector('button') && this.canActivate(item.value?.trim() ?? '')
-    );
+    const tabs = this.tabs.filter((item) => this.isAvailableTab(item));
     const index = tabs.indexOf(tab);
     if (index < 0) return;
 
@@ -136,7 +147,7 @@ export class SunmarTabs extends LitElement {
       : -1;
     if (next < 0) return;
     event.preventDefault();
-    tabs[next].querySelector('button')?.focus();
+    this.getButton(tabs[next])?.focus();
     this.activate(tabs[next].value?.trim() ?? '');
   };
 
@@ -163,19 +174,33 @@ export class SunmarTabs extends LitElement {
   }
 
   private isDisabled(tab: TabElement): boolean {
-    return Boolean(tab.querySelector('button')?.disabled);
+    return Boolean(this.getButton(tab)?.disabled);
   }
 
   private canActivate(value: string): boolean {
-    const tab = this.tabs.find((item) => item.value?.trim() === value);
-    return Boolean(
-      tab && !this.isDisabled(tab) && this.panels.some((panel) => panel.value?.trim() === value)
+    const tab = this.tabs.find((item) =>
+      item.value?.trim() === value && this.getButton(item)
     );
+    return Boolean(tab && this.isAvailableTab(tab));
   }
 
-  private idFor(type: 'tab' | 'panel', value: string): string {
-    const suffix = value.toLowerCase().replace(/[^a-z0-9_-]+/g, '-').replace(/^-+|-+$/g, '');
-    return `${this.instanceId}-${type}-${suffix || 'item'}`;
+  private isAvailableTab(tab: TabElement): boolean {
+    const value = tab.value?.trim() ?? '';
+    if (!value || !this.getButton(tab) || this.isDisabled(tab)) return false;
+
+    const firstTab = this.tabs.find((item) =>
+      item.value?.trim() === value && this.getButton(item)
+    );
+    const firstPanel = this.panels.find((panel) => panel.value?.trim() === value);
+    return firstTab === tab && Boolean(firstPanel);
+  }
+
+  private getButton(tab: TabElement): HTMLButtonElement | null {
+    return tab.querySelector<HTMLButtonElement>(':scope > button');
+  }
+
+  private idFor(type: 'tab' | 'panel', index: number): string {
+    return `${this.instanceId}-${type}-${index + 1}`;
   }
 
   private get tabs(): TabElement[] {

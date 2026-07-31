@@ -103,9 +103,8 @@
 - `sunmar-modal`
 - `sunmar-sticky-nav`
 - `sunmar-tabs`
-- `sunmar-tabs-nav`
-- `sunmar-tab-trigger`
-- `sunmar-tab-panel`
+- `sunmar-tab`
+- `sunmar-tab-content`
 
 ## Button API
 
@@ -323,44 +322,45 @@
 
 ## Tabs API
 
-- `sunmar-tabs` attributes/properties: `value` (reactive текущее значение вкладки)
-- `sunmar-tabs` slots:
-  - `nav` (ожидается `sunmar-tabs-nav`)
-  - `default` (ожидаются `sunmar-tab-panel`)
-- `sunmar-tabs` parts: нет
+- `sunmar-tabs` attributes/properties:
+  - `value` — текущее значение вкладки; программная установка не создаёт пользовательское событие
+  - `aria-label` — доступное имя внутреннего `tablist`
+- непосредственные дочерние элементы:
+  - `sunmar-tab` с непустым `value` и прямым нативным `<button type="button">`
+  - `sunmar-tab-content` с таким же непустым `value`
+- служебные slots `tab` и `panel` назначаются контейнером автоматически
+- `sunmar-tabs` parts: `root`, `nav`, `panels`
 - `sunmar-tabs` dispatches `sunmar-tabs-change` только при пользовательском переключении:
   - `detail: { value, previousValue }`
 - это позволяет:
   - синхронизировать 2 экземпляра табов через внешний JS
   - отправлять данные в метрику без циклов от programmatic updates
-
-- `sunmar-tabs-nav` attributes: нет
-- `sunmar-tabs-nav` slots: `default` (ожидаются `sunmar-tab-trigger`)
-- `sunmar-tabs-nav` parts: `list`
-
-- `sunmar-tab-trigger` attributes: `value`, `selected`, `disabled`
-- `sunmar-tab-trigger` slots: `default`
-- `sunmar-tab-trigger` parts: `control`
-- поддерживаются любые `data-*` атрибуты на хосте (например `data-personaj="Заяц"`) для внешней аналитики/метрик
+- `sunmar-tab` attributes: `value`, `forced`; `selected` устанавливается контейнером как служебное состояние
+- `sunmar-tab` slots: default (ожидается прямая нативная кнопка)
+- `sunmar-tab` parts: нет
+- disabled задаётся только нативной кнопке: `<button type="button" disabled>`
+- `forced` задаёт только начальную активную вкладку и не блокирует последующее переключение
 - `value` — стабильный технический идентификатор вкладки (не завязываемся на текст)
 - клавиатурная навигация: `ArrowLeft/ArrowRight`, `ArrowUp/ArrowDown`, `Home`, `End`
-- при активном `sunmar-tabs` компонент сам синхронизирует `aria-controls` и `aria-labelledby` между trigger и panel
+- контейнер синхронизирует `role`, `aria-controls`, `aria-labelledby`, `aria-selected`, `aria-disabled` и roving `tabindex`
+- при повторяющихся `value` используется только первая структурно корректная пара; остальные дубликаты недоступны и скрыты
+- `sunmar-tab-content` attributes: `value`; `active` устанавливается контейнером как служебное состояние
+- `sunmar-tab-content` slots: default
+- `sunmar-tab-content` parts: `content`
 
-- `sunmar-tab-panel` attributes: `value`, `active`
-- `sunmar-tab-panel` slots: `default`
-- `sunmar-tab-panel` parts: `content`
-
-Пример tabs с `data-*` на trigger:
+Пример:
 
 ```html
-<sunmar-tabs value="hare">
-  <sunmar-tabs-nav slot="nav">
-    <sunmar-tab-trigger value="hare" data-personaj="Заяц">Заяц</sunmar-tab-trigger>
-    <sunmar-tab-trigger value="wolf" data-personaj="Волк">Волк</sunmar-tab-trigger>
-  </sunmar-tabs-nav>
+<sunmar-tabs value="hare" aria-label="Персонажи">
+  <sunmar-tab value="hare" forced>
+    <button type="button">Заяц</button>
+  </sunmar-tab>
+  <sunmar-tab value="wolf">
+    <button type="button">Волк</button>
+  </sunmar-tab>
 
-  <sunmar-tab-panel value="hare">Контент зайца</sunmar-tab-panel>
-  <sunmar-tab-panel value="wolf">Контент волка</sunmar-tab-panel>
+  <sunmar-tab-content value="hare">Контент зайца</sunmar-tab-content>
+  <sunmar-tab-content value="wolf">Контент волка</sunmar-tab-content>
 </sunmar-tabs>
 ```
 
