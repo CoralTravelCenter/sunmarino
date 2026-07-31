@@ -1,11 +1,4 @@
 <style>
-  .sticky-nav-demo-sections {
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
-    padding: 24px 0 80px;
-  }
-
   .sticky-nav-demo-section {
     min-height: 70vh;
     padding: 32px;
@@ -25,19 +18,18 @@
 </style>
 
 <section class="sunmarino kv">
-  <sunmar-kv
-  >
+  <sunmar-kv>
     <sunmar-image
-            slot="image"
-            media="(min-width: 768px)"
-            srcset="https://b2ccdn.sunmar.ru/content/landing-pages/rb-summer/rb-kv.jpg"
-            src="https://b2ccdn.sunmar.ru/content/landing-pages/rb-summer/rb-kv-mo.jpg"
-            alt=""
+      slot="image"
+      media="(min-width: 768px)"
+      srcset="https://b2ccdn.sunmar.ru/content/landing-pages/rb-summer/rb-kv.jpg"
+      src="https://b2ccdn.sunmar.ru/content/landing-pages/rb-summer/rb-kv-mo.jpg"
+      alt=""
     ></sunmar-image>
     <h1 slot="title">ОчеВИДНАЯ выгода Раннего бронирования</h1>
     <p slot="text">
-       Скидки до 50% скидки и предоплата 20% от стоимости
-      </p>
+      Скидки до 50% и предоплата 20% от стоимости
+    </p>
     <div slot="actions">
       <sunmar-button-group>
         <sunmar-button type="primary">
@@ -110,40 +102,81 @@
 </section>
 <section class="sunmarino">
   <div class="sunmarino-container">
-    <sunmar-tabs value="turkey">
-      <sunmar-tabs-nav slot="nav">
-        <sunmar-tab-trigger value="april">Почему апрель?</sunmar-tab-trigger>
-        <sunmar-tab-trigger value="turkey">Турция</sunmar-tab-trigger>
-        <sunmar-tab-trigger value="egypt">Египет</sunmar-tab-trigger>
-      </sunmar-tabs-nav>
+    <h2 class="sunmar-h2">Tabs</h2>
+    <sunmar-tabs class="sunmar-mt-4" value="turkey" aria-label="Направления отдыха">
+      <sunmar-tab value="april">
+        <button type="button">Почему апрель?</button>
+      </sunmar-tab>
+      <sunmar-tab value="turkey" forced>
+        <button type="button">Турция</button>
+      </sunmar-tab>
+      <sunmar-tab value="egypt">
+        <button type="button">Египет</button>
+      </sunmar-tab>
 
-      <sunmar-tab-panel value="april">
+      <sunmar-tab-content value="april">
         <h2 class="sunmar-h2">Почему апрель?</h2>
         <p class="sunmar-text">
           Тестовый контент панели для проверки базовой логики tabs в playground.
         </p>
-      </sunmar-tab-panel>
+      </sunmar-tab-content>
 
-      <sunmar-tab-panel value="turkey">
+      <sunmar-tab-content value="turkey">
         <h2 class="sunmar-h2">Турция</h2>
         <p class="sunmar-text">
           Эта панель выбрана по умолчанию через value на sunmar-tabs.
         </p>
-      </sunmar-tab-panel>
+      </sunmar-tab-content>
 
-      <sunmar-tab-panel value="egypt">
+      <sunmar-tab-content value="egypt">
         <h2 class="sunmar-h2">Египет</h2>
         <p class="sunmar-text">
           Третья панель нужна для ручной проверки переключения и keyboard navigation.
         </p>
-      </sunmar-tab-panel>
+      </sunmar-tab-content>
     </sunmar-tabs>
   </div>
 </section>
 <section class="sunmarino">
   <div class="sunmarino-container">
+    <h2 class="sunmar-h2">Slider, Slide и Card</h2>
+    <sunmar-slider
+      class="sunmar-mt-4"
+      slides-per-view="1"
+      slides-per-view-768="2"
+      slides-per-view-1024="3"
+      gap="24"
+    >
+      <sunmar-slide>
+        <sunmar-card vertical>
+          <sunmar-image slot="media" src="/src/dev/assets/cards/coast.jpg" width="720" height="480" alt="Побережье Турции"></sunmar-image>
+          <h3 slot="title">Турция</h3>
+          <p slot="text">Семейные отели и отдых у моря.</p>
+          <sunmar-button slot="actions" type="primary"><a href="#turkey">Подробнее</a></sunmar-button>
+        </sunmar-card>
+      </sunmar-slide>
+      <sunmar-slide>
+        <sunmar-card vertical>
+          <sunmar-image slot="media" src="/src/dev/assets/cards/mountains.jpg" width="720" height="480" alt="Горный пейзаж"></sunmar-image>
+          <h3 slot="title">Горы</h3>
+          <p slot="text">Маршруты для активного отдыха.</p>
+        </sunmar-card>
+      </sunmar-slide>
+      <sunmar-slide>
+        <sunmar-card vertical>
+          <sunmar-image slot="media" src="/src/dev/assets/cards/resort.jpg" width="720" height="480" alt="Курортный отель"></sunmar-image>
+          <h3 slot="title">Курорты</h3>
+          <p slot="text">Отели для спокойного семейного отпуска.</p>
+          <sunmar-button slot="actions" type="neutral"><a href="#maldives">Выбрать</a></sunmar-button>
+        </sunmar-card>
+      </sunmar-slide>
+    </sunmar-slider>
+  </div>
+</section>
+<section class="sunmarino">
+  <div class="sunmarino-container">
     <h2 class="sunmar-h2">Accordion — multiple</h2>
-    <sunmar-accordion class="sunmar-mt-4">
+    <sunmar-accordion class="sunmar-mt-4" faq>
       <sunmar-accordion-item open>
         <h3 slot="header">Какие документы нужны?</h3>
         <p>

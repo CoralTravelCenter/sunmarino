@@ -4,7 +4,6 @@ import PREVIEW_HTML from './markup.html?raw'
 
 function renderPreview(target: HTMLElement): void {
   target.innerHTML = PREVIEW_HTML;
-  setupTabsSync(target);
   setupModalDemo(target);
 }
 
@@ -15,25 +14,6 @@ function setupModalDemo(scope: ParentNode): void {
 
   opener?.addEventListener('click', () => modal?.show());
   closer?.addEventListener('click', () => modal?.hide());
-}
-
-function setupTabsSync(scope: ParentNode): void {
-  const tabsA = scope.querySelector<HTMLElement & { value?: string }>('#tabs-sync-a');
-  const tabsB = scope.querySelector<HTMLElement & { value?: string }>('#tabs-sync-b');
-
-  if (!tabsA || !tabsB) {
-    return;
-  }
-
-  tabsA.addEventListener('sunmar-tabs-change', ((event: Event) => {
-    const customEvent = event as CustomEvent<{ value: string }>;
-    tabsB.value = customEvent.detail.value;
-  }) as EventListener);
-
-  tabsB.addEventListener('sunmar-tabs-change', ((event: Event) => {
-    const customEvent = event as CustomEvent<{ value: string }>;
-    tabsA.value = customEvent.detail.value;
-  }) as EventListener);
 }
 
 function ensureMonkeyMountPoint(): HTMLElement {
