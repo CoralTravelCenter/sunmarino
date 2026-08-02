@@ -10,18 +10,11 @@
 
 .viewport {
   width: 100%;
-  overflow-x: auto;
-  scrollbar-width: none;
-  scroll-snap-type: x mandatory;
-}
-
-.viewport::-webkit-scrollbar {
-  display: none;
-}
-
-:host([embla-ready]) .viewport {
   overflow: hidden;
-  scroll-snap-type: none;
+}
+
+:host(:not([embla-ready])) ::slotted(:not(:first-child)) {
+  visibility: hidden;
 }
 
 .container {
