@@ -62,15 +62,20 @@
 .button {
   position: absolute;
   top: 50%;
-  display: inline-grid;
-  place-items: center;
-  width: 40px;
-  height: 40px;
+  display: flex;
+  width: var(--Icon-Icon_Base_XL, 48px);
+  height: var(--Icon-Icon_Base_XL, 48px);
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   padding: 0;
   border: 0;
-  border-radius: 12px;
-  background: var(--sunmar-slider-navigation-background, #fff);
-  box-shadow: 0 12px 32px rgb(20 46 91 / 12%);
+  border-radius: 6px;
+  background: var(
+    --sunmar-slider-navigation-background,
+    var(--Base-color_Base_Light, #fff)
+  );
+  box-shadow: 0 16px 40px 0 rgb(20 20 22 / 20%);
   pointer-events: auto;
   transform: translateY(-50%);
 }
@@ -84,13 +89,16 @@
 }
 
 .button svg {
-  width: 24px;
-  height: 24px;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 2;
-  stroke-linecap: round;
-  stroke-linejoin: round;
+  width: 20px;
+  height: 14px;
+}
+
+.button path {
+  stroke: var(--sunmar-slider-control-color, #656565);
+}
+
+.button[part='next-button'] svg {
+  transform: rotate(180deg);
 }
 
 .button:disabled {
@@ -132,10 +140,6 @@
 }
 
 @media (min-width: 1024px) {
-  .button {
-    border-radius: 16px;
-  }
-
   .button[part='prev-button'] {
     left: 24px;
   }

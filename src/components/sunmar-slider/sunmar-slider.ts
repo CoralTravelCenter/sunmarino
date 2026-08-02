@@ -206,8 +206,21 @@ export class SunmarSlider extends LitElement {
             ?disabled=${!this.loop && !this.embla?.canScrollPrev()}
             @click=${() => this.embla?.scrollPrev()}
           >
-            <svg viewBox="0 0 32 32" aria-hidden="true">
-              <path d="M27 16H5M13 8l-8 8 8 8" />
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="14"
+              viewBox="0 0 20 14"
+              fill="none"
+              aria-hidden="true"
+            >
+              <path
+                d="M7.33334 12.7031L2 7.45314L7.33334 2.20314M2 7.45314L18 7.45313"
+                stroke="#656565"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
             </svg>
           </button>
           <button
@@ -218,8 +231,21 @@ export class SunmarSlider extends LitElement {
             ?disabled=${!this.loop && !this.embla?.canScrollNext()}
             @click=${() => this.embla?.scrollNext()}
           >
-            <svg viewBox="0 0 32 32" aria-hidden="true">
-              <path d="M5 16h22M19 8l8 8-8 8" />
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="14"
+              viewBox="0 0 20 14"
+              fill="none"
+              aria-hidden="true"
+            >
+              <path
+                d="M7.33334 12.7031L2 7.45314L7.33334 2.20314M2 7.45314L18 7.45313"
+                stroke="#656565"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
             </svg>
           </button>
         </div>
