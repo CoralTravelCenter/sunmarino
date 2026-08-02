@@ -4,6 +4,21 @@ import coastImageUrl from '../../dev/assets/cards/coast.jpg?url';
 import resortImageUrl from '../../dev/assets/cards/resort.jpg?url';
 import mountainsImageUrl from '../../dev/assets/cards/mountains.jpg?url';
 
+const sliderDemoStyles = html`
+  <style>
+    .slider-demo {
+      display: block;
+      padding: 24px;
+    }
+
+    @media (min-width: 1280px) {
+      .slider-demo {
+        padding-inline: 96px;
+      }
+    }
+  </style>
+`;
+
 const meta: Meta = {
   title: 'Components/Slider',
   tags: ['autodocs'],
@@ -15,7 +30,9 @@ type Story = StoryObj;
 
 export const Cards: Story = {
   render: () => html`
+    ${sliderDemoStyles}
     <sunmar-slider
+      class="slider-demo"
       aria-label="Направления отдыха"
       slides-per-view="1"
       slides-per-view-768="2"
@@ -23,7 +40,6 @@ export const Cards: Story = {
       slides-to-scroll="auto"
       gap="24"
       loop
-      style="display:block; padding:24px;"
     >
       ${[
         {

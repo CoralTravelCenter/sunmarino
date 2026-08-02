@@ -215,7 +215,7 @@
   - `gap` — неотрицательный отступ между слайдами; по умолчанию `16`
 - slots: default
 - parts: `viewport`, `container`, `controls`, `navigation`, `prev-button`, `next-button`, `pagination`, `dot`, `status`
-- CSS custom properties: `--sunmar-slider-control-color`, `--sunmar-slider-navigation-background`, `--sunmar-slider-dot-color`
+- CSS custom properties: `--sunmar-slider-control-color`, `--sunmar-slider-navigation-background`, `--sunmar-slider-navigation-outset`, `--sunmar-slider-dot-color`
 - после получения слайдов компонент добавляет им позиционные доступные имена вида «Слайд 1 из 6», не перезаписывая `aria-label`, заданный потребителем
 - до успешной загрузки Embla отображается только первый слайд, а неработающие controls скрыты
 - прокрутка и snap-позиционирование выполняются только Embla; нативный scroll-snap fallback не используется

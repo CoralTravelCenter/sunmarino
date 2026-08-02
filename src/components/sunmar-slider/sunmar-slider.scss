@@ -1,4 +1,6 @@
 :host {
+  --sunmar-slider-navigation-outset: 24px;
+
   display: block;
   position: relative;
   color: var(--sunmar-slider-control-color, #142e5b);
@@ -178,6 +180,22 @@
 }
 
 @media (min-width: 1280px) {
+  .button[part='prev-button'] {
+    left: 0;
+    transform: translate(
+      calc(-100% - var(--sunmar-slider-navigation-outset)),
+      -50%
+    );
+  }
+
+  .button[part='next-button'] {
+    right: 0;
+    transform: translate(
+      calc(100% + var(--sunmar-slider-navigation-outset)),
+      -50%
+    );
+  }
+
   .container {
     --slides-per-view: var(--sunmar-slider-slides-1280);
   }
