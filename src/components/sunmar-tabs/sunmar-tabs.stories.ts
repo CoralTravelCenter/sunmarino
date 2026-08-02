@@ -16,16 +16,17 @@ const meta: Meta = {
 - \`sunmar-tab-content\` содержит семантический контент панели
 - одинаковый \`value\` связывает кнопку и панель
 - \`sunmar-tab[forced]\` задаёт начальную активную вкладку
+- \`sunmar-tabs[aria-label]\` задаёт доступное имя списка вкладок
+- нативный \`disabled\` задаётся на вложенном \`button\`
 - служебные slots, ARIA и состояние \`active\` устанавливает контейнер
 
 **Parts**
 - \`sunmar-tabs::part(root|nav|panels)\`
-- \`sunmar-tab::part(control)\`
 - \`sunmar-tab-content::part(content)\`
 
 Клавиатура: стрелки, \`Home\`, \`End\`. Пользовательское переключение создаёт
 \`sunmar-tabs-change\` с \`detail: { value, previousValue }\`.
-Для программного переключения используется \`tabs.forced('value')\`; пользовательское событие при этом не создаётся.
+Для программного переключения установи \`tabs.value = 'value'\`; пользовательское событие при этом не создаётся.
 `
       }
     }
@@ -37,7 +38,7 @@ type Story = StoryObj;
 
 export const Default: Story = {
   render: () => html`
-    <sunmar-tabs value="turkey" style="max-width:1080px; margin:0 auto;">
+    <sunmar-tabs aria-label="Направления отдыха" value="turkey" style="max-width:1080px; margin:0 auto;">
       <sunmar-tab value="april"><button type="button">Почему апрель?</button></sunmar-tab>
       <sunmar-tab value="turkey" forced><button type="button">Турция</button></sunmar-tab>
       <sunmar-tab value="egypt"><button type="button">Египет</button></sunmar-tab>

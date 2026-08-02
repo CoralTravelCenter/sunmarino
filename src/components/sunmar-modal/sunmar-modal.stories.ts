@@ -38,16 +38,18 @@ type Story = StoryObj;
 
 export const Default: Story = {
   render: () => html`
-    <div>
-      <button
-        type="button"
-        @click=${(event: Event) => {
-          const root = (event.currentTarget as HTMLElement).parentElement;
-          root?.querySelector<HTMLElement & { show(): void }>('sunmar-modal')?.show();
-        }}
-      >
-        Открыть окно
-      </button>
+    <div data-modal-demo>
+      <sunmar-button type="primary">
+        <button
+          type="button"
+          @click=${(event: Event) => {
+            const root = (event.currentTarget as HTMLElement).closest('[data-modal-demo]');
+            root?.querySelector<HTMLElement & { show(): void }>('sunmar-modal')?.show();
+          }}
+        >
+          Открыть окно
+        </button>
+      </sunmar-button>
 
       <sunmar-modal aria-label="Подтверждение бронирования">
         <span slot="title">Подтверждение бронирования</span>

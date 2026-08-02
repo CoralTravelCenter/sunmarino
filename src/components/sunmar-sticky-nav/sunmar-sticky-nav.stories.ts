@@ -17,14 +17,6 @@ const sectionStyle = `
   color: #1a1a1a;
 `;
 
-const navMarkup = html`
-  <sunmar-sticky-nav>
-    <a slot="nav-link" href="#april">Почему апрель?</a>
-    <a slot="nav-link" href="#turkey">Турция</a>
-    <a slot="nav-link" href="#egypt">Египет</a>
-  </sunmar-sticky-nav>
-`;
-
 const meta: Meta = {
   title: 'Components/Sticky Nav',
   tags: ['autodocs'],
@@ -33,10 +25,10 @@ const meta: Meta = {
     docs: {
       description: {
         component: `
-Навигация с переходом в fixed-состояние при прокрутке, slot-driven ссылками и автоматическим активным состоянием по \`IntersectionObserver\`.
+Навигация с нативным \`position: sticky\`, slot-driven ссылками и автоматическим активным состоянием по \`IntersectionObserver\`.
 
 **Attributes**
-- \`top-offset\` — явный override отступа от верхней границы viewport для fixed-состояния
+- \`top-offset\` — явный отступ sticky-навигации от верхней границы viewport
 - \`teleport\` — CSS-селектор целевого узла; по умолчанию \`.row-outer-container\`
 - \`disable-relocate\` — отключает перенос и имеет приоритет над \`teleport\`
 
@@ -47,19 +39,18 @@ const meta: Meta = {
 - цель из \`teleport\` ожидается через \`MutationObserver\` не более 5 секунд; ожидание отменяется при отключении компонента или смене селектора
 - некорректный CSS-селектор безопасно игнорируется
 - если \`top-offset\` не задан, offset выбирается по текущему брейкпоинту при инициализации: mobile \`81\`, tablet \`65\`, desktop \`16\`
-- при достижении порога компонент переходит в fixed-состояние
-- порог фиксирования определяется через внутренний \`sentinel\`
+- фиксацию при прокрутке обеспечивает нативный \`position: sticky\`
+- переходы выполняют нативные якорные ссылки; компонент не перехватывает клики
 - active-state по scroll работает только когда у ссылок есть \`href="#id"\`, а на странице есть соответствующие секции с \`id\`
 - если target section не найдена, компонент безопасно игнорирует такую ссылку
 
 **API стилизации**
 - CSS variables: \`--sunmar-sticky-nav-z-index\`, \`--sunmar-sticky-nav-bg\`, \`--sunmar-sticky-nav-border\`, \`--sunmar-sticky-nav-gap\`
 - \`Parts\`: \`root\`
-- служебный host-класс: \`sunmar-sticky-nav--stuck\`
 
 **Как использовать?**
 - docs ниже показывают только сам компонент и его контракт
-- для проверки fixed-поведения и active-state используй отдельную story с демо-секциями
+- для проверки sticky-поведения и active-state используй отдельную story с демо-секциями
 `
       }
     }
@@ -89,8 +80,8 @@ export const Default: Story = {
         <section class="header-actions" style=${introStyle}>
           <h2 style="margin: 0;">Промо-блок перед навигацией</h2>
           <p style="max-width: 720px; margin: 16px 0 0;">
-            Этот блок нужен, чтобы в canvas было видно момент перехода навигации в fixed-состояние.
-            Прокрути страницу вниз: сначала навигация находится в потоке, затем фиксируется у верхней границы.
+            Этот блок нужен, чтобы в canvas было видно нативное sticky-поведение навигации.
+            Прокрути страницу вниз: навигация останется у верхней границы с заданным отступом.
           </p>
         </section>
 
@@ -103,7 +94,7 @@ export const Default: Story = {
         <section id="april" style=${sectionStyle}>
           <h2 style="margin: 0;">Почему апрель?</h2>
           <p style="margin: 16px 0 0; max-width: 720px;">
-            Первая тестовая секция для проверки fixed-перехода и active-state. При входе в видимую область
+            Первая тестовая секция для проверки sticky-поведения и active-state. При входе в видимую область
             соответствующая ссылка должна стать активной.
           </p>
         </section>
@@ -111,7 +102,7 @@ export const Default: Story = {
         <section id="turkey" style=${sectionStyle}>
           <h2 style="margin: 0;">Турция</h2>
           <p style="margin: 16px 0 0; max-width: 720px;">
-            Вторая секция нужна для проверки переключения активной ссылки при скролле и поведения fixed-навигации
+            Вторая секция нужна для проверки переключения активной ссылки при скролле и поведения sticky-навигации
             на длинной странице.
           </p>
         </section>

@@ -26,18 +26,53 @@ export const Cards: Story = {
       style="display:block; padding:24px;"
     >
       ${[
-        ['Турция', coastImageUrl],
-        ['Курорт', resortImageUrl],
-        ['Горы', mountainsImageUrl],
-        ['Побережье', coastImageUrl],
-        ['Отель', resortImageUrl],
-        ['Озеро', mountainsImageUrl]
-      ].map(([title, src]) => html`
+        {
+          title: 'Турция',
+          src: coastImageUrl,
+          text: 'Семейные отели и отдых у моря.',
+          action: 'Выбрать тур'
+        },
+        {
+          title: 'Курорт',
+          src: resortImageUrl,
+          text: 'Большой выбор отелей с разными концепциями питания и развлечениями для всей семьи.',
+          action: 'Подробнее'
+        },
+        {
+          title: 'Горы',
+          src: mountainsImageUrl,
+          text: 'Активный отдых и свежий воздух.',
+          action: ''
+        },
+        {
+          title: 'Побережье',
+          src: coastImageUrl,
+          text: 'Пляжный отдых.',
+          action: 'Смотреть туры'
+        },
+        {
+          title: 'Отель для спокойного отдыха',
+          src: resortImageUrl,
+          text: 'Комфортные номера, просторная территория и собственный пляж.',
+          action: ''
+        },
+        {
+          title: 'Озеро',
+          src: mountainsImageUrl,
+          text: 'Маршруты среди живописных гор и озёр.',
+          action: 'Узнать больше'
+        }
+      ].map(({ title, src, text, action }) => html`
         <sunmar-slide>
           <sunmar-card vertical>
             <sunmar-image slot="media" src=${src} width="720" height="480" alt=""></sunmar-image>
             <h3 slot="title">${title}</h3>
-            <p slot="text">Короткое описание направления.</p>
+            <p slot="text">${text}</p>
+            ${action ? html`
+              <sunmar-button slot="actions" type="primary">
+                <a href="#tour">${action}</a>
+              </sunmar-button>
+            ` : null}
           </sunmar-card>
         </sunmar-slide>
       `)}
