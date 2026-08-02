@@ -110,43 +110,29 @@
 
 .dot {
   position: relative;
-  width: 32px;
-  height: 32px;
+  width: 10px;
+  height: 10px;
   padding: 0;
   border: 0;
   border-radius: 50%;
-  background: transparent;
-}
-
-.dot::before,
-.dot::after {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  border-radius: 50%;
-  transform: translate(-50%, -50%);
-  content: '';
-}
-
-.dot::before {
-  width: 16px;
-  height: 16px;
-  border: 2px solid transparent;
-  box-sizing: border-box;
-}
-
-.dot::after {
-  width: 10px;
-  height: 10px;
   background: var(--sunmar-slider-dot-color, #d3d8e2);
 }
 
-.dot[aria-current='true']::before {
-  border-color: currentColor;
+.dot[aria-current='true'] {
+  background: currentColor;
 }
 
 .dot[aria-current='true']::after {
-  background: currentColor;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 16px;
+  height: 16px;
+  border: 2px solid currentColor;
+  border-radius: 50%;
+  box-sizing: border-box;
+  transform: translate(-50%, -50%);
+  content: '';
 }
 
 .button:focus-visible,
