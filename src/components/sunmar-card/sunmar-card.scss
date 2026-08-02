@@ -11,6 +11,10 @@
   margin: 0;
 }
 
+:host([vertical]) .root {
+  grid-template-rows: auto 1fr;
+}
+
 ::slotted([slot='media']) {
   display: block;
   width: 100%;
