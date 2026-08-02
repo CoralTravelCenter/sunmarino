@@ -3,7 +3,7 @@
   --sunmar-sticky-nav-bg: var(--Base-color_Base_Light_Gray, #F5F5F8);
   --sunmar-sticky-nav-border: none;
   --sunmar-sticky-nav-gap: 8px;
-  --sunmar-sticky-nav-top-offset: 0px;
+  --sunmar-sticky-nav-top-offset: 81px;
 
   display: block;
   position: sticky;
@@ -74,8 +74,17 @@
   }
 }
 
+@media (min-width: 768px) {
+  :host {
+    --sunmar-sticky-nav-top-offset: 65px;
+  }
+}
 
 @media (min-width: 1024px) {
+  :host {
+    --sunmar-sticky-nav-top-offset: 16px;
+  }
+
   .root {
     flex-wrap: nowrap;
   }

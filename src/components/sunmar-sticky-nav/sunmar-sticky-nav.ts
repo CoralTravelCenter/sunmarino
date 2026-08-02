@@ -5,11 +5,6 @@ import styles from './sunmar-sticky-nav.scss?inline';
 
 export const SUNMAR_STICKY_NAV_TAG_NAME = 'sunmar-sticky-nav';
 
-const TABLET_MIN_WIDTH = 768;
-const DESKTOP_MIN_WIDTH = 992;
-const MOBILE_TOP_OFFSET = 81;
-const TABLET_TOP_OFFSET = 65;
-const DESKTOP_TOP_OFFSET = 16;
 const DEFAULT_TELEPORT_SELECTOR = '.row-outer-container';
 const RELOCATE_TIMEOUT_MS = 5_000;
 
@@ -27,7 +22,6 @@ export class SunmarStickyNav extends LitElement {
   @property({ type: String })
   teleport: string | null = null;
 
-  private responsiveTopOffset = MOBILE_TOP_OFFSET;
   private navLinks: HTMLAnchorElement[] = [];
   private sectionLinkMap = new Map<HTMLElement, HTMLAnchorElement>();
   private activeSections = new Set<HTMLElement>();
@@ -124,17 +118,16 @@ export class SunmarStickyNav extends LitElement {
     }
   }
 
-  private syncResponsiveTopOffset(): void {
-    this.responsiveTopOffset = this.getResponsiveTopOffset();
-  }
-
   private syncStickyOffset(): void {
-    this.style.setProperty('--sunmar-sticky-nav-top-offset', `${this.resolvedTopOffset}px`);
-  }
+    if (typeof this.topOffset === 'number' && Number.isFinite(this.topOffset)) {
+      this.style.setProperty(
+        '--sunmar-sticky-nav-top-offset',
+        `${Math.max(0, this.topOffset)}px`
+      );
+      return;
+    }
 
-  private syncTopOffsetState(): void {
-    this.syncResponsiveTopOffset();
-    this.syncStickyOffset();
+    this.style.removeProperty('--sunmar-sticky-nav-top-offset');
   }
 
   private collectNavLinks(slot?: HTMLSlotElement): HTMLAnchorElement[] {
@@ -287,32 +280,6 @@ export class SunmarStickyNav extends LitElement {
     this.syncActiveNavLink();
   }
 
-  private getResponsiveTopOffset(): number {
-    const defaultView = this.ownerDocument.defaultView;
-
-    if (!defaultView) {
-      return MOBILE_TOP_OFFSET;
-    }
-
-    if (defaultView.matchMedia(`(min-width: ${DESKTOP_MIN_WIDTH}px)`).matches) {
-      return DESKTOP_TOP_OFFSET;
-    }
-
-    if (defaultView.matchMedia(`(min-width: ${TABLET_MIN_WIDTH}px)`).matches) {
-      return TABLET_TOP_OFFSET;
-    }
-
-    return MOBILE_TOP_OFFSET;
-  }
-
-  private get resolvedTopOffset(): number {
-    if (typeof this.topOffset === 'number' && Number.isFinite(this.topOffset)) {
-      return Math.max(0, this.topOffset);
-    }
-
-    return this.responsiveTopOffset;
-  }
-
   protected render() {
     return html`
       <nav
@@ -329,7 +296,7 @@ export class SunmarStickyNav extends LitElement {
   }
 
   private initializeAfterRender(): void {
-    this.syncTopOffsetState();
+    this.syncStickyOffset();
     this.syncNavLinks();
   }
 
