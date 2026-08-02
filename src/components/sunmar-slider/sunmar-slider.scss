@@ -71,8 +71,8 @@
   top: 50%;
   display: inline-grid;
   place-items: center;
-  width: 48px;
-  height: 48px;
+  width: 40px;
+  height: 40px;
   padding: 0;
   border: 0;
   border-radius: 12px;
@@ -140,14 +140,7 @@
 
 @media (min-width: 1024px) {
   .button {
-    width: 96px;
-    height: 96px;
     border-radius: 16px;
-  }
-
-  .button svg {
-    width: 40px;
-    height: 40px;
   }
 
   .button[part='prev-button'] {
