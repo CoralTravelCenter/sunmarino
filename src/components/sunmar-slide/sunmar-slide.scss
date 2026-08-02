@@ -3,7 +3,6 @@
   flex: 0 0 calc(100% / var(--sunmar-slider-slides-per-view, 1));
   min-width: 0;
   padding-inline-start: var(--sunmar-slider-slide-padding, 0);
-  scroll-snap-align: start;
 }
 
 .root {
