@@ -4,6 +4,10 @@
   color: var(--sunmar-slider-control-color, #142e5b);
 }
 
+.stage {
+  position: relative;
+}
+
 .viewport {
   width: 100%;
   overflow-x: auto;
@@ -168,7 +172,7 @@
 }
 
 @media (min-width: 768px) {
-  .navigation {
+  :host([embla-ready]) .navigation {
     display: block;
   }
 
@@ -212,7 +216,8 @@
       transform: none !important;
     }
 
-    :host([disabled-from='#{$breakpoint}']) .controls {
+    :host([disabled-from='#{$breakpoint}']) .controls,
+    :host([disabled-from='#{$breakpoint}']) .navigation {
       display: none;
     }
   }

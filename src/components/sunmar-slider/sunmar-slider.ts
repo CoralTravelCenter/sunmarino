@@ -187,16 +187,16 @@ export class SunmarSlider extends LitElement {
     ].join(';');
 
     return html`
-      <div class="viewport" part="viewport">
-        <slot
-          class="container"
-          part="container"
-          style=${slideStyles}
-          @slotchange=${this.handleSlotChange}
-        ></slot>
-      </div>
+      <div class="stage">
+        <div class="viewport" part="viewport">
+          <slot
+            class="container"
+            part="container"
+            style=${slideStyles}
+            @slotchange=${this.handleSlotChange}
+          ></slot>
+        </div>
 
-      <div class="controls" part="controls">
         <div class="navigation" part="navigation">
           <button
             class="button"
@@ -223,7 +223,9 @@ export class SunmarSlider extends LitElement {
             </svg>
           </button>
         </div>
+      </div>
 
+      <div class="controls" part="controls">
         <div class="pagination" part="pagination" role="group" aria-label="Выбор слайда">
           ${Array.from({ length: this.snapCount }, (_, index) => html`
             <button
