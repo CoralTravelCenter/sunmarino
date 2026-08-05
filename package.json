@@ -23,6 +23,7 @@
   ],
   "scripts": {
     "dev": "SUNMAR_ENABLE_MONKEY=true vite",
+    "dev:win": "set \"SUNMAR_ENABLE_MONKEY=true\"&& vite",
     "prebuild": "node ./scripts/sync-package-versioned-entry.mjs",
     "build": "npm run build:js && npm run build:types",
     "build:js": "vite build",
