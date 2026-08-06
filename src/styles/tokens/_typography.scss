@@ -1,3 +1,5 @@
+@use "../mixins" as mixins;
+
 :root {
   --sunmar-font-family: 'Museo Sans Cyrl', 'Segoe UI', sans-serif;
   --sunmar-font-size-base: 16px;
@@ -47,4 +49,24 @@
   --sunmar-heading-kv-line-height: 60px;
   --sunmar-heading-kv-font-weight: 500;
   --sunmar-heading-kv-letter-spacing: 0;
+}
+
+@include mixins.media-max('bp-768') {
+  :root {
+    --sunmar-heading-h1-font-size: 40px;
+    --sunmar-heading-h1-line-height: 44px;
+    --sunmar-heading-h2-font-size: 32px;
+    --sunmar-heading-h2-line-height: 36px;
+  }
+}
+
+@include mixins.media-max('bp-428') {
+  :root {
+    --sunmar-type-l-font-size: 20px;
+    --sunmar-type-l-line-height: 28px;
+    --sunmar-type-n-font-size: 16px;
+    --sunmar-type-n-line-height: 24px;
+    --sunmar-type-dropdown-font-size: 14px;
+    --sunmar-type-dropdown-line-height: 20px;
+  }
 }
