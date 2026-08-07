@@ -62,11 +62,7 @@
 
 @include mixins.media-max('bp-428') {
   :root {
-    --sunmar-type-l-font-size: 20px;
-    --sunmar-type-l-line-height: 28px;
     --sunmar-type-n-font-size: 16px;
     --sunmar-type-n-line-height: 24px;
-    --sunmar-type-dropdown-font-size: 14px;
-    --sunmar-type-dropdown-line-height: 20px;
   }
 }
