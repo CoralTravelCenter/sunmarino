@@ -37,12 +37,12 @@
   --sunmar-heading-h3-line-height: 36px;
   --sunmar-heading-h3-font-weight: 600;
   --sunmar-heading-h3-letter-spacing: 0;
-  --sunmar-heading-h2-font-size: 40px;
-  --sunmar-heading-h2-line-height: 44px;
+  --sunmar-heading-h2-font-size: 32px;
+  --sunmar-heading-h2-line-height: 36px;
   --sunmar-heading-h2-font-weight: 600;
   --sunmar-heading-h2-letter-spacing: 0;
-  --sunmar-heading-h1-font-size: 48px;
-  --sunmar-heading-h1-line-height: 52px;
+  --sunmar-heading-h1-font-size: 40px;
+  --sunmar-heading-h1-line-height: 44px;
   --sunmar-heading-h1-font-weight: 600;
   --sunmar-heading-h1-letter-spacing: 0;
   --sunmar-heading-kv-font-size: 56px;
@@ -51,18 +51,11 @@
   --sunmar-heading-kv-letter-spacing: 0;
 }
 
-@include mixins.media-max('bp-768') {
+@include mixins.media-min('bp-768') {
   :root {
-    --sunmar-heading-h1-font-size: 40px;
-    --sunmar-heading-h1-line-height: 44px;
-    --sunmar-heading-h2-font-size: 32px;
-    --sunmar-heading-h2-line-height: 36px;
-  }
-}
-
-@include mixins.media-max('bp-428') {
-  :root {
-    --sunmar-type-n-font-size: 16px;
-    --sunmar-type-n-line-height: 24px;
+    --sunmar-heading-h1-font-size: 48px;
+    --sunmar-heading-h1-line-height: 52px;
+    --sunmar-heading-h2-font-size: 40px;
+    --sunmar-heading-h2-line-height: 44px;
   }
 }
