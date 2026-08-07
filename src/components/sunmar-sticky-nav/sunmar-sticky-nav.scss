@@ -74,9 +74,15 @@
   }
 }
 
-@media (min-width: 768px) {
+@media (min-width: 768px) and (max-width: 993px) {
   :host {
     --sunmar-sticky-nav-top-offset: 65px;
+  }
+}
+
+@media (min-width: 993px) {
+  :host {
+    --sunmar-sticky-nav-top-offset: 16px;
   }
 }
 
