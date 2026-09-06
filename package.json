@@ -10,7 +10,6 @@
       "types": "./dist/types/exports.d.ts",
       "default": "./dist/sunmarino-0.1.3.iife.js"
     },
-    "./styles.css": "./dist/index.css",
     "./package.json": "./package.json"
   },
   "files": [
@@ -18,8 +17,7 @@
     "README.md"
   ],
   "sideEffects": [
-    "./dist/sunmarino-0.1.3.iife.js",
-    "./dist/index.css"
+    "./dist/sunmarino-0.1.3.iife.js"
   ],
   "scripts": {
     "dev": "SUNMAR_ENABLE_MONKEY=true vite",
@@ -31,7 +29,10 @@
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "test": "vitest",
+    "test:run": "vitest run",
+    "verify:package": "npm run build && node ./scripts/verify-package.mjs"
   },
   "keywords": [
     "web-components",
@@ -50,10 +51,12 @@
     "@storybook/addon-docs": "^10.4.4",
     "@storybook/web-components-vite": "^10.4.4",
     "@types/node": "^25.9.3",
+    "happy-dom": "^20.14.0",
     "sass": "^1.101.0",
     "storybook": "^10.4.4",
     "typescript": "^6.0.3",
     "vite": "^8.0.16",
-    "vite-plugin-monkey": "^8.0.6"
+    "vite-plugin-monkey": "^8.0.6",
+    "vitest": "^5.0.0"
   }
 }

@@ -18,12 +18,9 @@ if (!packageJson.exports['.'] || typeof packageJson.exports['.'] !== 'object') {
 
 packageJson.exports['.'].types = './dist/types/exports.d.ts';
 packageJson.exports['.'].default = bundlePath;
-packageJson.exports['./styles.css'] = './dist/index.css';
+delete packageJson.exports['./styles.css'];
 packageJson.exports['./package.json'] = './package.json';
 
-packageJson.sideEffects = [
-  bundlePath,
-  './dist/index.css'
-];
+packageJson.sideEffects = [bundlePath];
 
 await writeFile(packageJsonPath, `${JSON.stringify(packageJson, null, 2)}\n`);

@@ -19,8 +19,8 @@
     transform 120ms ease !important;
 }
 
-:host([type='primary']) ::slotted(button),
-:host([type='primary']) ::slotted(a) {
+:host([data-resolved-type='primary']) ::slotted(button),
+:host([data-resolved-type='primary']) ::slotted(a) {
   background-color: var(--sunmar-color-btn-bg-primary-default) !important;
   background-image: linear-gradient(
     245deg,
@@ -30,32 +30,32 @@
   color: var(--sunmar-color-btn-text-light) !important;
 }
 
-:host([type='secondary']) ::slotted(button),
-:host([type='secondary']) ::slotted(a) {
+:host([data-resolved-type='secondary']) ::slotted(button),
+:host([data-resolved-type='secondary']) ::slotted(a) {
   background-color: var(--sunmar-color-btn-bg-secondary-default) !important;
   color: var(--sunmar-color-btn-text-light) !important;
 }
 
-:host([type='neutral']) ::slotted(button),
-:host([type='neutral']) ::slotted(a) {
+:host([data-resolved-type='neutral']) ::slotted(button),
+:host([data-resolved-type='neutral']) ::slotted(a) {
   background-color: var(--sunmar-color-btn-bg-light-default) !important;
   color: var(--sunmar-color-btn-text-dark) !important;
   border-color: var(--sunmar-color-btn-stroke-light);
 }
 
-:host([type='primary']) ::slotted(button:not(:disabled):active),
-:host([type='primary']) ::slotted(a:active) {
+:host([data-resolved-type='primary']) ::slotted(button:not(:disabled):active),
+:host([data-resolved-type='primary']) ::slotted(a:active) {
   background-color: var(--sunmar-color-btn-bg-primary-pressed) !important;
   background-image: none !important;
 }
 
-:host([type='secondary']) ::slotted(button:not(:disabled):active),
-:host([type='secondary']) ::slotted(a:active) {
+:host([data-resolved-type='secondary']) ::slotted(button:not(:disabled):active),
+:host([data-resolved-type='secondary']) ::slotted(a:active) {
   background-color: var(--sunmar-color-btn-bg-secondary-pressed) !important;
 }
 
-:host([type='neutral']) ::slotted(button:not(:disabled):active),
-:host([type='neutral']) ::slotted(a:active) {
+:host([data-resolved-type='neutral']) ::slotted(button:not(:disabled):active),
+:host([data-resolved-type='neutral']) ::slotted(a:active) {
   background-color: var(--sunmar-color-btn-bg-light-pressed) !important;
 }
 
@@ -72,8 +72,8 @@
 }
 
 @media (hover: hover) and (pointer: fine) {
-  :host([type='primary']) ::slotted(button:not(:disabled):hover),
-  :host([type='primary']) ::slotted(a:hover) {
+  :host([data-resolved-type='primary']) ::slotted(button:not(:disabled):hover),
+  :host([data-resolved-type='primary']) ::slotted(a:hover) {
     background-image: var(
       --gradient_Primary_Hover,
       linear-gradient(
@@ -84,13 +84,26 @@
     ) !important;
   }
 
-  :host([type='secondary']) ::slotted(button:not(:disabled):hover),
-  :host([type='secondary']) ::slotted(a:hover) {
+  :host([data-resolved-type='secondary']) ::slotted(button:not(:disabled):hover),
+  :host([data-resolved-type='secondary']) ::slotted(a:hover) {
     background-color: var(--sunmar-color-btn-bg-secondary-hover) !important;
   }
 
-  :host([type='neutral']) ::slotted(button:not(:disabled):hover),
-  :host([type='neutral']) ::slotted(a:hover) {
+  :host([data-resolved-type='neutral']) ::slotted(button:not(:disabled):hover),
+  :host([data-resolved-type='neutral']) ::slotted(a:hover) {
     background-color: var(--sunmar-color-btn-bg-light-hover) !important;
   }
+}
+
+// Размеры по макету будут добавлены отдельно. Сейчас все размеры выглядят одинаково.
+:host([data-resolved-size='small']) {
+  // TODO: размеры small.
+}
+
+:host([data-resolved-size='medium']) {
+  // TODO: размеры medium (текущий размер по умолчанию).
+}
+
+:host([data-resolved-size='large']) {
+  // TODO: размеры large.
 }

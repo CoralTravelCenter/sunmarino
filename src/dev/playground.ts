@@ -4,15 +4,16 @@ import PREVIEW_HTML from './markup.html?raw'
 
 function renderPreview(target: HTMLElement): void {
   target.innerHTML = PREVIEW_HTML;
-  setupModalDemo(target);
+  setupTripModal(target);
 }
 
-function setupModalDemo(scope: ParentNode): void {
-  const opener = scope.querySelector<HTMLButtonElement>('#open-modal-demo');
-  const closer = scope.querySelector<HTMLButtonElement>('#close-modal-demo');
-  const modal = scope.querySelector<HTMLElement & { show(): void; hide(): void }>('#modal-demo');
+function setupTripModal(scope: ParentNode): void {
+  const closer = scope.querySelector<HTMLButtonElement>('#close-trip');
+  const modal = scope.querySelector<HTMLElement & { show(): void; hide(): void }>('#trip-modal');
 
-  opener?.addEventListener('click', () => modal?.show());
+  scope.querySelectorAll<HTMLButtonElement>('[data-open-trip]').forEach((opener) => {
+    opener.addEventListener('click', () => modal?.show());
+  });
   closer?.addEventListener('click', () => modal?.hide());
 }
 

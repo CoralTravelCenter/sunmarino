@@ -11,12 +11,14 @@ export class SunmarCard extends LitElement {
   @state()
   private hasActions = false;
 
-  private readonly handleActionsSlotChange = (event: Event): void => {
-    const slot = event.target;
-    if (slot instanceof HTMLSlotElement) {
-      this.hasActions = slot.assignedElements({ flatten: true }).length > 0;
-    }
+  private readonly syncActions = (): void => {
+    const slot = this.renderRoot.querySelector<HTMLSlotElement>('slot[name="actions"]');
+    this.hasActions = (slot?.assignedElements({ flatten: true }).length ?? 0) > 0;
   };
+
+  protected firstUpdated(): void {
+    this.syncActions();
+  }
 
   protected render() {
     return html`
@@ -26,7 +28,7 @@ export class SunmarCard extends LitElement {
           <div class="title" part="title"><slot name="title"></slot></div>
           <div class="text" part="text"><slot name="text"></slot></div>
           <div class="actions" part="actions" ?hidden=${!this.hasActions}>
-            <slot name="actions" @slotchange=${this.handleActionsSlotChange}></slot>
+            <slot name="actions" @slotchange=${this.syncActions}></slot>
           </div>
         </div>
       </article>

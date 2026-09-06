@@ -19,6 +19,9 @@ const meta: Meta = {
 **Attributes**
 - \`type\` — визуальный вариант: \`primary\`, \`secondary\`, \`neutral\`
 
+- \`size\` — \`small\`, \`medium\`, \`large\`; стили размеров пока пустые
+- явные параметры имеют приоритет над группой; без параметров наследуются настройки непосредственной группы, затем primary/medium
+
 **Slots**
 - default slot — один нативный \`button\` или \`a\`
 

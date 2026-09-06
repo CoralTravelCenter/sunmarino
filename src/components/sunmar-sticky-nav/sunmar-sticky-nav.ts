@@ -159,7 +159,13 @@ export class SunmarStickyNav extends LitElement {
       return null;
     }
 
-    const sectionId = decodeURIComponent(href.slice(hashIndex + 1)).trim();
+    let sectionId: string;
+
+    try {
+      sectionId = decodeURIComponent(href.slice(hashIndex + 1)).trim();
+    } catch {
+      return null;
+    }
 
     if (!sectionId) {
       return null;

@@ -24,7 +24,9 @@ Hero/KV-компонент с SEO-friendly light DOM контентом.
 
 **API стилизации**
 - image positioning: \`--sunmar-image-object-position\`
-- доступны \`Parts\`: \`root\`, \`media\`, \`picture\`, \`content\`, \`content-inner\`, \`eyebrow\`, \`title\`, \`text\`, \`actions\`
+- доступны \`Parts\`: \`root\`, \`media\`, \`picture\`, \`content\`, \`content-inner\`, \`eyebrow\`, \`title\`, \`text\`
+- высоты баннера являются минимальными; длинный контент может увеличить блок
+- actions сохраняет собственный display, поэтому группу кнопок можно передавать прямо в slot
 `
       }
     }
@@ -47,11 +49,14 @@ export const Default: Story = {
       ></sunmar-image>
       <h1 slot="title">ОчеВИДНАЯ выгода Раннего бронирования</h1>
       <p slot="text">Скидки до 50% и предоплата 20% от стоимости.</p>
-      <div slot="actions">
-        <sunmar-button type="primary">
+      <sunmar-button-group slot="actions" type="primary">
+        <sunmar-button>
           <button type="button">Подобрать тур</button>
         </sunmar-button>
-      </div>
+        <sunmar-button type="secondary">
+          <a href="#details">Подробнее</a>
+        </sunmar-button>
+      </sunmar-button-group>
     </sunmar-kv>
   `
 };

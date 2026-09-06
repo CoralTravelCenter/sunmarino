@@ -5,13 +5,21 @@ import coastImageUrl from '../../dev/assets/cards/coast.jpg?url';
 const meta: Meta = {
   title: 'Components/Card',
   tags: ['autodocs'],
-  parameters: { layout: 'centered' }
+  parameters: {
+    layout: 'centered',
+    docs: {
+      description: {
+        component: 'CSS-атрибуты vertical и reversed управляют раскладкой без JS-свойств. Брейкпоинт 1024px зависит от окна. Слоты media, title, text обязательны; actions необязателен. Группа кнопок управляет раскладкой нескольких действий.'
+      }
+    }
+  }
 };
 
 export default meta;
 type Story = StoryObj;
 
 export const Mobile: Story = {
+  name: 'Узкая карточка (раскладка зависит от окна)',
   render: () => html`
     <sunmar-card style="display:block; width:min(100%, 360px);">
       <sunmar-image
@@ -25,6 +33,20 @@ export const Mobile: Story = {
       <p slot="text">Семейные отели и отдых у моря.</p>
       <sunmar-button slot="actions" type="primary"><a href="#tour">Купить тур</a></sunmar-button>
       <sunmar-button slot="actions" type="neutral"><a href="#hot">Горящие туры</a></sunmar-button>
+    </sunmar-card>
+  `
+};
+
+export const WithButtonGroup: Story = {
+  render: () => html`
+    <sunmar-card vertical style="width:min(100%, 360px);">
+      <sunmar-image slot="media" src=${coastImageUrl} width="720" height="480" alt="Побережье Турции"></sunmar-image>
+      <h3 slot="title">Турция</h3>
+      <p slot="text">Семейные отели и отдых у моря.</p>
+      <sunmar-button-group slot="actions" type="secondary">
+        <sunmar-button><a href="#details">Подробнее</a></sunmar-button>
+        <sunmar-button type="primary"><button type="button">Подобрать тур</button></sunmar-button>
+      </sunmar-button-group>
     </sunmar-card>
   `
 };

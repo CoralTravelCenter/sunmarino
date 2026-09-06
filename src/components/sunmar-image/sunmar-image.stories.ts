@@ -16,8 +16,15 @@ const meta: Meta = {
 **Attributes**
 - \`src\`, \`alt\`, \`width\`, \`height\`, \`loading\` передаются fallback-изображению
 - \`srcset\`, \`sizes\`, \`media\` задают опциональный \`source\`
+- без заполненного \`srcset\` внутри \`picture\` находится только \`img\`
+- удаление \`media\` возвращает условие 768px, пустое значение снимает ограничение
 - \`loading\` принимает только \`eager\` или \`lazy\`
-- положительные \`width\` и \`height\` резервируют место до загрузки изображения
+- \`width\` и \`height\` принимают конечные числа от 1; дробная часть отбрасывается
+
+**CSS**
+- \`--sunmar-image-height\` — высота, по умолчанию auto
+- \`--sunmar-image-object-fit\` — по умолчанию cover
+- \`--sunmar-image-object-position\` — по умолчанию center center
 
 **Parts**
 - \`picture\`
