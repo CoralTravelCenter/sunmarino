@@ -1,230 +1,145 @@
 <style>
-  .sticky-nav-demo-section {
-    min-height: 70vh;
-    padding: 32px;
-    border-radius: 24px;
-    background: #f5f5f8;
-  }
-
-  .sticky-nav-demo-section h2,
-  .sticky-nav-demo-section p {
-    margin: 0;
-  }
-
-  .sticky-nav-demo-section p {
-    margin-top: 16px;
-    max-width: 720px;
+  body { margin: 0; background: #fff; }
+  .holiday { font-family: Arial, sans-serif; color: #172d50; line-height: 1.6; }
+  .holiday * { box-sizing: border-box; }
+  .holiday .wrap { width: min(1200px, calc(100% - 40px)); margin-inline: auto; }
+  .holiday header, .holiday footer { display: flex; justify-content: space-between; align-items: center; gap: 24px; padding-block: 24px; }
+  .holiday .brand { color: #e9292c; font-size: 30px; font-weight: 800; letter-spacing: -1.5px; text-decoration: none; }
+  .holiday .brand span { color: #21366a; }
+  .holiday .tagline, .holiday .eyebrow { font-size: 12px; letter-spacing: 2px; text-transform: uppercase; }
+  .holiday .hero { --sunmar-kv-content-max-width: 540px; }
+  .holiday .hero::part(picture)::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, #092940d9, #09294010); }
+  .holiday .hero::part(root) { background: #174d64; }
+  .holiday .hero h1 { font-weight: 600; }
+  .holiday sunmar-sticky-nav { margin: 24px auto 0; }
+  .holiday .section { padding-block: 64px; scroll-margin-top: 100px; }
+  .holiday h2 { font-size: clamp(28px, 3.5vw, 42px); line-height: 1.15; font-weight: 500; margin: 0 0 18px; letter-spacing: -1px; }
+  .holiday .intro { margin: 0 0 32px; color: #647082; max-width: 620px; }
+  .holiday .section-heading { display: flex; align-items: end; justify-content: space-between; gap: 24px; margin-bottom: 30px; }
+  .holiday .section-heading p { margin-bottom: 0; }
+  .holiday .benefits { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; padding-block: 36px; border-bottom: 1px solid #e4e8ed; }
+  .holiday .benefits strong { display: block; font-size: 18px; margin-bottom: 5px; }
+  .holiday .benefits p { margin: 0; color: #647082; font-size: 14px; }
+  .holiday sunmar-tab-content sunmar-card { margin-top: 28px; }
+  .holiday sunmar-card { color: #172d50; }
+  .holiday sunmar-card sunmar-image { --sunmar-image-height: 300px; }
+  .holiday .soft { background: #f5f7fa; }
+  .holiday .soft sunmar-card { --sunmar-card-background: #fff; }
+  .holiday .closing { background: #fff0e9; border-radius: 24px; padding: 48px; display: flex; align-items: center; justify-content: space-between; gap: 32px; }
+  .holiday .closing p { margin-bottom: 0; }
+  .holiday footer { border-top: 1px solid #e4e8ed; color: #647082; font-size: 13px; }
+  .holiday footer a { color: inherit; }
+  .holiday .modal-links { display: grid; gap: 12px; margin-top: 24px; }
+  @media (max-width: 767px) {
+    .holiday .wrap { width: calc(100% - 32px); }
+    .holiday header .tagline { display: none; }
+    .holiday .hero { width: 100%; --sunmar-kv-content-max-width: 100%; }
+    .holiday .hero::part(picture)::after { background: linear-gradient(180deg, #092940d9, #09294030); }
+    .holiday .benefits { grid-template-columns: 1fr; gap: 20px; }
+    .holiday .section { padding-block: 40px; }
+    .holiday .section-heading, .holiday .closing, .holiday footer { align-items: start; flex-direction: column; }
+    .holiday .closing { padding: 28px; }
   }
 </style>
-
-<section class="sunmarino kv">
-  <sunmar-kv>
-    <sunmar-image
-      slot="image"
-      media="(min-width: 768px)"
-      srcset="https://b2ccdn.sunmar.ru/content/landing-pages/rb-summer/rb-kv.jpg"
-      src="https://b2ccdn.sunmar.ru/content/landing-pages/rb-summer/rb-kv-mo.jpg"
-      alt=""
-    ></sunmar-image>
-    <h1 slot="title">ОчеВИДНАЯ выгода Раннего бронирования</h1>
-    <p slot="text">
-      Скидки до 50% и предоплата 20% от стоимости
-    </p>
-    <div slot="actions">
-      <sunmar-button-group>
-        <sunmar-button type="primary">
-          <button type="button">Подобрать тур</button>
-        </sunmar-button>
+<div class="holiday" id="top">
+  <header class="wrap">
+    <a class="brand" href="#top" aria-label="Sunmar — на главную">sun<span>mar</span> ☀</a>
+    <span class="tagline">Ваше время на солнце</span>
+    <sunmar-button type="secondary"><button type="button" data-open-trip>Выбрать отдых</button></sunmar-button>
+  </header>
+  <section class="wrap hero">
+    <sunmar-kv class="hero">
+      <sunmar-image slot="image" src="https://images.unsplash.com/photo-1675198221188-767e513b9bd4?auto=format&amp;fit=crop&amp;w=1920&amp;q=85" alt="Тропический берег с пальмами и бирюзовым океаном" loading="eager"></sunmar-image>
+      <p slot="eyebrow" class="eyebrow">Море. Солнце. Никаких планов.</p>
+      <h1 slot="title">Пора туда,<br>где хорошо.</h1>
+      <p slot="text">Оставьте будни дома. Впереди — тёплое море,<br>новые места и время только для себя.</p>
+      <sunmar-button-group slot="actions">
+        <sunmar-button type="primary"><button type="button" data-open-trip>Хочу к морю</button></sunmar-button>
+        <sunmar-button type="neutral"><a href="#destinations">Найти вдохновение</a></sunmar-button>
       </sunmar-button-group>
-    </div>
-  </sunmar-kv>
-</section>
-
-<section class="sunmarino">
-  <div class="sunmarino-container">
-    <h2 class="sunmar-h2">Modal</h2>
-    <sunmar-button type="primary">
-      <button id="open-modal-demo" type="button">Открыть модальное окно</button>
-    </sunmar-button>
-
-    <sunmar-modal id="modal-demo" aria-label="Проверка доступности модального окна">
-      <span slot="title">Проверка modal</span>
-      <p>Tab и Shift+Tab остаются внутри окна, Escape закрывает его.</p>
-      <button autofocus type="button">Первое действие</button>
-      <button id="close-modal-demo" slot="actions" type="button">Готово</button>
-    </sunmar-modal>
+    </sunmar-kv>
+  </section>
+  <sunmar-sticky-nav class="wrap" disable-relocate top-offset="0">
+    <a slot="nav-link" href="#destinations">Куда поехать</a>
+    <a slot="nav-link" href="#stays">Как отдыхать</a>
+    <a slot="nav-link" href="#questions">Полезно знать</a>
+  </sunmar-sticky-nav>
+  <div class="wrap benefits">
+    <div><strong>Ближе к морю</strong><p>Места, в которых хочется замедлиться.</p></div>
+    <div><strong>В своём ритме</strong><p>От семейного отпуска до побега вдвоём.</p></div>
+    <div><strong>Больше впечатлений</strong><p>Маленькие открытия каждый день.</p></div>
   </div>
-</section>
-<section class="sunmarino">
-    <div class="sunmarino-container">
-      <sunmar-sticky-nav teleport=".sunmarino-container">
-        <a slot="nav-link" href="#april">Почему апрель?</a>
-        <a slot="nav-link" href="#turkey">Турция</a>
-        <a slot="nav-link" href="#egypt">Египет</a>
-        <a slot="nav-link" href="#maldives">Мальдивы</a>
-        <a slot="nav-link" href="#thailand">Таиланд</a>
-      </sunmar-sticky-nav>
-    </div>
-</section>
-<section class="sunmarino sticky-nav-demo-section" id="april">
-  <h2>Почему апрель?</h2>
-  <p>
-    Моковая секция для теста sticky-nav. Здесь можно прокруткой проверить, как компонент переключает активное состояние по IntersectionObserver.
-  </p>
-</section>
-
-<section class="sunmarino sticky-nav-demo-section" id="turkey">
-  <h2>Турция</h2>
-  <p>
-    Секция с отдельным id. Навигационная ссылка должна становиться активной, когда линия активации sticky-nav попадает в эту область.
-  </p>
-</section>
-
-<section class="sunmarino sticky-nav-demo-section" id="egypt">
-  <h2>Египет</h2>
-  <p>
-    Высота сделана намеренно большой, чтобы было удобно тестировать переходы активного пункта при скролле вниз и вверх.
-  </p>
-</section>
-
-<section class="sunmarino sticky-nav-demo-section" id="maldives">
-  <h2>Мальдивы</h2>
-  <p>
-    Эта секция нужна только для локального playground и не влияет на публичный API библиотеки.
-  </p>
-</section>
-
-<section class="sunmarino sticky-nav-demo-section" id="thailand">
-  <h2>Таиланд</h2>
-  <p>
-    Последняя тестовая секция. По ней удобно проверить финальное active-состояние ближе к нижней части страницы.
-  </p>
-</section>
-<section class="sunmarino">
-  <div class="sunmarino-container">
-    <h2 class="sunmar-h2">Tabs</h2>
-    <sunmar-tabs class="sunmar-mt-4" value="turkey" aria-label="Направления отдыха">
-      <sunmar-tab value="april">
-        <button type="button">Почему апрель?</button>
-      </sunmar-tab>
-      <sunmar-tab value="turkey" forced>
-        <button type="button">Турция</button>
-      </sunmar-tab>
-      <sunmar-tab value="egypt">
-        <button type="button">Египет</button>
-      </sunmar-tab>
-
-      <sunmar-tab-content value="april">
-        <h2 class="sunmar-h2">Почему апрель?</h2>
-        <p class="sunmar-text">
-          Тестовый контент панели для проверки базовой логики tabs в playground.
-        </p>
+  <section class="wrap section" id="destinations">
+    <p class="eyebrow">Следующая остановка — счастье</p>
+    <h2>У каждого своё море</h2>
+    <p class="intro">Выберите настроение будущего отпуска. Осталось только представить себя там.</p>
+    <sunmar-tabs value="islands" aria-label="Направления отдыха">
+      <sunmar-tab value="islands"><button type="button">Острова</button></sunmar-tab>
+      <sunmar-tab value="tropics"><button type="button">Тропики</button></sunmar-tab>
+      <sunmar-tab value="coast"><button type="button">Морское побережье</button></sunmar-tab>
+      <sunmar-tab-content value="islands">
+        <sunmar-card>
+          <sunmar-image slot="media" src="https://images.unsplash.com/photo-1675198221188-767e513b9bd4?auto=format&amp;fit=crop&amp;w=1000&amp;q=80" width="1000" height="650" alt="Островной курорт среди пальм" loading="lazy"></sunmar-image>
+          <h3 slot="title">Островной режим: включён</h3><p slot="text">Бирюзовая вода, белый песок и долгие завтраки с видом на океан. Здесь можно никуда не спешить — и всё успеть.</p>
+          <sunmar-button slot="actions" type="primary"><a href="#stays">Выбрать свой отдых</a></sunmar-button>
+        </sunmar-card>
       </sunmar-tab-content>
-
-      <sunmar-tab-content value="turkey">
-        <h2 class="sunmar-h2">Турция</h2>
-        <p class="sunmar-text">
-          Эта панель выбрана по умолчанию через value на sunmar-tabs.
-        </p>
+      <sunmar-tab-content value="tropics">
+        <sunmar-card>
+          <sunmar-image slot="media" src="https://images.unsplash.com/photo-1581691762073-9bbf84cac909?auto=format&amp;fit=crop&amp;w=1000&amp;q=80" width="1000" height="650" alt="Зелёный тропический берег и пляж" loading="lazy"></sunmar-image>
+          <h3 slot="title">Там, где лето круглый год</h3><p slot="text">Просыпаться под шум волн, гулять в тени пальм и пробовать что-то новое. Отпуск, в котором каждый день немного похож на приключение.</p>
+          <sunmar-button slot="actions" type="primary"><a href="#stays">Выбрать свой отдых</a></sunmar-button>
+        </sunmar-card>
       </sunmar-tab-content>
-
-      <sunmar-tab-content value="egypt">
-        <h2 class="sunmar-h2">Египет</h2>
-        <p class="sunmar-text">
-          Третья панель нужна для ручной проверки переключения и keyboard navigation.
-        </p>
+      <sunmar-tab-content value="coast">
+        <sunmar-card>
+          <sunmar-image slot="media" src="https://images.unsplash.com/photo-1503461007167-0e27f216b896?auto=format&amp;fit=crop&amp;w=1000&amp;q=80" width="1000" height="650" alt="Бассейны курорта у моря" loading="lazy"></sunmar-image>
+          <h3 slot="title">Счастье на первой линии</h3><p slot="text">От утреннего купания до заката на берегу — море всегда рядом. Идеальный план для тех, кто соскучился по солнцу.</p>
+          <sunmar-button slot="actions" type="primary"><a href="#stays">Выбрать свой отдых</a></sunmar-button>
+        </sunmar-card>
       </sunmar-tab-content>
     </sunmar-tabs>
-  </div>
-</section>
-<section class="sunmarino">
-  <div class="sunmarino-container">
-    <h2 class="sunmar-h2">Slider, Slide и Card</h2>
-    <sunmar-slider
-      class="sunmar-mt-4"
-      slides-per-view="1"
-      slides-per-view-768="2"
-      slides-per-view-1024="3"
-      gap="24"
-    >
-      <sunmar-slide>
-        <sunmar-card vertical>
-          <sunmar-image slot="media" src="/src/dev/assets/cards/coast.jpg" width="720" height="480" alt="Побережье Турции"></sunmar-image>
-          <h3 slot="title">Турция</h3>
-          <p slot="text">Семейные отели и отдых у моря.</p>
-          <sunmar-button slot="actions" type="primary"><a href="#turkey">Подробнее</a></sunmar-button>
-        </sunmar-card>
-      </sunmar-slide>
-      <sunmar-slide>
-        <sunmar-card vertical>
-          <sunmar-image slot="media" src="/src/dev/assets/cards/mountains.jpg" width="720" height="480" alt="Горный пейзаж"></sunmar-image>
-          <h3 slot="title">Горы</h3>
-          <p slot="text">Маршруты для активного отдыха.</p>
-        </sunmar-card>
-      </sunmar-slide>
-      <sunmar-slide>
-        <sunmar-card vertical>
-          <sunmar-image slot="media" src="/src/dev/assets/cards/resort.jpg" width="720" height="480" alt="Курортный отель"></sunmar-image>
-          <h3 slot="title">Курорты</h3>
-          <p slot="text">Отели для спокойного семейного отпуска.</p>
-          <sunmar-button slot="actions" type="neutral"><a href="#maldives">Выбрать</a></sunmar-button>
-        </sunmar-card>
-      </sunmar-slide>
+  </section>
+  <section class="soft section" id="stays"><div class="wrap">
+    <div class="section-heading"><div><p class="eyebrow">Отпуск, который вам подходит</p><h2>Как хочется отдохнуть?</h2></div><p class="intro">Разные сценарии. Одно прекрасное чувство.</p></div>
+    <sunmar-slider slides-per-view="1" slides-per-view-768="2" slides-per-view-1024="3" gap="24">
+      <sunmar-slide><sunmar-card vertical>
+        <sunmar-image slot="media" src="https://images.unsplash.com/photo-1737569943610-1e56157b267a?auto=format&amp;fit=crop&amp;w=720&amp;h=540&amp;q=80" width="720" height="540" alt="Круглый курорт у бирюзового моря" loading="lazy"></sunmar-image>
+        <h3 slot="title">Только вы и океан</h3><p slot="text">Тихие утра, неспешные прогулки и закаты, которые хочется разделить.</p>
+        <sunmar-button slot="actions" type="secondary"><button type="button" data-open-trip>Хочу так же</button></sunmar-button>
+      </sunmar-card></sunmar-slide>
+      <sunmar-slide><sunmar-card vertical>
+        <sunmar-image slot="media" src="https://images.unsplash.com/photo-1680013995061-2d6d1f3ab417?auto=format&amp;fit=crop&amp;w=720&amp;h=540&amp;q=80" width="720" height="540" alt="Курорт с бассейнами и пляжем" loading="lazy"></sunmar-image>
+        <h3 slot="title">Вместе веселее</h3><p slot="text">Бассейн, пляж и целый день вместе. Собирайте семейные воспоминания.</p>
+        <sunmar-button slot="actions" type="secondary"><button type="button" data-open-trip>Хочу так же</button></sunmar-button>
+      </sunmar-card></sunmar-slide>
+      <sunmar-slide><sunmar-card vertical>
+        <sunmar-image slot="media" src="https://images.unsplash.com/photo-1581691762073-9bbf84cac909?auto=format&amp;fit=crop&amp;w=720&amp;h=540&amp;q=80" width="720" height="540" alt="Зелень и пляж тропического острова" loading="lazy"></sunmar-image>
+        <h3 slot="title">Поближе к природе</h3><p slot="text">Тропическая зелень, морской воздух и новые маршруты за поворотом.</p>
+        <sunmar-button slot="actions" type="secondary"><button type="button" data-open-trip>Хочу так же</button></sunmar-button>
+      </sunmar-card></sunmar-slide>
+      <sunmar-slide><sunmar-card vertical>
+        <sunmar-image slot="media" src="https://images.unsplash.com/photo-1503461007167-0e27f216b896?auto=format&amp;fit=crop&amp;w=720&amp;h=540&amp;q=80" width="720" height="540" alt="Вид сверху на прибрежный курорт" loading="lazy"></sunmar-image>
+        <h3 slot="title">Никуда не спешить</h3><p slot="text">Любимая книга у бассейна и море в двух шагах. Иногда этого достаточно.</p>
+        <sunmar-button slot="actions" type="secondary"><button type="button" data-open-trip>Хочу так же</button></sunmar-button>
+      </sunmar-card></sunmar-slide>
     </sunmar-slider>
-  </div>
-</section>
-<section class="sunmarino">
-  <div class="sunmarino-container">
-    <h2 class="sunmar-h2">Accordion — multiple</h2>
-    <sunmar-accordion class="sunmar-mt-4" faq>
-      <sunmar-accordion-item open>
-        <h3 slot="header">Какие документы нужны?</h3>
-        <p>
-          Это тестовый контент для проверки базового сценария multiple. Здесь можно проверить открытие и закрытие item независимо друг от друга.
-        </p>
-      </sunmar-accordion-item>
-
-      <sunmar-accordion-item>
-        <h3 slot="header">Можно ли перенести тур?</h3>
-        <p>
-          Вторая секция нужна для проверки обычного переключения и визуального контракта trigger/content.
-        </p>
-      </sunmar-accordion-item>
-
-      <sunmar-accordion-item>
-        <h3 slot="header">Что входит в стоимость?</h3>
-        <p>
-          Третий item нужен для ручной проверки отступов, иконки и общего поведения family в playground.
-        </p>
-      </sunmar-accordion-item>
+  </div></section>
+  <section class="wrap section" id="questions">
+    <p class="eyebrow">Перед путешествием</p><h2>Всё начинается с простого</h2>
+    <p class="intro">Несколько ответов, чтобы сделать первый шаг к отпуску.</p>
+    <sunmar-accordion faq mode="single">
+      <sunmar-accordion-item open><h3 slot="header">С чего начать выбор отдыха?</h3><p>Подумайте, с кем вы едете и как хотите проводить время: на пляже, у бассейна или на прогулках. Затем выберите направление и удобные даты.</p></sunmar-accordion-item>
+      <sunmar-accordion-item><h3 slot="header">Как выбрать отель для всей семьи?</h3><p>Обратите внимание на расположение пляжа, варианты питания, семейные номера и занятия для детей. Сравните описание отеля с тем, что важно именно вам.</p></sunmar-accordion-item>
+      <sunmar-accordion-item><h3 slot="header">Где посмотреть доступные туры?</h3><p>Нажмите «Выбрать отдых» и перейдите на сайт Sunmar. Там можно указать даты, город вылета и состав путешественников.</p></sunmar-accordion-item>
     </sunmar-accordion>
-  </div>
-</section>
-
-<section class="sunmarino">
-  <div class="sunmarino-container">
-    <h2 class="sunmar-h2">Accordion — single</h2>
-    <sunmar-accordion class="sunmar-mt-4" mode="single">
-      <sunmar-accordion-item open>
-        <h3 slot="header">Почему открыт только один item?</h3>
-        <p>
-          В режиме single контейнер сам нормализует состояние и не позволяет держать открытыми несколько пунктов одновременно.
-        </p>
-      </sunmar-accordion-item>
-
-      <sunmar-accordion-item>
-        <h3 slot="header">Что происходит при повторном клике?</h3>
-        <p>
-          Этот пункт нужен для проверки, что в single-режиме активный item можно закрыть повторным кликом по trigger.
-        </p>
-      </sunmar-accordion-item>
-
-      <sunmar-accordion-item disabled>
-        <h3 slot="header">Disabled item</h3>
-        <p>
-          Disabled-сценарий нужен для ручной проверки визуального состояния и блокировки взаимодействия.
-        </p>
-      </sunmar-accordion-item>
-    </sunmar-accordion>
-  </div>
-</section>
+  </section>
+  <section class="wrap section"><div class="closing"><div><p class="eyebrow">Пусть море станет ближе</p><h2>Ваш отпуск начинается здесь</h2><p>Выберите место, в которое хочется вернуться.</p></div><sunmar-button type="primary"><button type="button" data-open-trip>Выбрать отдых</button></sunmar-button></div></section>
+  <footer class="wrap"><a class="brand" href="#top">sun<span>mar</span> ☀</a><span>Время для моря. Время для себя.</span><a href="https://unsplash.com" target="_blank" rel="noopener noreferrer">Фотографии — Unsplash</a></footer>
+  <sunmar-modal id="trip-modal" aria-label="Выберите направление">
+    <h2 slot="title">Куда отправимся?</h2>
+    <p>Вдохновитесь нашей подборкой или перейдите к поиску тура на сайте Sunmar.</p>
+    <div class="modal-links"><sunmar-button type="primary"><a href="https://www.sunmar.ru/" target="_blank" rel="noopener noreferrer">Найти тур на Sunmar ↗</a></sunmar-button></div>
+    <sunmar-button slot="actions" type="neutral"><button type="button" id="close-trip">Продолжить знакомство</button></sunmar-button>
+  </sunmar-modal>
+</div>
