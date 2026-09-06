@@ -2,5 +2,11 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "buildCommand": "npm run build-storybook",
   "outputDirectory": "storybook-static",
-  "installCommand": "npm ci"
+  "installCommand": "npm ci",
+  "git": {
+    "deploymentEnabled": {
+      "*": false,
+      "deploy": true
+    }
+  }
 }
