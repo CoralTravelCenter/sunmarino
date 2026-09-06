@@ -12,8 +12,8 @@
 ## Скрипты
 
 - `npm run dev` - локальный dev сервер
-- `npm run build` - production build JS (`sunmarino.iife.js`) и `.d.ts` в `dist/`
-- `npm run build:js` - только JS-бандл `sunmarino.iife.js`
+- `npm run build` - production build JS (`sunmarino-<version>.iife.js`) и `.d.ts` в `dist/`
+- `npm run build:js` - только JS-бандл `sunmarino-<version>.iife.js`
 - `npm run build:types` - только TypeScript declaration files в `dist/types/`
 - `npm run build:external` - сборка с external vendor deps (`@fluejs/noscroll`) для уменьшения размера бандла
 - `npm run preview` - просмотр production сборки
@@ -52,7 +52,7 @@
 
 ## Typography Utilities
 
-- глобальные utility-классы попадают в `styles.css` библиотеки и не зависят от компонентов
+- глобальные utility-классы встраиваются в IIFE-бандл и не зависят от компонентов
 - текущий минимальный набор:
   - `sunmar-h2`
   - `sunmar-text`
@@ -78,11 +78,10 @@
 ### Script tag (IIFE)
 
 ```html
-<link rel="stylesheet" href="/path/to/dist/index.css" />
-<script src="/path/to/dist/sunmarino.iife.js"></script>
+<script src="/path/to/dist/sunmarino-0.1.3.iife.js"></script>
 ```
 
-- после загрузки скрипта компоненты зарегистрированы автоматически
+- после загрузки скрипта компоненты зарегистрированы автоматически, а runtime-токены и utility-стили добавлены в документ
 
 ## Глобальный layout
 
@@ -108,9 +107,13 @@
 
 ## Button API
 
+Подробный контракт, ограничения и план проверок: [sunmar-button](docs/sunmar-button-contract.md).
+
 - strict API: legacy-атрибуты (`variant`, `state`) и legacy alias-и не поддерживаются
 - `sunmar-button` — только стилевая оболочка; через default slot передается один нативный `<button>` или `<a>`
 - `sunmar-button` attributes: `type="primary|secondary|neutral"` (по умолчанию `primary`; отсутствующее или некорректное значение нормализуется в `primary`)
+- `sunmar-button` attributes: `size="small|medium|large"`; по умолчанию `medium`, SCSS размеров пока не заполнен
+- Для `type` и `size`: явное значение кнопки → настройка непосредственной группы → значение по умолчанию. Отсутствующий атрибут не создаётся; JS-свойство возвращает итоговое значение. Удаление атрибута возвращает наследование.
 - `sunmar-button` slots: `default`
 - `sunmar-button` parts: нет
 - состояния `hover/active` управляются только нативными псевдоклассами `:hover/:active` (без state-атрибутов)
@@ -130,16 +133,21 @@
   <a href="/offers" target="_blank" rel="noopener noreferrer">Предложения</a>
 </sunmar-button>
 ```
-- `sunmar-button-group` attributes: нет (layout управляется стилями; по умолчанию `flex-wrap: wrap`)
+- `sunmar-button-group` attributes/properties: `type="primary|secondary|neutral"`, `size="small|medium|large"`; задают значения кнопкам без собственных настроек
+- направление задаётся CSS-переменной `--sunmar-button-group-direction: row | column` (по умолчанию `row`); перенос включён через `flex-wrap: wrap`
+- контракт группы: [sunmar-button-group](docs/sunmar-button-group-contract.md)
 - `sunmar-button-group` parts: нет
 - расстояние между элементами настраивается через `--sunmar-button-group-gap` (по умолчанию `--sunmar-space-s`)
 
 ## Card API
 
+Подробный контракт и статус проверок: [sunmar-card](docs/sunmar-card-contract.md).
+
 - `sunmar-card` attributes:
   - `vertical` — сохраняет вертикальную раскладку на всех ширинах
   - `reversed` — меняет местами media и content в горизонтальной раскладке от `1024px`
 - при одновременном использовании `vertical` и `reversed` приоритет имеет `vertical`
+- `vertical` и `reversed` — только CSS-атрибуты присутствия, JS-свойств нет; брейкпоинт зависит от ширины окна
 - обязательные slots: `media`, `title`, `text`
 - необязательный slot: `actions`; пустой actions-контейнер не занимает место
 - parts: `root`, `media`, `content`, `title`, `text`, `actions`
@@ -175,18 +183,22 @@
 
 ## Image API
 
+Подробный контракт: [sunmar-image](docs/sunmar-image-contract.md).
+
 - `sunmar-image` attributes:
   - `src` — обязательный fallback-источник для внутреннего `img`
   - `srcset` — необязательный набор источников для `source` внутри `picture`
   - `media` — условие для `source` (по умолчанию `'(min-width: 768px)'`)
   - `sizes` — необязательная подсказка размеров для `source`
   - `alt` — осмысленное описание либо пустая строка для декоративного изображения
-  - `width`, `height` — положительные размеры внутреннего `img`; некорректные значения не передаются
+  - `width`, `height` — конечные числа от `1` для внутреннего `img`; дробная часть отбрасывается, некорректные значения не передаются
   - `loading="eager|lazy"` — необязательный нативный режим загрузки; неизвестное значение не передаётся
-- `sunmar-image` внутри рендерит `picture` (`source` + fallback `img`) и упрощает art direction в `sunmar-kv`
+- `sunmar-image` рендерит `picture` с одним `img`; `source` добавляется только при непустом `srcset`
+- удаление `src`, `srcset`, `sizes` безопасно убирает соответствующие внутренние атрибуты или `source`; удаление `media` возвращает условие по умолчанию, пустой `media` снимает ограничение
 - когда размеры изображения известны, указывайте `width` и `height`, чтобы браузер заранее резервировал место и уменьшал layout shift
 - `sunmar-image` parts: `picture`, `img`
 - CSS custom properties:
+  - `--sunmar-image-height` (default `auto`)
   - `--sunmar-image-object-fit` (default `cover`)
   - `--sunmar-image-object-position` (default `center center`)
 
@@ -270,6 +282,8 @@
 
 ## KV API
 
+Подробный контракт: [sunmar-kv](docs/sunmar-kv-contract.md).
+
 - обязательные slots:
   - `image` (обычно `sunmar-image`; допустим любой media-узел, который сам умеет корректно заполнять область визуала)
   - `title` (ожидается семантический заголовок `h1|h2|h3` в light DOM)
@@ -277,7 +291,7 @@
   - `eyebrow` (контент, лучше `span` или `p`)
   - `text` (ожидается `p` в light DOM)
   - `actions`
-- размеры `KV`:
+- минимальная высота `KV` (может увеличиваться при длинном контенте):
   - base: `556px`
   - `>= 768px`: `320px`
   - `>= 1024px`: `360px`

@@ -35,3 +35,28 @@ export const Preview: Story = {
     </sunmar-button-group>
   `
 };
+
+export const InheritedSettings: Story = {
+  render: () => html`
+    <sunmar-button-group type="secondary" size="large">
+      <sunmar-button><button type="button">От группы</button></sunmar-button>
+      <sunmar-button type="primary"><button type="button">Свой тип</button></sunmar-button>
+      <sunmar-button size="small"><a href="#details">Свой размер</a></sunmar-button>
+    </sunmar-button-group>
+  `
+};
+
+export const ResponsiveDirection: Story = {
+  render: () => html`
+    <style>
+      .responsive-button-group { --sunmar-button-group-direction: column; }
+      @media (min-width: 768px) {
+        .responsive-button-group { --sunmar-button-group-direction: row; }
+      }
+    </style>
+    <sunmar-button-group class="responsive-button-group" type="secondary">
+      <sunmar-button><button type="button">Подобрать тур</button></sunmar-button>
+      <sunmar-button><a href="#details">Подробнее</a></sunmar-button>
+    </sunmar-button-group>
+  `
+};
