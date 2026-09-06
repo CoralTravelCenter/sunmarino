@@ -6,6 +6,11 @@ import styles from './sunmar-slider.scss?inline';
 export const SUNMAR_SLIDER_TAG_NAME = 'sunmar-slider';
 
 const SUPPORTED_DISABLED_BREAKPOINTS = [768, 1024, 1280, 1440] as const;
+const OPTION_PROPERTIES = new Set([
+  'slidesPerView', 'slidesPerView768', 'slidesPerView1024', 'slidesPerView1280',
+  'slidesPerView1440', 'slidesToScroll', 'disabledFrom', 'align', 'dragFree', 'loop', 'gap'
+]);
+
 const SUPPORTED_ALIGNMENTS = ['start', 'center', 'end'] as const;
 
 export class SunmarSlider extends LitElement {
@@ -16,13 +21,15 @@ export class SunmarSlider extends LitElement {
     slidesPerView1280: { type: Number, attribute: 'slides-per-view-1280' },
     slidesPerView1440: { type: Number, attribute: 'slides-per-view-1440' },
     slidesToScroll: { type: String, attribute: 'slides-to-scroll' },
-    disabledFrom: { type: Number, attribute: 'disabled-from' },
+    disabledFrom: { type: Number, attribute: 'disabled-from', reflect: true },
     align: { type: String },
     dragFree: { type: Boolean, attribute: 'drag-free' },
     loop: { type: Boolean },
     gap: { type: Number },
     activeIndex: { state: true },
-    snapCount: { state: true }
+    snapCount: { state: true },
+    canScrollPrev: { state: true },
+    canScrollNext: { state: true }
   };
 
   static styles = [componentBaseStyles, css`${unsafeCSS(styles)}`];
@@ -41,6 +48,9 @@ export class SunmarSlider extends LitElement {
 
   private activeIndex = 0;
   private snapCount = 0;
+  private canScrollPrev = false;
+  private canScrollNext = false;
+  private initializationId = 0;
   private embla?: EmblaApi;
   private generatedSlideLabels = new WeakMap<HTMLElement, string>();
   private labeledSlides = new Set<HTMLElement>();
@@ -63,16 +73,27 @@ export class SunmarSlider extends LitElement {
   }
 
   protected updated(changed: Map<PropertyKey, unknown>): void {
-    if (!this.embla || changed.has('activeIndex') || changed.has('snapCount')) return;
+    if (!this.embla || !Array.from(changed.keys()).some((key) => OPTION_PROPERTIES.has(String(key)))) return;
     this.embla.reInit(this.getEmblaOptions());
   }
 
   disconnectedCallback(): void {
-    this.embla?.destroy();
-    this.embla = undefined;
+    this.initializationId++;
+    this.destroyEmbla();
     this.clearGeneratedSlideLabels();
     this.removeAttribute('embla-ready');
     super.disconnectedCallback();
+  }
+
+  private destroyEmbla(): void {
+    this.embla?.off('select', this.syncState).off('reInit', this.syncState);
+    this.embla?.destroy();
+    this.embla = undefined;
+    this.activeIndex = 0;
+    this.snapCount = 0;
+    this.canScrollPrev = false;
+    this.canScrollNext = false;
+    this.removeAttribute('embla-ready');
   }
 
   private get slides(): HTMLElement[] {
@@ -88,13 +109,15 @@ export class SunmarSlider extends LitElement {
     const align = SUPPORTED_ALIGNMENTS.includes(this.align) ? this.align : 'start';
     const slidesToScroll = this.slidesToScroll === 'auto'
       ? 'auto'
-      : this.getValidNumber(Number(this.slidesToScroll), 1, 1);
+      : Math.floor(this.getValidNumber(Number(this.slidesToScroll), 1, 1));
 
     return {
       align,
-      breakpoints: disabledFrom
-        ? { [`(min-width: ${disabledFrom}px)`]: { active: false } }
-        : undefined,
+      // reInit merges options: explicitly reset every owned breakpoint.
+      breakpoints: Object.fromEntries(SUPPORTED_DISABLED_BREAKPOINTS.map((breakpoint) => [
+        `(min-width: ${breakpoint}px)`,
+        { active: disabledFrom === undefined || breakpoint < disabledFrom }
+      ])),
       container: container ?? undefined,
       dragFree: this.dragFree,
       loop: this.loop,
@@ -126,7 +149,7 @@ export class SunmarSlider extends LitElement {
       const currentLabel = slide.getAttribute('aria-label');
       const generatedLabel = this.generatedSlideLabels.get(slide);
 
-      if (currentLabel && currentLabel !== generatedLabel) {
+      if (slide.hasAttribute('aria-labelledby') || (currentLabel && currentLabel !== generatedLabel)) {
         this.generatedSlideLabels.delete(slide);
         this.labeledSlides.delete(slide);
         return;
@@ -147,43 +170,58 @@ export class SunmarSlider extends LitElement {
       }
     }
     this.labeledSlides.clear();
+    this.generatedSlideLabels = new WeakMap();
   }
 
   private async initEmbla(): Promise<void> {
     const viewport = this.renderRoot.querySelector<HTMLElement>('.viewport');
-    if (!viewport || !this.isConnected) return;
+    if (!viewport || !this.isConnected || this.embla) return;
+    const initializationId = ++this.initializationId;
 
     try {
       const EmblaCarousel = await loadEmbla();
-      if (!this.isConnected || this.embla) return;
+      if (!this.isConnected || initializationId !== this.initializationId || this.embla) return;
 
+      // Embla must measure the flex layout, not the loading grid.
+      this.toggleAttribute('embla-ready', true);
       this.embla = EmblaCarousel(viewport, this.getEmblaOptions());
       this.embla.on('select', this.syncState).on('reInit', this.syncState);
-      this.toggleAttribute('embla-ready', true);
       this.syncState(this.embla);
-    } catch (error) {
-      console.error('[sunmar-slider] Embla failed to load.', error);
+    } catch {
+      if (!this.isConnected || initializationId !== this.initializationId) return;
+      this.destroyEmbla();
+      console.error('[sunmar-slider] Embla initialization failed; displaying a static grid.');
     }
   }
 
   private syncState = (api: EmblaApi): void => {
+    if (api !== this.embla) return;
+    this.canScrollPrev = api.canScrollPrev();
+    this.canScrollNext = api.canScrollNext();
     this.activeIndex = api.selectedScrollSnap();
     this.snapCount = api.scrollSnapList().length;
   };
 
   private handleSlotChange(): void {
+    if (!this.isConnected) return;
     this.syncSlideLabels();
     this.embla?.reInit(this.getEmblaOptions());
   }
 
   protected render() {
+    const counts = [this.slidesPerView, this.slidesPerView768, this.slidesPerView1024,
+      this.slidesPerView1280, this.slidesPerView1440];
+    const suffixes = ['', '-768', '-1024', '-1280', '-1440'];
+    let previous = 1;
     const slideStyles = [
       `--sunmar-slider-gap:${this.getValidNumber(this.gap, 16, 0)}px`,
-      `--sunmar-slider-slides:${this.getValidNumber(this.slidesPerView, 1, 1)}`,
-      `--sunmar-slider-slides-768:${this.getValidNumber(this.slidesPerView768 ?? this.slidesPerView, 1, 1)}`,
-      `--sunmar-slider-slides-1024:${this.getValidNumber(this.slidesPerView1024 ?? this.slidesPerView768 ?? this.slidesPerView, 1, 1)}`,
-      `--sunmar-slider-slides-1280:${this.getValidNumber(this.slidesPerView1280 ?? this.slidesPerView1024 ?? this.slidesPerView768 ?? this.slidesPerView, 1, 1)}`,
-      `--sunmar-slider-slides-1440:${this.getValidNumber(this.slidesPerView1440 ?? this.slidesPerView1280 ?? this.slidesPerView1024 ?? this.slidesPerView768 ?? this.slidesPerView, 1, 1)}`
+      ...counts.flatMap((count, index) => {
+        previous = count === undefined ? previous : this.getValidNumber(count, 1, 1);
+        return [
+          `--sunmar-slider-slides${suffixes[index]}:${previous}`,
+          `--sunmar-slider-grid-columns${suffixes[index]}:${Math.floor(previous)}`
+        ];
+      })
     ].join(';');
 
     return html`
@@ -197,13 +235,13 @@ export class SunmarSlider extends LitElement {
           ></slot>
         </div>
 
-        <div class="navigation" part="navigation">
+        <div class="navigation" part="navigation" ?hidden=${this.snapCount < 2}>
           <button
-            class="button"
+            class="button button-prev"
             part="prev-button"
             type="button"
             aria-label="Предыдущий слайд"
-            ?disabled=${!this.loop && !this.embla?.canScrollPrev()}
+            ?disabled=${!this.canScrollPrev}
             @click=${() => this.embla?.scrollPrev()}
           >
             <svg
@@ -216,7 +254,7 @@ export class SunmarSlider extends LitElement {
             >
               <path
                 d="M7.33334 12.7031L2 7.45314L7.33334 2.20314M2 7.45314L18 7.45313"
-                stroke="#656565"
+                stroke="currentColor"
                 stroke-width="1.5"
                 stroke-linecap="round"
                 stroke-linejoin="round"
@@ -224,11 +262,11 @@ export class SunmarSlider extends LitElement {
             </svg>
           </button>
           <button
-            class="button"
+            class="button button-next"
             part="next-button"
             type="button"
             aria-label="Следующий слайд"
-            ?disabled=${!this.loop && !this.embla?.canScrollNext()}
+            ?disabled=${!this.canScrollNext}
             @click=${() => this.embla?.scrollNext()}
           >
             <svg
@@ -241,7 +279,7 @@ export class SunmarSlider extends LitElement {
             >
               <path
                 d="M7.33334 12.7031L2 7.45314L7.33334 2.20314M2 7.45314L18 7.45313"
-                stroke="#656565"
+                stroke="currentColor"
                 stroke-width="1.5"
                 stroke-linecap="round"
                 stroke-linejoin="round"
@@ -251,14 +289,14 @@ export class SunmarSlider extends LitElement {
         </div>
       </div>
 
-      <div class="controls" part="controls">
-        <div class="pagination" part="pagination" role="group" aria-label="Выбор слайда">
+      <div class="controls" part="controls" ?hidden=${this.snapCount < 2}>
+        <div class="pagination" part="pagination" role="group" aria-label="Выбор позиции карусели">
           ${Array.from({ length: this.snapCount }, (_, index) => html`
             <button
               class="dot"
               part="dot"
               type="button"
-              aria-label=${`Перейти к слайду ${index + 1}`}
+              aria-label=${`Перейти к позиции ${index + 1}`}
               aria-current=${index === this.activeIndex ? 'true' : nothing}
               @click=${() => this.embla?.scrollTo(index)}
             ></button>
@@ -267,7 +305,7 @@ export class SunmarSlider extends LitElement {
       </div>
 
       <span class="status" part="status" aria-live="polite">
-        ${this.snapCount ? `Слайд ${this.activeIndex + 1} из ${this.snapCount}` : nothing}
+        ${this.snapCount > 1 ? `Позиция ${this.activeIndex + 1} из ${this.snapCount}` : nothing}
       </span>
     `;
   }

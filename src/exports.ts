@@ -1,11 +1,12 @@
-export { SunmarModal } from './components/sunmar-modal/sunmar-modal';
+export { SunmarModal, SUNMAR_MODAL_OPEN_EVENT, SUNMAR_MODAL_CLOSE_EVENT } from './components/sunmar-modal/sunmar-modal';
 export { SunmarButton } from './components/sunmar-button/sunmar-button';
 export { SunmarButtonGroup } from './components/sunmar-button-group/sunmar-button-group';
 export { SunmarImage } from './components/sunmar-image/sunmar-image';
 export { SunmarKv } from './components/sunmar-kv/sunmar-kv';
 export { SunmarAccordion } from './components/sunmar-accordion/sunmar-accordion';
 export { SunmarAccordionItem } from './components/sunmar-accordion-item/sunmar-accordion-item';
-export { SunmarTabs } from './components/sunmar-tabs/sunmar-tabs';
+export { SunmarTabs, SUNMAR_TABS_CHANGE_EVENT } from './components/sunmar-tabs/sunmar-tabs';
+export type { SunmarTabsChangeDetail } from './components/sunmar-tabs/sunmar-tabs';
 export { SunmarTab } from './components/sunmar-tabs/sunmar-tab';
 export { SunmarTabContent } from './components/sunmar-tabs/sunmar-tab-content';
 export { SunmarStickyNav } from './components/sunmar-sticky-nav/sunmar-sticky-nav';

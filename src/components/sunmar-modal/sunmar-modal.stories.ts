@@ -12,8 +12,8 @@ const meta: Meta = {
 
 **Attributes**
 - \`open\` — открытое состояние
-- \`close-on-backdrop\` — закрытие по клику на фон
-- \`close-on-esc\` — закрытие по Escape
+- \`disable-close-on-backdrop\` — отключает закрытие по клику на фон
+- \`disable-close-on-esc\` — отключает закрытие по Escape
 - \`aria-label\` — явное доступное имя; рекомендуется, когда внешний заголовок не используется
 - \`aria-labelledby\` — id элемента, задающего доступное имя
 
@@ -24,8 +24,8 @@ const meta: Meta = {
 - фон получает \`inert\` только на время открытого состояния и затем восстанавливается
 
 **Events**
-- \`sunmar-open\`
-- \`sunmar-close\`
+- \`sunmar-modal-open\`
+- \`sunmar-modal-close\`
 `
       }
     }
@@ -66,6 +66,43 @@ export const Default: Story = {
         >
           Готово
         </button>
+      </sunmar-modal>
+    </div>
+  `
+};
+
+
+export const Stacked: Story = {
+  name: 'Два окна',
+  render: () => html`
+    <div data-modal-demo>
+      <button type="button" @click=${(event: Event) => {
+        (event.currentTarget as HTMLElement).parentElement!.querySelector('sunmar-modal')!.show();
+      }}>Открыть первое окно</button>
+      <sunmar-modal aria-label="Первое окно">
+        <span slot="title">Первое окно</span>
+        <button type="button" @click=${(event: Event) => {
+          (event.currentTarget as HTMLElement).closest('[data-modal-demo]')!.querySelectorAll('sunmar-modal')[1].show();
+        }}>Открыть второе окно</button>
+      </sunmar-modal>
+      <sunmar-modal aria-label="Второе окно">
+        <span slot="title">Второе окно</span>
+        <p>Escape закрывает только это окно и возвращает фокус в первое.</p>
+      </sunmar-modal>
+    </div>
+  `
+};
+
+export const ExplicitClose: Story = {
+  name: 'Закрытие только кнопкой',
+  render: () => html`
+    <div>
+      <button type="button" @click=${(event: Event) => {
+        (event.currentTarget as HTMLElement).parentElement!.querySelector('sunmar-modal')!.show();
+      }}>Открыть окно</button>
+      <sunmar-modal disable-close-on-esc disable-close-on-backdrop>
+        <span slot="title">Подтверждение</span>
+        <p>Закройте окно кнопкой в заголовке.</p>
       </sunmar-modal>
     </div>
   `

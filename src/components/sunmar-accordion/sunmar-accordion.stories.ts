@@ -18,7 +18,7 @@ const meta: Meta = {
 
 **Attributes sunmar-accordion-item**
 - \`open\` — открытое состояние
-- \`disabled\` — блокирует переключение элемента
+- \`disabled\` — блокирует пользовательское переключение; программное изменение open разрешено
 
 **Slots**
 - \`slot="header"\` — заголовок элемента
@@ -63,5 +63,37 @@ export const SingleFaq: Story = {
         <p>Документы доступны в личном кабинете после подтверждения тура.</p>
       </sunmar-accordion-item>
     </sunmar-accordion>
+  `
+};
+
+
+export const DynamicFaq: Story = {
+  name: 'Обновление FAQ',
+  render: () => html`
+    <div style="width:min(calc(100vw - 32px), 720px);">
+      <button type="button" @click=${(event: MouseEvent) => {
+        const group = (event.currentTarget as HTMLButtonElement).parentElement!.querySelector('sunmar-accordion')!;
+        const answer = group.querySelector('p')!;
+        answer.textContent = answer.textContent === 'Первоначальный ответ.'
+          ? 'Ответ обновлён. JSON-LD содержит тот же текст.'
+          : 'Первоначальный ответ.';
+      }}>Обновить ответ</button>
+      <sunmar-accordion faq>
+        <sunmar-accordion-item open>
+          <span slot="header">Как обновляется ответ?</span>
+          <p>Первоначальный ответ.</p>
+        </sunmar-accordion-item>
+      </sunmar-accordion>
+    </div>
+  `
+};
+
+export const DisabledOpen: Story = {
+  name: 'Открытый недоступный пункт',
+  render: () => html`
+    <sunmar-accordion-item open disabled>
+      <span slot="header">Условия бронирования</span>
+      <p>Содержимое доступно для чтения, пользовательское переключение заблокировано.</p>
+    </sunmar-accordion-item>
   `
 };

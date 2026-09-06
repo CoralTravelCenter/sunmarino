@@ -7,7 +7,7 @@ import styles from './sunmar-tabs.scss?inline';
 export const SUNMAR_TABS_TAG_NAME = 'sunmar-tabs';
 const TAB_TAG_NAME = 'sunmar-tab';
 const TAB_CONTENT_TAG_NAME = 'sunmar-tab-content';
-const TABS_CHANGE_EVENT = 'sunmar-tabs-change';
+export const SUNMAR_TABS_CHANGE_EVENT = 'sunmar-tabs-change';
 
 type TabElement = HTMLElement & { value?: string; forced?: boolean };
 type TabContentElement = HTMLElement & { value?: string };
@@ -24,6 +24,61 @@ export class SunmarTabs extends LitElement {
 
   private readonly instanceId = `${SUNMAR_TABS_TAG_NAME}-${++tabsInstance}`;
   private initialized = false;
+  private nextId = 0;
+  private observer?: MutationObserver;
+  private readonly ownedAttributes = new Map<Element, Map<string, { original: string | null; written: string | null }>>();
+
+  connectedCallback(): void {
+    super.connectedCallback();
+    this.addEventListener('click', this.onClick);
+    this.addEventListener('keydown', this.onKeyDown);
+    this.observeChildren();
+    if (this.hasUpdated) this.sync();
+  }
+
+  disconnectedCallback(): void {
+    this.observer?.disconnect();
+    this.removeEventListener('click', this.onClick);
+    this.removeEventListener('keydown', this.onKeyDown);
+    for (const element of this.ownedAttributes.keys()) this.restoreAttributes(element);
+    super.disconnectedCallback();
+  }
+
+  private observeChildren(): void {
+    this.observer ??= new MutationObserver(this.sync);
+    this.observer.observe(this, {
+      subtree: true, childList: true, attributes: true,
+      attributeFilter: ['value', 'disabled', 'forced', 'id', 'slot']
+    });
+  }
+
+  private writeAttribute(element: Element, name: string, value: string | null): void {
+    let attributes = this.ownedAttributes.get(element);
+    if (!attributes) {
+      attributes = new Map();
+      this.ownedAttributes.set(element, attributes);
+    }
+    const current = element.getAttribute(name);
+    const previous = attributes.get(name);
+    const original = previous && current === previous.written ? previous.original : current;
+    attributes.set(name, { original, written: value });
+    if (current === value) return;
+    if (value === null) element.removeAttribute(name);
+    else element.setAttribute(name, value);
+  }
+
+  private restoreAttributes(element: Element): void {
+    for (const [name, { original, written }] of this.ownedAttributes.get(element) ?? []) {
+      if (element.getAttribute(name) !== written) continue;
+      if (original === null) element.removeAttribute(name);
+      else element.setAttribute(name, original);
+    }
+    this.ownedAttributes.delete(element);
+  }
+
+  private ensureId(element: Element, type: 'tab' | 'panel'): void {
+    if (!element.id) this.writeAttribute(element, 'id', `${this.instanceId}-${type}-${++this.nextId}`);
+  }
 
   @property({ type: String, reflect: true })
   value = '';
@@ -33,7 +88,7 @@ export class SunmarTabs extends LitElement {
 
   protected render() {
     return html`
-      <div class="root" part="root" @click=${this.onClick} @keydown=${this.onKeyDown}>
+      <div class="root" part="root">
         <div
           class="nav"
           part="nav"
@@ -51,7 +106,6 @@ export class SunmarTabs extends LitElement {
   }
 
   protected firstUpdated(): void {
-    this.distributeChildren();
     this.sync();
   }
 
@@ -60,8 +114,16 @@ export class SunmarTabs extends LitElement {
   }
 
   private readonly sync = (): void => {
+    if (!this.isConnected || !this.hasUpdated) return;
+    this.observer?.disconnect();
     const tabs = this.tabs;
     const panels = this.panels;
+    const managed = new Set<Element>([...tabs, ...panels]);
+    tabs.forEach((tab) => { const button = this.getButton(tab); if (button) managed.add(button); });
+    for (const element of this.ownedAttributes.keys()) {
+      if (!managed.has(element)) this.restoreAttributes(element);
+    }
+    this.distributeChildren();
     const panelsByValue = new Map<string, TabContentElement>();
     const tabsByValue = new Map<string, TabElement>();
 
@@ -86,44 +148,45 @@ export class SunmarTabs extends LitElement {
     const forcedValue = this.initialized
       ? ''
       : tabs.find((tab) => tab.forced && isAvailable(tab))?.value?.trim() ?? '';
-    const requestedValue = this.value.trim();
+    const requestedValue = this.value?.trim() ?? '';
     const activeValue = forcedValue
       || tabs.find((tab) => tab.value?.trim() === requestedValue && isAvailable(tab))?.value?.trim()
       || tabs.find(isAvailable)?.value?.trim()
       || '';
 
-    this.initialized = true;
+    if (tabs.some(isAvailable)) this.initialized = true;
 
     if (activeValue !== this.value) this.value = activeValue;
 
-    panels.forEach((panel, index) => {
+    panels.forEach((panel) => {
       const panelValue = panel.value?.trim() ?? '';
       const isPrimaryPanel = panelsByValue.get(panelValue) === panel;
-      panel.id ||= this.idFor('panel', index);
-      panel.setAttribute('role', 'tabpanel');
-      panel.removeAttribute('aria-labelledby');
-      panel.toggleAttribute('active', isPrimaryPanel && panelValue === activeValue);
+      this.ensureId(panel, 'panel');
+      this.writeAttribute(panel, 'role', 'tabpanel');
+      this.writeAttribute(panel, 'aria-labelledby', null);
+      this.writeAttribute(panel, 'active', activeValue && isPrimaryPanel && panelValue === activeValue ? '' : null);
     });
 
-    tabs.forEach((tab, index) => {
+    tabs.forEach((tab) => {
       const tabValue = tab.value?.trim() ?? '';
       const button = this.getButton(tab);
       const panel = panelsByValue.get(tabValue);
       const available = isAvailable(tab);
       const selected = available && tabValue === activeValue;
-      tab.toggleAttribute('selected', selected);
+      this.writeAttribute(tab, 'selected', selected ? '' : null);
       if (!button) return;
-      button.id ||= tab.id || this.idFor('tab', index);
-      button.setAttribute('role', 'tab');
-      button.setAttribute('aria-disabled', String(!available));
-      button.setAttribute('aria-selected', String(selected));
-      button.setAttribute('tabindex', selected ? '0' : '-1');
-      button.removeAttribute('aria-controls');
+      this.ensureId(button, 'tab');
+      this.writeAttribute(button, 'role', 'tab');
+      this.writeAttribute(button, 'aria-disabled', String(!available));
+      this.writeAttribute(button, 'aria-selected', String(selected));
+      this.writeAttribute(button, 'tabindex', selected ? '0' : '-1');
+      this.writeAttribute(button, 'aria-controls', null);
       if (tabsByValue.get(tabValue) === tab && panel?.id) {
-        button.setAttribute('aria-controls', panel.id);
-        panel.setAttribute('aria-labelledby', button.id);
+        this.writeAttribute(button, 'aria-controls', panel.id);
+        this.writeAttribute(panel, 'aria-labelledby', button.id);
       }
     });
+    this.observeChildren();
   };
 
   private readonly onClick = (event: Event): void => {
@@ -135,7 +198,7 @@ export class SunmarTabs extends LitElement {
 
   private readonly onKeyDown = (event: KeyboardEvent): void => {
     const tab = this.tabFromEvent(event);
-    if (!tab) return;
+    if (!tab || !event.composedPath().includes(this.getButton(tab)!)) return;
     const tabs = this.tabs.filter((item) => this.isAvailableTab(item));
     const index = tabs.indexOf(tab);
     if (index < 0) return;
@@ -155,21 +218,22 @@ export class SunmarTabs extends LitElement {
     if (!value || value === this.value || !this.canActivate(value)) return;
     const previousValue = this.value || null;
     this.value = value;
-    this.dispatchEvent(new CustomEvent<SunmarTabsChangeDetail>(TABS_CHANGE_EVENT, {
+    this.sync();
+    this.dispatchEvent(new CustomEvent<SunmarTabsChangeDetail>(SUNMAR_TABS_CHANGE_EVENT, {
       detail: { value, previousValue }, bubbles: true, composed: true,
     }));
   }
 
   private distributeChildren(): void {
     for (const child of Array.from(this.children)) {
-      if (child.matches(TAB_TAG_NAME)) child.slot = 'tab';
-      if (child.matches(TAB_CONTENT_TAG_NAME)) child.slot = 'panel';
+      if (child.matches(TAB_TAG_NAME)) this.writeAttribute(child, 'slot', 'tab');
+      if (child.matches(TAB_CONTENT_TAG_NAME)) this.writeAttribute(child, 'slot', 'panel');
     }
   }
 
   private tabFromEvent(event: Event): TabElement | undefined {
     return event.composedPath().find((item): item is TabElement =>
-      item instanceof HTMLElement && item.matches(TAB_TAG_NAME)
+      item instanceof HTMLElement && item.matches(TAB_TAG_NAME) && item.parentElement === this
     );
   }
 
@@ -197,10 +261,6 @@ export class SunmarTabs extends LitElement {
 
   private getButton(tab: TabElement): HTMLButtonElement | null {
     return tab.querySelector<HTMLButtonElement>(':scope > button');
-  }
-
-  private idFor(type: 'tab' | 'panel', index: number): string {
-    return `${this.instanceId}-${type}-${index + 1}`;
   }
 
   private get tabs(): TabElement[] {

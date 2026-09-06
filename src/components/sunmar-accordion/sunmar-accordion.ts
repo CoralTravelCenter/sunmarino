@@ -36,17 +36,36 @@ export class SunmarAccordion extends LitElement {
   faq = false;
 
   private faqScript: HTMLScriptElement | null = null;
+  private contentObserver?: MutationObserver;
+
+  private readonly onContentChange = (records: MutationRecord[]): void => {
+    if (records.some((record) => record.type === 'childList' && record.target === this)) {
+      this.normalizeItems();
+    }
+    this.syncFaqStructuredData();
+  };
 
   connectedCallback(): void {
     super.connectedCallback();
+    this.addEventListener('sunmar-accordion-item-toggle-request', this.onItemToggleRequest);
+    this.contentObserver ??= new MutationObserver(this.onContentChange);
+    this.contentObserver.observe(this, {
+      childList: true,
+      subtree: true,
+      characterData: true,
+      attributes: true,
+      attributeFilter: ['slot']
+    });
     if (this.hasUpdated) {
+      this.normalizeItems();
       this.syncFaqStructuredData();
     }
   }
 
   disconnectedCallback(): void {
-    this.faqScript?.remove();
-    this.faqScript = null;
+    this.removeEventListener('sunmar-accordion-item-toggle-request', this.onItemToggleRequest);
+    this.contentObserver?.disconnect();
+    this.removeFaqStructuredData();
     super.disconnectedCallback();
   }
 
@@ -69,7 +88,6 @@ export class SunmarAccordion extends LitElement {
     return html`
       <slot
         @slotchange=${this.onSlotChange}
-        @sunmar-accordion-item-toggle-request=${this.onItemToggleRequest}
       ></slot>
     `;
   }
@@ -79,8 +97,8 @@ export class SunmarAccordion extends LitElement {
     this.syncFaqStructuredData();
   };
 
-  private readonly onItemToggleRequest = (event: AccordionItemToggleRequestEvent): void => {
-    const { item } = event.detail;
+  private readonly onItemToggleRequest = (event: Event): void => {
+    const { item } = (event as AccordionItemToggleRequestEvent).detail;
     const items = this.items;
     if (!items.includes(item)) {
       return;
@@ -139,14 +157,16 @@ export class SunmarAccordion extends LitElement {
 
     const mainEntity = this.items.flatMap((item) => {
       const name = normalizeText(
-        item.querySelector<HTMLElement>('[slot="header"]')?.textContent ?? ''
+        Array.from(item.children)
+          .filter((element) => element.getAttribute('slot') === 'header')
+          .map((element) => element.textContent ?? '')
+          .join(' ')
       );
       const text = normalizeText(
         Array.from(item.childNodes)
-          .filter(
-            (node) =>
-              !(node instanceof HTMLElement) || node.getAttribute('slot') !== 'header'
-          )
+          .filter((node) => node.nodeType === Node.TEXT_NODE || (
+            node instanceof Element && !node.getAttribute('slot')
+          ))
           .map((node) => node.textContent ?? '')
           .join(' ')
       );

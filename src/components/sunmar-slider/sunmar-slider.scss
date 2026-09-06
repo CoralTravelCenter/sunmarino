@@ -1,9 +1,11 @@
+@use '../../styles/mixins' as mixins;
+
 :host {
-  --sunmar-slider-navigation-outset: 24px;
+  --sunmar-slider-navigation-outset: var(--sunmar-space-l);
 
   display: block;
   position: relative;
-  color: var(--sunmar-slider-control-color, #142e5b);
+  color: var(--sunmar-slider-control-color, var(--sunmar-color-base-icon));
 }
 
 .stage {
@@ -15,13 +17,11 @@
   overflow: hidden;
 }
 
-:host(:not([embla-ready])) ::slotted(:not(:first-child)) {
-  visibility: hidden;
-}
 
 .container {
-  --slides-per-view: var(--sunmar-slider-slides);
-  --sunmar-slider-slides-per-view: var(--slides-per-view);
+  --sunmar-slider-current-slides: var(--sunmar-slider-slides);
+  --sunmar-slider-current-columns: var(--sunmar-slider-grid-columns);
+  --sunmar-slider-slides-per-view: var(--sunmar-slider-current-slides);
   --sunmar-slider-slide-padding: var(--sunmar-slider-gap);
 
   display: flex;
@@ -33,7 +33,7 @@
   display: none;
   align-items: center;
   justify-content: center;
-  margin-top: 24px;
+  margin-top: var(--sunmar-space-l);
 }
 
 :host([embla-ready]) .controls {
@@ -44,8 +44,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  min-height: 32px;
+  gap: var(--sunmar-space-xs);
+  min-height: var(--sunmar-space-xl);
 }
 
 .navigation {
@@ -65,29 +65,29 @@
   position: absolute;
   top: 50%;
   display: flex;
-  width: var(--Icon-Icon_Base_XL, 48px);
-  height: var(--Icon-Icon_Base_XL, 48px);
+  width: var(--sunmar-icon-xl);
+  height: var(--sunmar-icon-xl);
   flex-direction: column;
   align-items: center;
   justify-content: center;
   padding: 0;
   border: 0;
-  border-radius: 6px;
+  border-radius: var(--sunmar-slider-navigation-radius, calc((var(--sunmar-radius-xxs) + var(--sunmar-radius-xs)) / 2));
   background: var(
     --sunmar-slider-navigation-background,
-    var(--Base-color_Base_Light, #fff)
+    var(--sunmar-color-base-light)
   );
-  box-shadow: 0 16px 40px 0 rgb(20 20 22 / 20%);
+  box-shadow: var(--sunmar-shadow-darker);
   pointer-events: auto;
   transform: translateY(-50%);
 }
 
-.button[part='prev-button'] {
-  left: 16px;
+.button-prev {
+  left: var(--sunmar-space-n);
 }
 
-.button[part='next-button'] {
-  right: 16px;
+.button-next {
+  right: var(--sunmar-space-n);
 }
 
 .button svg {
@@ -96,10 +96,10 @@
 }
 
 .button path {
-  stroke: var(--sunmar-slider-control-color, #656565);
+  stroke: var(--sunmar-slider-control-color, var(--sunmar-color-text-light-alt));
 }
 
-.button[part='next-button'] svg {
+.button-next svg {
   transform: rotate(180deg);
 }
 
@@ -110,12 +110,12 @@
 
 .dot {
   position: relative;
-  width: 10px;
-  height: 10px;
+  width: calc((var(--sunmar-space-xs) + var(--sunmar-space-s)) / 2);
+  height: calc((var(--sunmar-space-xs) + var(--sunmar-space-s)) / 2);
   padding: 0;
   border: 0;
   border-radius: 50%;
-  background: var(--sunmar-slider-dot-color, #d3d8e2);
+  background: var(--sunmar-slider-dot-color, var(--sunmar-color-base-light-alt1));
 }
 
 .dot[aria-current='true'] {
@@ -126,8 +126,8 @@
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 16px;
-  height: 16px;
+  width: var(--sunmar-space-n);
+  height: var(--sunmar-space-n);
   border: 2px solid currentColor;
   border-radius: 50%;
   box-sizing: border-box;
@@ -141,13 +141,13 @@
   outline-offset: 3px;
 }
 
-@media (min-width: 1024px) {
-  .button[part='prev-button'] {
-    left: 24px;
+@include mixins.media-min(bp-1024) {
+  .button-prev {
+    left: var(--sunmar-space-l);
   }
 
-  .button[part='next-button'] {
-    right: 24px;
+  .button-next {
+    right: var(--sunmar-space-l);
   }
 }
 
@@ -163,24 +163,26 @@
   border: 0;
 }
 
-@media (min-width: 768px) {
+@include mixins.media-min(bp-768) {
   :host([embla-ready]) .navigation {
     display: block;
   }
 
   .container {
-    --slides-per-view: var(--sunmar-slider-slides-768);
+    --sunmar-slider-current-slides: var(--sunmar-slider-slides-768);
+    --sunmar-slider-current-columns: var(--sunmar-slider-grid-columns-768);
   }
 }
 
-@media (min-width: 1024px) {
+@include mixins.media-min(bp-1024) {
   .container {
-    --slides-per-view: var(--sunmar-slider-slides-1024);
+    --sunmar-slider-current-slides: var(--sunmar-slider-slides-1024);
+    --sunmar-slider-current-columns: var(--sunmar-slider-grid-columns-1024);
   }
 }
 
-@media (min-width: 1280px) {
-  .button[part='prev-button'] {
+@include mixins.media-min(bp-1280) {
+  .button-prev {
     left: 0;
     transform: translate(
       calc(-100% - var(--sunmar-slider-navigation-outset)),
@@ -188,7 +190,7 @@
     );
   }
 
-  .button[part='next-button'] {
+  .button-next {
     right: 0;
     transform: translate(
       calc(100% + var(--sunmar-slider-navigation-outset)),
@@ -197,41 +199,43 @@
   }
 
   .container {
-    --slides-per-view: var(--sunmar-slider-slides-1280);
+    --sunmar-slider-current-slides: var(--sunmar-slider-slides-1280);
+    --sunmar-slider-current-columns: var(--sunmar-slider-grid-columns-1280);
   }
 }
 
-@media (min-width: 1440px) {
+@include mixins.media-min(bp-1440) {
   .container {
-    --slides-per-view: var(--sunmar-slider-slides-1440);
+    --sunmar-slider-current-slides: var(--sunmar-slider-slides-1440);
+    --sunmar-slider-current-columns: var(--sunmar-slider-grid-columns-1440);
   }
 }
 
-@mixin disable-carousel($breakpoint) {
-  @media (min-width: #{$breakpoint}px) {
-    :host([disabled-from='#{$breakpoint}']) .viewport {
-      overflow: visible;
-    }
+// The fallback keeps every slide available while loading or after a CDN failure.
+@mixin static-grid {
+  .viewport { overflow: visible; }
+  .container {
+    --sunmar-slider-slide-padding: 0;
+    display: grid;
+    grid-template-columns: repeat(var(--sunmar-slider-current-columns), minmax(0, 1fr));
+    grid-auto-rows: 1fr;
+    gap: var(--sunmar-slider-gap);
+    margin-inline-start: 0;
+    touch-action: auto;
+  }
+  .controls, .navigation, .status { display: none; }
+}
 
-    :host([disabled-from='#{$breakpoint}']) .container {
-      --sunmar-slider-slide-padding: 0;
+:host(:not([embla-ready])) {
+  @include static-grid;
+}
 
-      display: grid;
-      grid-template-columns: repeat(var(--slides-per-view), minmax(0, 1fr));
-      grid-auto-rows: 1fr;
-      gap: var(--sunmar-slider-gap);
-      margin-inline-start: 0;
-      transform: none !important;
-    }
-
-    :host([disabled-from='#{$breakpoint}']) .controls,
-    :host([disabled-from='#{$breakpoint}']) .navigation {
-      display: none;
+@each $breakpoint, $width in mixins.$sunmar-breakpoints {
+  @include mixins.media-min($breakpoint) {
+    :host([disabled-from='#{calc($width / 1px)}']) {
+      @include static-grid;
     }
   }
 }
 
-@include disable-carousel(768);
-@include disable-carousel(1024);
-@include disable-carousel(1280);
-@include disable-carousel(1440);
+.controls[hidden], .navigation[hidden] { display: none; }

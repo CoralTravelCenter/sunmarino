@@ -2,9 +2,12 @@ import { LitElement, css, html, nothing, unsafeCSS } from 'lit';
 import { state } from 'lit/decorators.js';
 import { componentBaseStyles } from '../../styles/component-base';
 import { acquirePageScrollLock, releasePageScrollLock } from '../../utils/scroll/no-scroll';
+import { pushModal, removeModal, topModal } from './modal-stack';
 import styles from './sunmar-modal.scss?inline';
 
 export const SUNMAR_MODAL_TAG_NAME = 'sunmar-modal';
+export const SUNMAR_MODAL_OPEN_EVENT = 'sunmar-modal-open';
+export const SUNMAR_MODAL_CLOSE_EVENT = 'sunmar-modal-close';
 const FOCUSABLE_SELECTOR = [
   'a[href]',
   'area[href]',
@@ -19,30 +22,13 @@ const FOCUSABLE_SELECTOR = [
   '[tabindex]:not([tabindex="-1"])'
 ].join(',');
 
-const enabledByDefaultBooleanConverter = {
-  fromAttribute(value: string | null): boolean {
-    return value !== 'false';
-  },
-  toAttribute(value: boolean): string {
-    return value ? '' : 'false';
-  }
-};
-
 let modalIdCounter = 0;
 
 export class SunmarModal extends LitElement {
   static properties = {
     open: { type: Boolean, reflect: true },
-    closeOnBackdrop: {
-      reflect: true,
-      attribute: 'close-on-backdrop',
-      converter: enabledByDefaultBooleanConverter
-    },
-    closeOnEsc: {
-      reflect: true,
-      attribute: 'close-on-esc',
-      converter: enabledByDefaultBooleanConverter
-    },
+    disableCloseOnBackdrop: { type: Boolean, attribute: 'disable-close-on-backdrop' },
+    disableCloseOnEsc: { type: Boolean, attribute: 'disable-close-on-esc' },
     ariaLabel: { type: String, attribute: 'aria-label' },
     ariaLabelledby: { type: String, attribute: 'aria-labelledby' }
   };
@@ -52,8 +38,8 @@ export class SunmarModal extends LitElement {
   `];
 
   open = false;
-  closeOnBackdrop = true;
-  closeOnEsc = true;
+  disableCloseOnBackdrop = false;
+  disableCloseOnEsc = false;
   ariaLabel: string | null = null;
   ariaLabelledby: string | null = null;
 
@@ -63,16 +49,27 @@ export class SunmarModal extends LitElement {
   private hasScrollLock = false;
   private hasDocumentHandlers = false;
   private previouslyFocusedElement: HTMLElement | null = null;
-  private readonly backgroundInertState = new Map<HTMLElement, boolean>();
+  private active = false;
+  private labelObserver?: MutationObserver;
+  @state()
+  private externalLabel = '';
+
+  private readonly syncExternalLabel = (): void => {
+    const root = this.getRootNode() as Document | ShadowRoot;
+    const ids = this.ariaLabelledby?.trim().split(/\s+/) ?? [];
+    this.externalLabel = ids.map((id) => root.getElementById?.(id)?.textContent?.trim() ?? '')
+      .filter(Boolean).join(' ');
+  };
   private readonly titleId = `sunmar-modal-title-${++modalIdCounter}`;
 
   private readonly onDocumentKeydown = (event: KeyboardEvent): void => {
-    if (!this.open || !this.ownsCurrentFocus()) {
+    if (!this.open || topModal(this.ownerDocument) !== this) {
       return;
     }
 
-    if (event.key === 'Escape' && this.closeOnEsc) {
+    if (event.key === 'Escape' && !this.disableCloseOnEsc) {
       event.preventDefault();
+      event.stopImmediatePropagation();
       this.hide();
       return;
     }
@@ -84,6 +81,11 @@ export class SunmarModal extends LitElement {
 
   connectedCallback(): void {
     super.connectedCallback();
+    this.labelObserver ??= new MutationObserver(this.syncExternalLabel);
+    this.labelObserver.observe(this.getRootNode(), {
+      childList: true, subtree: true, characterData: true, attributes: true, attributeFilter: ['id']
+    });
+    this.syncExternalLabel();
 
     if (this.open) {
       this.activateModal();
@@ -92,11 +94,18 @@ export class SunmarModal extends LitElement {
   }
 
   disconnectedCallback(): void {
+    this.labelObserver?.disconnect();
     this.deactivateModal(true);
     super.disconnectedCallback();
   }
 
   updated(changedProperties: Map<string, unknown>): void {
+    if (!this.isConnected) return;
+    if (this.open) {
+      const actions = this.renderRoot.querySelector<HTMLSlotElement>('slot[name="actions"]');
+      this.hasActions = (actions?.assignedElements({ flatten: true }).length ?? 0) > 0;
+    }
+    if (changedProperties.has('ariaLabelledby')) this.syncExternalLabel();
     if (!changedProperties.has('open')) {
       return;
     }
@@ -115,7 +124,7 @@ export class SunmarModal extends LitElement {
     }
 
     this.dispatchEvent(
-      new CustomEvent(this.open ? 'sunmar-open' : 'sunmar-close', {
+      new CustomEvent(this.open ? SUNMAR_MODAL_OPEN_EVENT : SUNMAR_MODAL_CLOSE_EVENT, {
         bubbles: true,
         composed: true
       })
@@ -139,10 +148,10 @@ export class SunmarModal extends LitElement {
       return nothing;
     }
 
-    const ariaLabel = this.ariaLabel?.trim() || undefined;
+    const ariaLabel = this.ariaLabel?.trim() || this.externalLabel || undefined;
     const ariaLabelledby = ariaLabel
       ? undefined
-      : this.ariaLabelledby?.trim() || this.titleId;
+      : this.titleId;
 
     return html`
       <div class="overlay" part="overlay" @click=${this.handleBackdropClick}>
@@ -158,7 +167,7 @@ export class SunmarModal extends LitElement {
         >
           <header class="header" part="header">
             <h2 id=${this.titleId} class="title" part="title">
-              <slot name="title">Modal title</slot>
+              <slot name="title">Диалог</slot>
             </h2>
             <button
               class="close"
@@ -182,7 +191,7 @@ export class SunmarModal extends LitElement {
   }
 
   private handleBackdropClick = (): void => {
-    if (this.closeOnBackdrop) {
+    if (!this.disableCloseOnBackdrop && topModal(this.ownerDocument) === this) {
       this.hide();
     }
   };
@@ -227,37 +236,43 @@ export class SunmarModal extends LitElement {
   }
 
   private activateModal(): void {
+    if (!this.isConnected || !this.open || this.active) return;
+    this.active = true;
     if (!this.previouslyFocusedElement) {
       this.previouslyFocusedElement = this.getDeepActiveElement();
     }
 
     this.toggleDocumentHandlers(true);
     this.syncScrollLock(true);
-    this.setBackgroundInert();
+    pushModal(this);
   }
 
   private deactivateModal(restoreFocus: boolean): void {
+    if (!this.active) return;
+    this.active = false;
     this.toggleDocumentHandlers(false);
     this.syncScrollLock(false);
-    this.restoreBackgroundInert();
+    const wasTop = removeModal(this);
 
     const elementToRestore = this.previouslyFocusedElement;
     this.previouslyFocusedElement = null;
 
-    if (restoreFocus && elementToRestore?.isConnected && !elementToRestore.inert) {
+    if (restoreFocus && wasTop && elementToRestore?.isConnected && !this.hasInertAncestor(elementToRestore)) {
       elementToRestore.focus({ preventScroll: true });
+    } else if (restoreFocus && wasTop) {
+      (topModal(this.ownerDocument) as SunmarModal | undefined)?.focusInitialElement();
     }
   }
 
   private focusInitialElement(): void {
-    if (!this.open || !this.isConnected) {
+    if (!this.open || !this.isConnected || topModal(this.ownerDocument) !== this) {
       return;
     }
 
     const autofocusElement = this.getFocusableElements().find((element) =>
       element.hasAttribute('autofocus')
     );
-    const lightDomElement = this.getLightDomFocusableElements()[0];
+    const lightDomElement = this.getFocusableElements().find((element) => element !== this.renderRoot.querySelector('.close'));
     const fallbackElement = this.renderRoot.querySelector<HTMLElement>('.close');
     const dialog = this.renderRoot.querySelector<HTMLElement>('.dialog');
 
@@ -294,43 +309,31 @@ export class SunmarModal extends LitElement {
   }
 
   private getFocusableElements(): HTMLElement[] {
-    const shadowElements = Array.from(
-      this.renderRoot.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR)
-    );
-
-    return [...shadowElements, ...this.getLightDomFocusableElements()].filter(
-      (element, index, elements) =>
-        elements.indexOf(element) === index && this.isElementFocusable(element)
-    );
+    const result: HTMLElement[] = [];
+    const visit = (element: Element): void => {
+      if (element instanceof HTMLElement && (element.hidden || element.inert)) return;
+      if (element instanceof HTMLElement && element.matches(FOCUSABLE_SELECTOR)
+        && !element.matches(':disabled') && element.tabIndex >= 0
+        && element.getClientRects().length > 0
+        && getComputedStyle(element).visibility !== 'hidden') result.push(element);
+      const children = element instanceof HTMLSlotElement
+        ? (element.assignedElements({ flatten: true }).length
+          ? element.assignedElements({ flatten: true }) : Array.from(element.children))
+        : Array.from((element.shadowRoot ?? element).children);
+      children.forEach(visit);
+    };
+    Array.from(this.renderRoot.children).forEach(visit);
+    return result;
   }
 
-  private getLightDomFocusableElements(): HTMLElement[] {
-    return Array.from(this.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR)).filter((element) =>
-      this.isElementFocusable(element)
-    );
-  }
-
-  private isElementFocusable(element: HTMLElement): boolean {
-    return (
-      !element.hidden &&
-      !element.inert &&
-      element.tabIndex >= 0 &&
-      element.getAttribute('aria-hidden') !== 'true' &&
-      element.getClientRects().length > 0
-    );
-  }
-
-  private ownsCurrentFocus(): boolean {
-    const activeElement = this.getDeepActiveElement();
-    if (!activeElement) {
-      return false;
+  private hasInertAncestor(element: HTMLElement): boolean {
+    let current: Element | null = element;
+    while (current) {
+      if (current instanceof HTMLElement && current.inert) return true;
+      const root: Node = current.getRootNode();
+      current = current.assignedSlot ?? current.parentElement ?? (root instanceof ShadowRoot ? root.host : null);
     }
-
-    const activeRoot = activeElement.getRootNode();
-    const focusHost = activeRoot instanceof ShadowRoot ? activeRoot.host : activeElement;
-    const owningModal = focusHost.closest(SUNMAR_MODAL_TAG_NAME);
-
-    return owningModal === this;
+    return false;
   }
 
   private getDeepActiveElement(): HTMLElement | null {
@@ -343,54 +346,7 @@ export class SunmarModal extends LitElement {
     return activeElement instanceof HTMLElement ? activeElement : null;
   }
 
-  private setBackgroundInert(): void {
-    if (this.backgroundInertState.size > 0) {
-      return;
-    }
 
-    let branch: Node = this;
-
-    while (branch.parentNode) {
-      const parent = branch.parentNode;
-
-      if (parent instanceof ShadowRoot) {
-        for (const sibling of Array.from(parent.children)) {
-          if (sibling === branch || !(sibling instanceof HTMLElement)) {
-            continue;
-          }
-
-          this.backgroundInertState.set(sibling, sibling.inert);
-          sibling.inert = true;
-        }
-
-        branch = parent.host;
-        continue;
-      }
-
-      if (!(parent instanceof HTMLElement)) {
-        break;
-      }
-
-      for (const sibling of Array.from(parent.children)) {
-        if (sibling === branch || !(sibling instanceof HTMLElement)) {
-          continue;
-        }
-
-        this.backgroundInertState.set(sibling, sibling.inert);
-        sibling.inert = true;
-      }
-
-      branch = parent;
-    }
-  }
-
-  private restoreBackgroundInert(): void {
-    for (const [element, wasInert] of this.backgroundInertState) {
-      element.inert = wasInert;
-    }
-
-    this.backgroundInertState.clear();
-  }
 }
 
 declare global {

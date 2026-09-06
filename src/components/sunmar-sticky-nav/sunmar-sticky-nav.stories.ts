@@ -118,3 +118,28 @@ export const Default: Story = {
     </div>
   `
 };
+
+
+export const Dynamic: Story = {
+  name: 'Изменение ссылки и раздела',
+  render: () => html`
+    <div style="padding:24px;">
+      <button type="button" @click=${(event: Event) => {
+        const root = (event.currentTarget as HTMLElement).parentElement!;
+        const link = root.querySelector('a')!;
+        const section = root.querySelector('section')!;
+        const next = section.id === 'dynamic-first' ? 'dynamic-second' : 'dynamic-first';
+        section.id = next;
+        link.setAttribute('href', '#' + next);
+        link.textContent = next === 'dynamic-first' ? 'Первый раздел' : 'Обновлённый раздел';
+      }}>Изменить ссылку и ID раздела</button>
+      <sunmar-sticky-nav disable-relocate top-offset="0">
+        <a slot="nav-link" href="#dynamic-first">Первый раздел</a>
+      </sunmar-sticky-nav>
+      <section id="dynamic-first" style=${sectionStyle}>
+        <h2>Динамический раздел</h2>
+        <p>Подсветка продолжает работать после изменения ID и ссылки.</p>
+      </section>
+    </div>
+  `
+};

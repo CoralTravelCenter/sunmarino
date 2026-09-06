@@ -49,3 +49,35 @@ export const Default: Story = {
     </sunmar-tabs>
   `
 };
+
+
+export const Dynamic: Story = {
+  name: 'Динамические вкладки',
+  render: () => html`
+    <div>
+      <button type="button" @click=${(event: Event) => {
+        const tabs = (event.currentTarget as HTMLElement).parentElement!.querySelector('sunmar-tabs')!;
+        if (!tabs.querySelector('sunmar-tab[value="second"]')) {
+          const tab = document.createElement('sunmar-tab');
+          tab.value = 'second';
+          const button = document.createElement('button');
+          button.type = 'button'; button.textContent = 'Второй раздел';
+          tab.append(button);
+          const panel = document.createElement('sunmar-tab-content');
+          panel.value = 'second'; panel.textContent = 'Динамически добавленное содержимое.';
+          tabs.append(tab, panel);
+        }
+        tabs.value = 'second';
+      }}>Добавить и выбрать второй раздел</button>
+      <button type="button" @click=${(event: Event) => {
+        const button = (event.currentTarget as HTMLElement).parentElement!
+          .querySelector<HTMLButtonElement>('sunmar-tab[value="second"] > button');
+        if (button) button.disabled = !button.disabled;
+      }}>Переключить доступность второго раздела</button>
+      <sunmar-tabs aria-label="Разделы примера">
+        <sunmar-tab value="first"><button type="button">Первый раздел</button></sunmar-tab>
+        <sunmar-tab-content value="first"><p>Первоначальное содержимое.</p></sunmar-tab-content>
+      </sunmar-tabs>
+    </div>
+  `
+};

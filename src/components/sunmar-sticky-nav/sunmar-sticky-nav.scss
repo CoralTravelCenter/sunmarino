@@ -1,8 +1,10 @@
+@use '../../styles/mixins' as mixins;
+
 :host {
   --sunmar-sticky-nav-z-index: 10;
-  --sunmar-sticky-nav-bg: var(--Base-color_Base_Light_Gray, #F5F5F8);
+  --sunmar-sticky-nav-bg: var(--sunmar-color-btn-bg-light-hover);
   --sunmar-sticky-nav-border: none;
-  --sunmar-sticky-nav-gap: 8px;
+  --sunmar-sticky-nav-gap: var(--sunmar-space-xs);
   --sunmar-sticky-nav-top-offset: 81px;
 
   display: block;
@@ -20,16 +22,17 @@
   flex-wrap: wrap;
   justify-content: center;
   gap: var(--sunmar-sticky-nav-gap);
-  padding: 8px;
+  padding: var(--sunmar-padding-xs);
   border: var(--sunmar-sticky-nav-border);
-  border-radius: 24px;
+  border-radius: var(--sunmar-radius-l);
   background: var(--sunmar-sticky-nav-bg);
 }
 
+// These overrides keep navigation links consistent against host-page link styles in light DOM.
 ::slotted([slot="nav-link"]) {
   flex: 1 1 auto;
-  font-size: 14px;
-  padding: 8px 15px;
+  font-size: var(--sunmar-type-dropdown-font-size);
+  padding: var(--sunmar-padding-xs) calc(var(--sunmar-padding-n) - 1px);
   border: 1px solid var(--sunmar-color-btn-stroke-light);
   border-radius: 100px;
   background: transparent !important;
@@ -74,13 +77,13 @@
   }
 }
 
-@media (min-width: 768px) {
+@include mixins.media-min(bp-768) {
   :host {
     --sunmar-sticky-nav-top-offset: 65px;
   }
 }
 
-@media (min-width: 1024px) {
+@include mixins.media-min(bp-1024) {
   :host {
     --sunmar-sticky-nav-top-offset: 16px;
   }
@@ -92,7 +95,7 @@
   ::slotted([slot="nav-link"]) {
     flex: 1;
     border: none;
-    font-size: 16px;
-    padding: 16px 30px;
+    font-size: var(--sunmar-type-n-font-size);
+    padding: var(--sunmar-padding-n) calc(var(--sunmar-padding-xl) - 2px);
   }
 }

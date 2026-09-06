@@ -156,22 +156,24 @@
 
 ## Modal API
 
+Подробный контракт и миграция: [sunmar-modal](docs/sunmar-modal-contract.md).
+
 - `sunmar-modal` attributes:
   - `open`
-  - `close-on-backdrop` — включено по умолчанию; значение `"false"` отключает закрытие по фону
-  - `close-on-esc` — включено по умолчанию; значение `"false"` отключает закрытие по Escape
+  - `disable-close-on-backdrop` — присутствие отключает закрытие по фону
+  - `disable-close-on-esc` — присутствие отключает закрытие по Escape
   - `aria-label`, `aria-labelledby`
 - `sunmar-modal` methods: `show()`, `hide()`, `toggle()`
-- `sunmar-modal` events: `sunmar-open`, `sunmar-close`
+- `sunmar-modal` events: `sunmar-modal-open`, `sunmar-modal-close`
 - slots: `title`, default, `actions` (необязательный; пустой footer не занимает место)
 - parts: `overlay`, `dialog`, `header`, `title`, `close`, `body`, `actions`
 - CSS custom properties: `--sunmar-modal-z-index`, `--sunmar-modal-overlay`, `--sunmar-modal-surface`, `--sunmar-modal-border`, `--sunmar-modal-title`, `--sunmar-modal-text`
 - `aria-label` задаёт явное доступное имя; без него dialog использует `aria-labelledby` или внутренний заголовок
 - при открытии фокус переходит внутрь modal и удерживается там по Tab/Shift+Tab
-- Escape закрывает окно, если `close-on-esc` включён
+- Escape закрывает окно, если `disable-close-on-esc` отсутствует
 - после закрытия фокус возвращается на ранее активный элемент
 - фон временно получает `inert`; исходное состояние всех затронутых элементов восстанавливается
-- начальный `open=false` не вызывает `sunmar-close`
+- начальный `open=false` не вызывает `sunmar-modal-close`
 
 ```html
 <button id="open-booking-modal" type="button">Открыть</button>
@@ -227,13 +229,16 @@
   - `gap` — неотрицательный отступ между слайдами; по умолчанию `16`
 - slots: default
 - parts: `viewport`, `container`, `controls`, `navigation`, `prev-button`, `next-button`, `pagination`, `dot`, `status`
-- CSS custom properties: `--sunmar-slider-control-color`, `--sunmar-slider-navigation-background`, `--sunmar-slider-navigation-outset`, `--sunmar-slider-dot-color`
+- CSS custom properties: `--sunmar-slider-control-color`, `--sunmar-slider-navigation-background`, `--sunmar-slider-navigation-outset`, `--sunmar-slider-navigation-radius`, `--sunmar-slider-dot-color`
 - после получения слайдов компонент добавляет им позиционные доступные имена вида «Слайд 1 из 6», не перезаписывая `aria-label`, заданный потребителем
-- до успешной загрузки Embla отображается только первый слайд, а неработающие controls скрыты
+- во время загрузки и при ошибке Embla все слайды отображаются статической сеткой, управление скрыто; повторное подключение запускает новую попытку загрузки
 - прокрутка и snap-позиционирование выполняются только Embla; нативный scroll-snap fallback не используется
 - Embla загружается лениво по URL, определённому в `embla-loader.ts`
+- полный контракт: [sunmar-slider](docs/sunmar-slider-contract.md)
 
 ## Sticky Nav API
+
+Подробный контракт: [sunmar-sticky-nav](docs/sunmar-sticky-nav-contract.md).
 
 - `sunmar-sticky-nav` attributes:
   - `top-offset` (number, optional override для отступа sticky-блока от верхней границы viewport)
@@ -251,7 +256,9 @@
   - `disable-relocate` отключает перенос и имеет приоритет над `teleport`
   - ожидание целевого узла отменяется при отключении компонента
   - если `top-offset` не задан, верхний offset задаётся CSS-медиазапросами: меньше `768px` — `81px`, от `768px` — `65px`, от `1024px` — `16px`
-  - active-state ссылок синхронизируется по `IntersectionObserver` на основе `href="#section-id"` и реальных `section[id]`
+  - active-state синхронизируется по IntersectionObserver; учитываются ссылки только на текущую страницу с существующим ID
+  - изменения href, slot и ID разделов, добавление и удаление разделов обновляют связи
+  - удалённые ссылки и отключение компонента восстанавливают принадлежащие компоненту class=active и aria-current
   - если `href` пустой/битый или целевая секция не найдена, компонент безопасно игнорирует такую ссылку и не ломает скрипты
 - переходы, прокрутка и обновление URL выполняются нативным поведением `<a href="#section-id">`; компонент не перехватывает клики
 - CSS custom properties:
@@ -321,13 +328,15 @@
 
 ## Accordion API
 
+Подробный контракт: [sunmar-accordion](docs/sunmar-accordion-contract.md).
+
 - `sunmar-accordion` attributes:
   - `mode="single|multiple"` (по умолчанию `multiple`; отсутствующее или некорректное значение нормализуется в `multiple`)
   - `faq` — добавляет рядом с компонентом JSON-LD-разметку `FAQPage`
 - `sunmar-accordion` slots: `default` (ожидаются `sunmar-accordion-item`)
 - `sunmar-accordion` parts: нет
 - внешний API у accordion минимальный: управляем только `mode`, без отдельного reactive value
-- при `faq` текст элемента из `slot="header"` становится `Question`, остальной light DOM-контент item становится `acceptedAnswer`; пустые пары в JSON-LD не включаются
+- при `faq` текст непосредственных элементов `slot="header"` становится `Question`, текст и элементы default slot становятся `acceptedAnswer`; пустые пары исключаются, изменения текста и slot-атрибутов синхронизируются
 
 - `sunmar-accordion-item` attributes: `open`, `disabled`
 - `sunmar-accordion-item` slots: `header`, `default`
@@ -337,13 +346,16 @@
 
 ## Tabs API
 
+Подробный контракт: [sunmar-tabs](docs/sunmar-tabs-contract.md).
+
 - `sunmar-tabs` attributes/properties:
   - `value` — текущее значение вкладки; программная установка не создаёт пользовательское событие
   - `aria-label` — доступное имя внутреннего `tablist`
 - непосредственные дочерние элементы:
   - `sunmar-tab` с непустым `value` и прямым нативным `<button type="button">`
   - `sunmar-tab-content` с таким же непустым `value`
-- служебные slots `tab` и `panel` назначаются контейнером автоматически
+- служебные slots `tab` и `panel` назначаются контейнером автоматически, включая динамически добавленные пары
+- изменения value вкладок и панелей, disabled кнопок и замена кнопок синхронизируются; при удалении восстанавливаются принадлежащие контейнеру атрибуты
 - `sunmar-tabs` parts: `root`, `nav`, `panels`
 - `sunmar-tabs` dispatches `sunmar-tabs-change` только при пользовательском переключении:
   - `detail: { value, previousValue }`

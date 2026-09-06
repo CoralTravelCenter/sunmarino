@@ -18,6 +18,17 @@ export class SunmarAccordionItem extends LitElement {
   open = false;
   disabled = false;
 
+  protected updated(changed: Map<PropertyKey, unknown>): void {
+    if (!changed.has('open') || !this.isConnected) return;
+    this.dispatchEvent(
+      new CustomEvent(ACCORDION_ITEM_TOGGLE_REQUEST_EVENT, {
+        detail: { item: this },
+        bubbles: true,
+        composed: true
+      })
+    );
+  }
+
   protected render() {
     return html`
       <details
@@ -64,14 +75,6 @@ export class SunmarAccordionItem extends LitElement {
     }
 
     this.open = details.open;
-
-    this.dispatchEvent(
-      new CustomEvent(ACCORDION_ITEM_TOGGLE_REQUEST_EVENT, {
-        detail: { item: this },
-        bubbles: true,
-        composed: true,
-      })
-    );
   };
 }
 

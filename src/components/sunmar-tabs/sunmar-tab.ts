@@ -8,7 +8,7 @@ export const SUNMAR_TAB_TAG_NAME = 'sunmar-tab';
 export class SunmarTab extends LitElement {
   static styles = [componentBaseStyles, css`${unsafeCSS(styles)}`];
 
-  @property({ type: String }) value = '';
+  @property({ type: String, reflect: true }) value = '';
   @property({ type: Boolean }) forced = false;
 
   protected render() {

@@ -22,11 +22,15 @@ export class SunmarStickyNav extends LitElement {
   @property({ type: String })
   teleport: string | null = null;
 
+  private contentObserver?: MutationObserver;
+  private observerGeneration = 0;
+  private readonly linkState = new Map<HTMLAnchorElement, {
+    active: boolean; current: string | null; writtenActive: boolean; writtenCurrent: string | null;
+  }>();
   private navLinks: HTMLAnchorElement[] = [];
   private sectionLinkMap = new Map<HTMLElement, HTMLAnchorElement>();
   private activeSections = new Set<HTMLElement>();
   private sectionObserver: IntersectionObserver | null = null;
-  private currentActiveLink: HTMLAnchorElement | null = null;
   private relocateTargetObserver: MutationObserver | null = null;
   private relocateTimeoutId: ReturnType<typeof setTimeout> | null = null;
   private isRelocating = false;
@@ -142,7 +146,12 @@ export class SunmarStickyNav extends LitElement {
   }
 
   private syncNavLinks(slot?: HTMLSlotElement): void {
-    this.navLinks = this.collectNavLinks(slot);
+    if (!this.isConnected) return;
+    const next = this.collectNavLinks(slot);
+    for (const link of this.navLinks) {
+      if (!next.includes(link)) this.restoreLink(link);
+    }
+    this.navLinks = next;
     this.setupSectionObserver();
   }
 
@@ -153,28 +162,22 @@ export class SunmarStickyNav extends LitElement {
       return null;
     }
 
-    const hashIndex = href.indexOf('#');
-
-    if (hashIndex < 0 || hashIndex === href.length - 1) {
-      return null;
-    }
-
     let sectionId: string;
-
     try {
-      sectionId = decodeURIComponent(href.slice(hashIndex + 1)).trim();
+      const target = new URL(href, this.ownerDocument.baseURI);
+      const current = new URL(this.ownerDocument.URL);
+      if (target.origin !== current.origin || target.pathname !== current.pathname
+        || target.search !== current.search || !target.hash) return null;
+      sectionId = decodeURIComponent(target.hash.slice(1));
     } catch {
       return null;
     }
-
-    if (!sectionId) {
-      return null;
-    }
+    if (!sectionId) return null;
 
     return sectionId;
   }
 
-  private rebuildSectionLinkMap(): void {
+  private rebuildSectionLinkMap(): boolean {
     const nextSectionLinkMap = new Map<HTMLElement, HTMLAnchorElement>();
 
     for (const navLink of this.navLinks) {
@@ -193,41 +196,52 @@ export class SunmarStickyNav extends LitElement {
       nextSectionLinkMap.set(section, navLink);
     }
 
+    const previous = Array.from(this.sectionLinkMap);
+    const next = Array.from(nextSectionLinkMap);
+    const changed = previous.length !== next.length || next.some(([section, link], index) =>
+      previous[index]?.[0] !== section || previous[index]?.[1] !== link);
     this.sectionLinkMap = nextSectionLinkMap;
+    return changed;
   }
 
   private teardownSectionObserver(): void {
+    this.observerGeneration++;
     this.sectionObserver?.disconnect();
     this.sectionObserver = null;
     this.activeSections.clear();
   }
 
-  private clearActiveNavLinks(): void {
-    for (const navLink of this.navLinks) {
-      navLink.classList.remove('active');
-      navLink.removeAttribute('aria-current');
+  private restoreLink(link: HTMLAnchorElement): void {
+    const state = this.linkState.get(link);
+    if (!state) return;
+    if (link.classList.contains('active') === state.writtenActive) link.classList.toggle('active', state.active);
+    if (link.getAttribute('aria-current') === state.writtenCurrent) {
+      if (state.current === null) link.removeAttribute('aria-current');
+      else link.setAttribute('aria-current', state.current);
     }
+    this.linkState.delete(link);
+  }
 
-    this.currentActiveLink = null;
+  private clearActiveNavLinks(): void {
+    this.setActiveNavLink(null);
   }
 
   private setActiveNavLink(navLink: HTMLAnchorElement | null): void {
-    if (this.currentActiveLink === navLink) {
-      return;
+    for (const link of this.navLinks) {
+      const active = link.classList.contains('active');
+      const current = link.getAttribute('aria-current');
+      const previous = this.linkState.get(link);
+      const isActive = link === navLink;
+      this.linkState.set(link, {
+        active: previous && active === previous.writtenActive ? previous.active : active,
+        current: previous && current === previous.writtenCurrent ? previous.current : current,
+        writtenActive: isActive,
+        writtenCurrent: isActive ? 'true' : null
+      });
+      link.classList.toggle('active', isActive);
+      if (isActive) link.setAttribute('aria-current', 'true');
+      else link.removeAttribute('aria-current');
     }
-
-    for (const currentNavLink of this.navLinks) {
-      const isActive = currentNavLink === navLink;
-      currentNavLink.classList.toggle('active', isActive);
-
-      if (isActive) {
-        currentNavLink.setAttribute('aria-current', 'true');
-      } else {
-        currentNavLink.removeAttribute('aria-current');
-      }
-    }
-
-    this.currentActiveLink = navLink;
   }
 
   private syncActiveNavLink(): void {
@@ -247,16 +261,22 @@ export class SunmarStickyNav extends LitElement {
   }
 
   private setupSectionObserver(): void {
+    const changed = this.rebuildSectionLinkMap();
+    if (!changed && this.sectionObserver) {
+      this.syncActiveNavLink();
+      return;
+    }
     this.teardownSectionObserver();
-    this.rebuildSectionLinkMap();
 
     if (this.sectionLinkMap.size === 0 || typeof IntersectionObserver === 'undefined') {
       this.clearActiveNavLinks();
       return;
     }
 
+    const generation = this.observerGeneration;
     this.sectionObserver = new IntersectionObserver(
       (entries) => {
+        if (!this.isConnected || generation !== this.observerGeneration) return;
         for (const entry of entries) {
           const section = entry.target;
 
@@ -282,7 +302,7 @@ export class SunmarStickyNav extends LitElement {
     for (const section of this.sectionLinkMap.keys()) {
       this.sectionObserver.observe(section);
     }
-    
+
     this.syncActiveNavLink();
   }
 
@@ -302,6 +322,7 @@ export class SunmarStickyNav extends LitElement {
   }
 
   private initializeAfterRender(): void {
+    if (!this.isConnected) return;
     this.syncStickyOffset();
     this.syncNavLinks();
   }
@@ -309,6 +330,13 @@ export class SunmarStickyNav extends LitElement {
   connectedCallback(): void {
     super.connectedCallback();
 
+    this.contentObserver ??= new MutationObserver(() => this.syncNavLinks());
+    this.contentObserver.observe(this, {
+      subtree: true, childList: true, attributes: true, attributeFilter: ['href', 'slot']
+    });
+    this.contentObserver.observe(this.ownerDocument, {
+      subtree: true, childList: true, attributes: true, attributeFilter: ['href', 'id', 'slot']
+    });
     this.startRelocateTargetWait();
 
     if (this.hasUpdated) {
@@ -317,6 +345,7 @@ export class SunmarStickyNav extends LitElement {
   }
 
   updated(changedProperties: Map<string, unknown>): void {
+    if (!this.isConnected) return;
     if (changedProperties.has('topOffset')) {
       this.syncStickyOffset();
     }
@@ -342,7 +371,11 @@ export class SunmarStickyNav extends LitElement {
 
     this.cancelRelocateTargetWait();
     this.relocatedSelector = null;
+    this.contentObserver?.disconnect();
     this.teardownSectionObserver();
+    for (const link of this.navLinks) this.restoreLink(link);
+    this.navLinks = [];
+    this.sectionLinkMap.clear();
 
     super.disconnectedCallback();
   }
