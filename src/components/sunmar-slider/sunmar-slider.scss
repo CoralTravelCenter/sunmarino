@@ -77,7 +77,7 @@
     --sunmar-slider-navigation-background,
     var(--sunmar-color-base-light)
   );
-  box-shadow: var(--sunmar-shadow-darker);
+  box-shadow: rgba(149, 157, 165, 0.2) 0 8px 24px;
   pointer-events: auto;
   transform: translateY(-50%);
 }
@@ -97,6 +97,17 @@
 
 .button path {
   stroke: var(--sunmar-slider-control-color, var(--sunmar-color-text-light-alt));
+  transition: stroke 160ms ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .button:not(:disabled):hover path {
+    stroke: var(--sunmar-color-btn-bg-secondary-default);
+  }
+}
+
+.button:not(:disabled):active path {
+  stroke: var(--sunmar-color-btn-bg-primary-default);
 }
 
 .button-next svg {

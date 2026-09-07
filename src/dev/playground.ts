@@ -1,9 +1,25 @@
 import './suppress-lit-dev-warnings';
 import '../index';
-import PREVIEW_HTML from './markup.html?raw'
+import coastImageUrl from './assets/cards/coast.jpg?url';
+import mountainsImageUrl from './assets/cards/mountains.jpg?url';
+import resortImageUrl from './assets/cards/resort.jpg?url';
+import PREVIEW_HTML from './markup.html?raw';
+
+function replacePlaceholder(markup: string, placeholder: string, value: string): string {
+  return markup.split(placeholder).join(value);
+}
+
+const previewHtml = [
+  ['__COAST_IMAGE_URL__', coastImageUrl],
+  ['__MOUNTAINS_IMAGE_URL__', mountainsImageUrl],
+  ['__RESORT_IMAGE_URL__', resortImageUrl]
+].reduce(
+  (markup, [placeholder, value]) => replacePlaceholder(markup, placeholder, value),
+  PREVIEW_HTML
+);
 
 function renderPreview(target: HTMLElement): void {
-  target.innerHTML = PREVIEW_HTML;
+  target.innerHTML = previewHtml;
   setupTripModal(target);
 }
 

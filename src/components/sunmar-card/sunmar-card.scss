@@ -3,15 +3,13 @@
   border-radius: var(--radius-radius_LG, 16px);
   overflow: clip;
   display: block;
+  container-type: inline-size;
 }
 
 .root {
   display: grid;
   height: 100%;
   margin: 0;
-}
-
-:host([vertical]) .root {
   grid-template-rows: auto 1fr;
 }
 
@@ -57,35 +55,36 @@
   display: none;
 }
 
-@media (min-width: 1024px) {
+@container (min-width: 1024px) {
   .actions {
     width: fit-content;
   }
 
-  :host(:not([vertical])) .root {
+  .root {
     grid-template-columns: 1fr 1fr;
+    grid-template-rows: none;
   }
 
-  :host([reversed]:not([vertical])) .media {
+  :host([reversed]) .media {
     grid-column: 2;
     grid-row: 1;
   }
 
-  :host([reversed]:not([vertical])) .content {
+  :host([reversed]) .content {
     grid-column: 1;
     grid-row: 1;
   }
 
-  :host(:not([vertical])) .content {
+  .content {
     justify-content: center;
   }
 
-  :host(:not([vertical])) .actions {
+  .actions {
     margin-top: 24px;
     padding-top: 0;
   }
 
-  :host(:not([vertical])) ::slotted([slot='media']) {
+  ::slotted([slot='media']) {
     --sunmar-image-height: 100%;
 
     height: 100%;

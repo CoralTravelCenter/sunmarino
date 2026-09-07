@@ -83,7 +83,7 @@ export const Cards: Story = {
         }
       ].map(({ title, src, text, action }) => html`
         <sunmar-slide>
-          <sunmar-card vertical>
+          <sunmar-card>
             <sunmar-image slot="media" src=${src} width="720" height="480" alt=""></sunmar-image>
             <h3 slot="title">${title}</h3>
             <p slot="text">${text}</p>

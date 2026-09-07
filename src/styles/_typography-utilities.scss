@@ -20,21 +20,3 @@
 :where(.sunmar-text-balance) {
   @include mixins.text-balance;
 }
-
-:where(.sunmarino-container) {
-  padding-block: 32px;
-
-  @media (max-width: 767px) {
-    padding-inline: 16px;
-  }
-
-  @media (min-width: 768px) {
-    padding-block: 40px;
-  }
-}
-
-:where(section.sunmarino.kv) {
-  @media (max-width: 767px) {
-    padding-top: 0;
-  }
-}

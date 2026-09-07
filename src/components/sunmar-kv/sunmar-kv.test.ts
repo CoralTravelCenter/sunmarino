@@ -18,6 +18,26 @@ function assigned(kv: SunmarKv, name: string): Element[] {
 describe('SunmarKv content contract', () => {
   afterEach(() => document.body.replaceChildren());
 
+  it('reflects the full-width attribute and property', async () => {
+    const kv = mount();
+    await kv.updateComplete;
+
+    expect(kv.fullWidth).toBe(false);
+    expect(kv.hasAttribute('full-width')).toBe(false);
+
+    kv.fullWidth = true;
+    await kv.updateComplete;
+    expect(kv.getAttribute('full-width')).toBe('');
+
+    kv.removeAttribute('full-width');
+    await kv.updateComplete;
+    expect(kv.fullWidth).toBe(false);
+
+    kv.setAttribute('full-width', 'false');
+    await kv.updateComplete;
+    expect(kv.fullWidth).toBe(true);
+  });
+
   it('projects image and semantic title without rewriting consumer markup', async () => {
     const kv = mount();
     const nodes = Array.from(kv.children);

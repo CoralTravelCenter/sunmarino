@@ -5,10 +5,29 @@
   color: var(--sunmar-kv-content-color, var(--sunmar-color-text-light));
 }
 
+:host([full-width]) {
+  .root {
+    width: 100vw;
+    transform: translateX(-50%);
+    left: 50%;
+    position: relative;
+    border-radius: 0;
+    max-height: 520px;
+  }
+
+
+  .content {
+    max-width: 1530px;
+    margin: 0 auto;
+    width: 100%;
+  }
+}
+
 .root {
   position: relative;
+  display: grid;
   overflow: clip;
-  min-height: 556px;
+  aspect-ratio: 87 / 113;
 }
 
 .media {
@@ -29,7 +48,7 @@
   z-index: 3;
   display: flex;
   align-items: stretch;
-  min-height: 556px;
+  min-height: 100%;
   padding: 48px 32px;
   color: inherit;
 }
@@ -39,8 +58,7 @@
   flex-direction: column;
   align-items: flex-start;
   justify-content: flex-start;
-  gap: 0;
-  width: min(100%, var(--sunmar-kv-content-max-width, 100%));
+  width: 100%;
 }
 
 .eyebrow,
@@ -59,7 +77,7 @@
 
 ::slotted([slot='eyebrow']) {
   display: block;
-  margin: 0 0 var(--sunmar-margin-s) 0;
+  margin: 0 0 16px 0;
   color: var(--sunmar-kv-eyebrow-color, inherit);
 }
 
@@ -72,6 +90,7 @@
   line-height: 1.1;
 }
 
+
 ::slotted([slot='text']) {
   display: block;
   margin: 0;
@@ -81,18 +100,15 @@
 }
 
 ::slotted([slot='actions']) {
-  margin-top: 32px;
+  margin: 32px 0 0 0;
 }
 
 @include mixins.media-min(bp-768) {
-  .root,
-  .content {
-    min-height: 320px;
-  }
-
   .root {
+    aspect-ratio: 608 / 320;
     border-radius: var(--sunmar-radius-base);
   }
+
 
   .content {
     padding: 48px 40px;
@@ -101,24 +117,18 @@
 }
 
 @include mixins.media-min(bp-1024) {
-  .root,
-  .content {
-    min-height: 360px;
+  .root {
+    aspect-ratio: 872 / 360;
   }
 
   .content {
     padding: 48px;
   }
-
-  ::slotted([slot='title']) {
-    margin-bottom: 24px;
-  }
 }
 
 @include mixins.media-min(bp-1280) {
-  .root,
-  .content {
-    min-height: 400px;
+  .root {
+    aspect-ratio: 1120 / 400;
   }
 
   .content {
@@ -127,14 +137,12 @@
 }
 
 @include mixins.media-min(bp-1440) {
-  .root,
-  .content {
-    min-height: 500px;
+  .root {
+    aspect-ratio: 1360 / 500;
   }
 
   ::slotted([slot='title']) {
     font-size: 56px;
-    margin-bottom: 32px;
     line-height: 1.1;
   }
 }

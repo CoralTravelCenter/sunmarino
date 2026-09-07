@@ -9,7 +9,7 @@ const meta: Meta = {
     layout: 'centered',
     docs: {
       description: {
-        component: 'CSS-атрибуты vertical и reversed управляют раскладкой без JS-свойств. Брейкпоинт 1024px зависит от окна. Слоты media, title, text обязательны; actions необязателен. Группа кнопок управляет раскладкой нескольких действий.'
+        component: 'Раскладка автоматически зависит от ширины карточки: вертикальная до 1024px и горизонтальная от 1024px. Атрибут reversed меняет порядок колонок. Слоты media, title, text обязательны; actions необязателен.'
       }
     }
   }
@@ -39,7 +39,7 @@ export const Mobile: Story = {
 
 export const WithButtonGroup: Story = {
   render: () => html`
-    <sunmar-card vertical style="width:min(100%, 360px);">
+    <sunmar-card style="width:min(100%, 360px);">
       <sunmar-image slot="media" src=${coastImageUrl} width="720" height="480" alt="Побережье Турции"></sunmar-image>
       <h3 slot="title">Турция</h3>
       <p slot="text">Семейные отели и отдых у моря.</p>
@@ -61,9 +61,9 @@ export const Reversed: Story = {
   `
 };
 
-export const Vertical: Story = {
+export const Responsive: Story = {
   render: () => html`
-    <sunmar-card vertical style="display:block; width:min(100%, 360px);">
+    <sunmar-card style="display:block; width:min(100%, 360px);">
       <sunmar-image slot="media" src=${coastImageUrl} width="720" height="480" alt="Побережье Турции"></sunmar-image>
       <h3 slot="title">Турция</h3>
       <p slot="text">Семейные отели и отдых у моря.</p>

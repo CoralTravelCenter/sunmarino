@@ -16,6 +16,7 @@ describe('registerSunmarComponents', () => {
     expect(registry.get('sunmar-modal')).toBeDefined();
     expect(registry.get('sunmar-tabs')).toBeDefined();
     expect(registry.get('sunmar-slider')).toBeDefined();
+    expect(registry.get('sunmar-cards-grid')).toBeDefined();
     expect(registry.get('sunmar-sticky-nav')).toBeDefined();
   });
 
@@ -32,6 +33,6 @@ describe('registerSunmarComponents', () => {
       registerSunmarComponents(registry);
       registerSunmarComponents(registry);
     }).not.toThrow();
-    expect(registry.define).toHaveBeenCalledTimes(14);
+    expect(registry.define).toHaveBeenCalledTimes(15);
   });
 });

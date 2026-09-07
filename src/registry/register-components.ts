@@ -47,6 +47,10 @@ import {
   SunmarCard
 } from '../components/sunmar-card/sunmar-card';
 import {
+  SUNMAR_CARDS_GRID_TAG_NAME,
+  SunmarCardsGrid
+} from '../components/sunmar-cards-grid/sunmar-cards-grid';
+import {
   SUNMAR_SLIDE_TAG_NAME,
   SunmarSlide
 } from '../components/sunmar-slide/sunmar-slide';
@@ -68,6 +72,7 @@ const sunmarComponentRegistryEntries = [
   [SUNMAR_TAB_CONTENT_TAG_NAME, SunmarTabContent],
   [SUNMAR_STICKY_NAV_TAG_NAME, SunmarStickyNav],
   [SUNMAR_CARD_TAG_NAME, SunmarCard],
+  [SUNMAR_CARDS_GRID_TAG_NAME, SunmarCardsGrid],
   [SUNMAR_SLIDE_TAG_NAME, SunmarSlide],
   [SUNMAR_SLIDER_TAG_NAME, SunmarSlider]
 ] as const;

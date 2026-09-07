@@ -23,9 +23,11 @@ Hero/KV-компонент с SEO-friendly light DOM контентом.
 - \`slot="image"\` — медиаконтент компонента
 
 **API стилизации**
+- boolean attribute/property \`full-width\` / \`fullWidth\` помечает KV как полноширинный
 - image positioning: \`--sunmar-image-object-position\`
 - доступны \`Parts\`: \`root\`, \`media\`, \`picture\`, \`content\`, \`content-inner\`, \`eyebrow\`, \`title\`, \`text\`
-- высоты баннера являются минимальными; длинный контент может увеличить блок
+- баннер адаптируется к ширине viewport через media queries
+- aspect ratio меняется на общих брейкпоинтах; длинный контент может увеличить блок
 - actions сохраняет собственный display, поэтому группу кнопок можно передавать прямо в slot
 `
       }
