@@ -24,7 +24,7 @@ Hero/KV-компонент с SEO-friendly light DOM контентом.
 
 **API стилизации**
 - boolean attribute/property \`full-width\` / \`fullWidth\` помечает KV как полноширинный
-- image positioning: \`--sunmar-image-object-position\`
+- image positioning: \`--sunmarino-image-object-position\`
 - доступны \`Parts\`: \`root\`, \`media\`, \`picture\`, \`content\`, \`content-inner\`, \`eyebrow\`, \`title\`, \`text\`
 - баннер адаптируется к ширине viewport через media queries
 - aspect ratio меняется на общих брейкпоинтах; длинный контент может увеличить блок

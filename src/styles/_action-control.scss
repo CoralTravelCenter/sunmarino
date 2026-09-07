@@ -10,18 +10,18 @@
 
 @mixin control {
   font-family: inherit;
-  font-size: var(--sunmar-type-btn-l-font-size);
-  line-height: var(--sunmar-type-btn-l-line-height);
+  font-size: var(--sunmarino-type-btn-l-font-size);
+  line-height: var(--sunmarino-type-btn-l-line-height);
   font-weight: 700;
   @include mixins.text-balance;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   width: auto;
-  padding-block: var(--sunmar-padding-s);
-  padding-inline: calc(var(--sunmar-padding-xl) + var(--sunmar-padding-3xs));
+  padding-block: var(--sunmarino-padding-s);
+  padding-inline: calc(var(--sunmarino-padding-xl) + var(--sunmarino-padding-3xs));
   border: 1px solid transparent;
-  border-radius: var(--sunmar-radius-xxl);
+  border-radius: var(--sunmarino-radius-xxl);
   cursor: pointer;
   appearance: none;
   text-decoration: none;

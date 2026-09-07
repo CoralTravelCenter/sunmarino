@@ -22,9 +22,9 @@ const meta: Meta = {
 - \`width\` и \`height\` принимают конечные числа от 1; дробная часть отбрасывается
 
 **CSS**
-- \`--sunmar-image-height\` — высота, по умолчанию auto
-- \`--sunmar-image-object-fit\` — по умолчанию cover
-- \`--sunmar-image-object-position\` — по умолчанию center center
+- \`--sunmarino-image-height\` — высота, по умолчанию auto
+- \`--sunmarino-image-object-fit\` — по умолчанию cover
+- \`--sunmarino-image-object-position\` — по умолчанию center center
 
 **Parts**
 - \`picture\`

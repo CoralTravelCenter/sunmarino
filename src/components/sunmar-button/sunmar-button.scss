@@ -21,42 +21,42 @@
 
 :host([data-resolved-type='primary']) ::slotted(button),
 :host([data-resolved-type='primary']) ::slotted(a) {
-  background-color: var(--sunmar-color-btn-bg-primary-default) !important;
+  background-color: var(--sunmarino-color-btn-bg-primary-default) !important;
   background-image: linear-gradient(
     245deg,
-    var(--Gradient-color_Gradinet_Primary_Second, var(--sunmar-color-gradient-primary-second)) 15.84%,
-    var(--Gradient-color_Gradient_Primary_First, var(--sunmar-color-gradient-primary-first)) 84.16%
+    var(--Gradient-color_Gradinet_Primary_Second, var(--sunmarino-color-gradient-primary-second)) 15.84%,
+    var(--Gradient-color_Gradient_Primary_First, var(--sunmarino-color-gradient-primary-first)) 84.16%
   ) !important;
-  color: var(--sunmar-color-btn-text-light) !important;
+  color: var(--sunmarino-color-btn-text-light) !important;
 }
 
 :host([data-resolved-type='secondary']) ::slotted(button),
 :host([data-resolved-type='secondary']) ::slotted(a) {
-  background-color: var(--sunmar-color-btn-bg-secondary-default) !important;
-  color: var(--sunmar-color-btn-text-light) !important;
+  background-color: var(--sunmarino-color-btn-bg-secondary-default) !important;
+  color: var(--sunmarino-color-btn-text-light) !important;
 }
 
 :host([data-resolved-type='neutral']) ::slotted(button),
 :host([data-resolved-type='neutral']) ::slotted(a) {
-  background-color: var(--sunmar-color-btn-bg-light-default) !important;
-  color: var(--sunmar-color-btn-text-dark) !important;
-  border-color: var(--sunmar-color-btn-stroke-light);
+  background-color: var(--sunmarino-color-btn-bg-light-default) !important;
+  color: var(--sunmarino-color-btn-text-dark) !important;
+  border-color: var(--sunmarino-color-btn-stroke-light);
 }
 
 :host([data-resolved-type='primary']) ::slotted(button:not(:disabled):active),
 :host([data-resolved-type='primary']) ::slotted(a:active) {
-  background-color: var(--sunmar-color-btn-bg-primary-pressed) !important;
+  background-color: var(--sunmarino-color-btn-bg-primary-pressed) !important;
   background-image: none !important;
 }
 
 :host([data-resolved-type='secondary']) ::slotted(button:not(:disabled):active),
 :host([data-resolved-type='secondary']) ::slotted(a:active) {
-  background-color: var(--sunmar-color-btn-bg-secondary-pressed) !important;
+  background-color: var(--sunmarino-color-btn-bg-secondary-pressed) !important;
 }
 
 :host([data-resolved-type='neutral']) ::slotted(button:not(:disabled):active),
 :host([data-resolved-type='neutral']) ::slotted(a:active) {
-  background-color: var(--sunmar-color-btn-bg-light-pressed) !important;
+  background-color: var(--sunmarino-color-btn-bg-light-pressed) !important;
 }
 
 ::slotted(button:disabled) {
@@ -67,7 +67,7 @@
 
 ::slotted(button:focus-visible),
 ::slotted(a:focus-visible) {
-  outline: 2px solid var(--sunmar-color-brand-blue) !important;
+  outline: 2px solid var(--sunmarino-color-brand-blue) !important;
   outline-offset: 2px !important;
 }
 
@@ -78,20 +78,20 @@
       --gradient_Primary_Hover,
       linear-gradient(
         245deg,
-        var(--Gradient-color_Gradient_Primary_First, var(--sunmar-color-gradient-primary-first)) 15.84%,
-        var(--Gradient-color_Gradinet_Primary_Second, var(--sunmar-color-gradient-primary-second)) 84.16%
+        var(--Gradient-color_Gradient_Primary_First, var(--sunmarino-color-gradient-primary-first)) 15.84%,
+        var(--Gradient-color_Gradinet_Primary_Second, var(--sunmarino-color-gradient-primary-second)) 84.16%
       )
     ) !important;
   }
 
   :host([data-resolved-type='secondary']) ::slotted(button:not(:disabled):hover),
   :host([data-resolved-type='secondary']) ::slotted(a:hover) {
-    background-color: var(--sunmar-color-btn-bg-secondary-hover) !important;
+    background-color: var(--sunmarino-color-btn-bg-secondary-hover) !important;
   }
 
   :host([data-resolved-type='neutral']) ::slotted(button:not(:disabled):hover),
   :host([data-resolved-type='neutral']) ::slotted(a:hover) {
-    background-color: var(--sunmar-color-btn-bg-light-hover) !important;
+    background-color: var(--sunmarino-color-btn-bg-light-hover) !important;
   }
 }
 

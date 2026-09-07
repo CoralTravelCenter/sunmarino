@@ -30,6 +30,30 @@ afterEach(() => {
   vi.clearAllMocks();
 });
 describe('SunmarModal', () => {
+  it('resolves actions on the first opening render and after changes while closed', async () => {
+    const modal = await mount('<button slot="actions">Действие</button>');
+    const actionsHidden = () => modal.shadowRoot!.querySelector<HTMLElement>('.actions')!.hidden;
+    modal.show();
+    await modal.updateComplete;
+    expect(actionsHidden()).toBe(false);
+    modal.hide(); await settle(modal);
+    modal.querySelector('button')!.remove();
+    modal.show();
+    await modal.updateComplete;
+    expect(actionsHidden()).toBe(true);
+    modal.hide(); await settle(modal);
+    const action = document.createElement('button');
+    action.slot = 'actions';
+    modal.append(action);
+    modal.show();
+    await modal.updateComplete;
+    expect(actionsHidden()).toBe(false);
+    action.slot = 'title'; await settle(modal);
+    expect(actionsHidden()).toBe(true);
+    action.slot = 'actions'; await settle(modal);
+    expect(actionsHidden()).toBe(false);
+  });
+
   it('emits the new events once per state change', async () => {
     const modal = await mount();
     const opened = vi.fn(); const closed = vi.fn();

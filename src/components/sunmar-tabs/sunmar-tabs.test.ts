@@ -19,6 +19,30 @@ async function mount() {
 }
 afterEach(() => document.body.replaceChildren());
 describe('SunmarTabs', () => {
+  it('uses the same duplicate availability rules for clicks, keyboard and fallback', async () => {
+    const tabs = await mount();
+    const first = tabs.querySelector('sunmar-tab')!;
+    tabs.insertAdjacentHTML('beforeend', '<sunmar-tab value="first"><button type="button">Дубль</button></sunmar-tab>');
+    first.querySelector('button')!.disabled = true;
+    await settle(tabs);
+    const buttons = tabs.querySelectorAll('button');
+    expect(tabs.value).toBe('second');
+    buttons[2].click();
+    expect(tabs.value).toBe('second');
+    buttons[1].dispatchEvent(new KeyboardEvent('keydown', {
+      key: 'ArrowRight', bubbles: true, composed: true, cancelable: true
+    }));
+    expect(tabs.value).toBe('second');
+    expect(document.activeElement).toBe(buttons[1]);
+    first.remove();
+    await settle(tabs);
+    expect(buttons[2].getAttribute('aria-disabled')).toBe('false');
+    buttons[2].click();
+    expect(tabs.value).toBe('first');
+    expect(buttons[2].getAttribute('aria-selected')).toBe('true');
+    expect(tabs.querySelectorAll('sunmar-tab-content[active]')).toHaveLength(1);
+  });
+
   it('connects buttons and panels without duplicating a tab host ID', async () => {
     const tabs = await mount();
     const tab = tabs.querySelector('sunmar-tab')!; tab.id = 'consumer-tab';

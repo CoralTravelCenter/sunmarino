@@ -1,9 +1,9 @@
 import { LitElement, css, html, unsafeCSS } from 'lit';
+import { property } from 'lit/decorators.js';
 import { componentBaseStyles } from '../../styles/component-base';
 import styles from './sunmar-button-group.scss?inline';
 
-import { normalizeButtonType, normalizeButtonSize, type SunmarButtonType, type SunmarButtonSize } from '../sunmar-button/button-settings';
-import type { SunmarButton } from '../sunmar-button/sunmar-button';
+import { BUTTON_GROUP_SETTINGS_CHANGE_EVENT, normalizeButtonType, normalizeButtonSize, type SunmarButtonType, type SunmarButtonSize } from '../sunmar-button/button-settings';
 
 export const SUNMAR_BUTTON_GROUP_TAG_NAME = 'sunmar-button-group';
 
@@ -12,25 +12,24 @@ export class SunmarButtonGroup extends LitElement {
     ${unsafeCSS(styles)}
   `];
 
-  static properties = {
-    type: { attribute: false, noAccessor: true },
-    size: { attribute: false, noAccessor: true }
-  };
+  @property({ attribute: 'type' })
+  private explicitType: string | null = null;
 
-  static get observedAttributes(): string[] {
-    return [...super.observedAttributes, 'type', 'size'];
-  }
+  @property({ attribute: 'size' })
+  private explicitSize: string | null = null;
 
+  @property({ attribute: false })
   get type(): SunmarButtonType {
-    return normalizeButtonType(this.getAttribute('type'));
+    return normalizeButtonType(this.explicitType);
   }
 
   set type(value: SunmarButtonType) {
     this.setAttribute('type', normalizeButtonType(value));
   }
 
+  @property({ attribute: false })
   get size(): SunmarButtonSize {
-    return normalizeButtonSize(this.getAttribute('size'));
+    return normalizeButtonSize(this.explicitSize);
   }
 
   set size(value: SunmarButtonSize) {
@@ -39,28 +38,22 @@ export class SunmarButtonGroup extends LitElement {
 
   attributeChangedCallback(name: string, oldValue: string | null, value: string | null): void {
     super.attributeChangedCallback(name, oldValue, value);
+    // Preserve synchronous normalization of explicit HTML settings.
     if (name !== 'type' && name !== 'size') return;
     if (value !== null) {
       const normalized = name === 'type' ? normalizeButtonType(value) : normalizeButtonSize(value);
       if (value !== normalized) this.setAttribute(name, normalized);
     }
-    this.requestUpdate();
   }
 
-  protected updated(): void {
-    this.updateButtons();
-  }
-
-  private updateButtons(): void {
-    for (const child of this.children) {
-      if (child.localName === 'sunmar-button') {
-        (child as SunmarButton).requestUpdate?.();
-      }
+  protected updated(changed: Map<PropertyKey, unknown>): void {
+    if (changed.has('explicitType') || changed.has('explicitSize')) {
+      this.dispatchEvent(new Event(BUTTON_GROUP_SETTINGS_CHANGE_EVENT));
     }
   }
 
   protected render() {
-    return html`<slot @slotchange=${this.updateButtons}></slot>`;
+    return html`<slot></slot>`;
   }
 }
 

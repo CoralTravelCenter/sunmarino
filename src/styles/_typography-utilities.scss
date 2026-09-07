@@ -1,22 +1,44 @@
 @use './mixins' as mixins;
 
-:where(.sunmar-h2) {
-  margin: 0;
-  font-family: inherit;
-  font-size: var(--sunmar-heading-h2-font-size);
-  line-height: calc(var(--sunmar-heading-h2-line-height) /  var(--sunmar-heading-h2-font-size));
-  color: var(--sunmar-color-text-dark);
-  font-weight: var(--sunmar-heading-h2-font-weight);
+@for $level from 1 through 5 {
+  :where(.sunmarino-h#{$level}, .sunmarino-prose h#{$level}) {
+    margin: 0;
+    font-family: inherit;
+    color: inherit;
+    font-size: var(--sunmarino-heading-h#{$level}-mobile-font-size);
+    line-height: calc(var(--sunmarino-heading-h#{$level}-mobile-line-height) / var(--sunmarino-heading-h#{$level}-mobile-font-size));
+    font-weight: var(--sunmarino-heading-h#{$level}-font-weight);
+    letter-spacing: var(--sunmarino-heading-h#{$level}-letter-spacing);
+
+    @include mixins.media-min(bp-768) {
+      font-size: var(--sunmarino-heading-h#{$level}-font-size);
+      line-height: calc(var(--sunmarino-heading-h#{$level}-line-height) / var(--sunmarino-heading-h#{$level}-font-size));
+    }
+  }
 }
 
-:where(.sunmar-text) {
+:where(.sunmarino-text, .sunmarino-text-sm, .sunmarino-text-lg, .sunmarino-prose) {
   margin: 0;
   font-family: inherit;
-  color: var(--sunmar-color-text-dark);
-  font-size: var(--sunmar--text-font-size);
-  line-height: calc(var(--sunmar--text-line-height) / var(--sunmar--text-font-size));
+  color: inherit;
+  font-size: var(--sunmarino-text-font-size);
+  line-height: calc(var(--sunmarino-text-line-height) / var(--sunmarino-text-font-size));
 }
 
-:where(.sunmar-text-balance) {
+@each $variant, $token in (sm: s, lg: l) {
+  :where(.sunmarino-text-#{$variant}) {
+    font-size: var(--sunmarino-type-#{$token}-font-size);
+    line-height: calc(var(--sunmarino-type-#{$token}-line-height) / var(--sunmarino-type-#{$token}-font-size));
+  }
+}
+
+:where(.sunmarino-text-balance) {
   @include mixins.text-balance;
 }
+
+@each $alignment in (start, center, end) {
+  :where(.sunmarino-text-#{$alignment}) { text-align: $alignment; }
+}
+
+:where(.sunmarino-text-muted) { color: var(--sunmarino-color-text-light-alt); }
+:where(.sunmarino-text-light) { color: var(--sunmarino-color-text-light); }

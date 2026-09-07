@@ -90,8 +90,8 @@ describe('SunmarStickyNav', () => {
   });
   it('normalizes offsets', async () => {
     const { nav } = await mount(); nav.topOffset = -5; await settle(nav);
-    expect(nav.style.getPropertyValue('--sunmar-sticky-nav-top-offset')).toBe('0px');
-    nav.topOffset = NaN; await settle(nav); expect(nav.style.getPropertyValue('--sunmar-sticky-nav-top-offset')).toBe('');
+    expect(nav.style.getPropertyValue('--sunmarino-sticky-nav-top-offset')).toBe('0px');
+    nav.topOffset = NaN; await settle(nav); expect(nav.style.getPropertyValue('--sunmarino-sticky-nav-top-offset')).toBe('');
   });
   it('relocates after a late target and follows a changed selector', async () => {
     const nav = document.createElement('sunmar-sticky-nav'); nav.teleport = '#target'; document.body.append(nav); await settle(nav);

@@ -1,4 +1,5 @@
 import { LitElement, css, html, unsafeCSS } from 'lit';
+import { property } from 'lit/decorators.js';
 import type { SunmarAccordionItem } from '../sunmar-accordion-item/sunmar-accordion-item';
 import { componentBaseStyles } from '../../styles/component-base';
 import styles from './sunmar-accordion.scss?inline';
@@ -17,22 +18,20 @@ const normalizeMode = (value: unknown): SunmarAccordionMode =>
   value === 'single' ? 'single' : 'multiple';
 
 export class SunmarAccordion extends LitElement {
-  static properties = {
-    mode: {
-      reflect: true,
-      converter: {
-        fromAttribute: normalizeMode,
-        toAttribute: normalizeMode
-      }
-    },
-    faq: { type: Boolean }
-  };
-
   static styles = [componentBaseStyles, css`
     ${unsafeCSS(styles)}
   `];
 
+  @property({
+    reflect: true,
+    converter: {
+      fromAttribute: normalizeMode,
+      toAttribute: normalizeMode
+    }
+  })
   mode: SunmarAccordionMode = 'multiple';
+
+  @property({ type: Boolean })
   faq = false;
 
   private faqScript: HTMLScriptElement | null = null;

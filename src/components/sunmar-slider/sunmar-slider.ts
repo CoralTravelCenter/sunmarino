@@ -1,4 +1,6 @@
 import { LitElement, css, html, nothing, unsafeCSS } from 'lit';
+import { property, query, queryAssignedElements, state } from 'lit/decorators.js';
+import { styleMap } from 'lit/directives/style-map.js';
 import { componentBaseStyles } from '../../styles/component-base';
 import { type EmblaApi, type EmblaOptions, loadEmbla } from './embla-loader';
 import styles from './sunmar-slider.scss?inline';
@@ -14,46 +16,65 @@ const OPTION_PROPERTIES = new Set([
 const SUPPORTED_ALIGNMENTS = ['start', 'center', 'end'] as const;
 
 export class SunmarSlider extends LitElement {
-  static properties = {
-    slidesPerView: { type: Number, attribute: 'slides-per-view' },
-    slidesPerView768: { type: Number, attribute: 'slides-per-view-768' },
-    slidesPerView1024: { type: Number, attribute: 'slides-per-view-1024' },
-    slidesPerView1280: { type: Number, attribute: 'slides-per-view-1280' },
-    slidesPerView1440: { type: Number, attribute: 'slides-per-view-1440' },
-    slidesToScroll: { type: String, attribute: 'slides-to-scroll' },
-    disabledFrom: { type: Number, attribute: 'disabled-from', reflect: true },
-    align: { type: String },
-    dragFree: { type: Boolean, attribute: 'drag-free' },
-    loop: { type: Boolean },
-    gap: { type: Number },
-    activeIndex: { state: true },
-    snapCount: { state: true },
-    canScrollPrev: { state: true },
-    canScrollNext: { state: true }
-  };
-
   static styles = [componentBaseStyles, css`${unsafeCSS(styles)}`];
 
+  @property({ type: Number, attribute: 'slides-per-view' })
   slidesPerView = 1;
+
+  @property({ type: Number, attribute: 'slides-per-view-768' })
   slidesPerView768?: number;
+
+  @property({ type: Number, attribute: 'slides-per-view-1024' })
   slidesPerView1024?: number;
+
+  @property({ type: Number, attribute: 'slides-per-view-1280' })
   slidesPerView1280?: number;
+
+  @property({ type: Number, attribute: 'slides-per-view-1440' })
   slidesPerView1440?: number;
+
+  @property({ type: String, attribute: 'slides-to-scroll' })
   slidesToScroll = '1';
+
+  @property({ type: Number, attribute: 'disabled-from', reflect: true })
   disabledFrom?: number;
+
+  @property({ type: String })
   align: 'start' | 'center' | 'end' = 'start';
+
+  @property({ type: Boolean, attribute: 'drag-free' })
   dragFree = false;
+
+  @property({ type: Boolean })
   loop = false;
+
+  @property({ type: Number })
   gap = 16;
 
+  @state()
   private activeIndex = 0;
+
+  @state()
   private snapCount = 0;
+
+  @state()
   private canScrollPrev = false;
+
+  @state()
   private canScrollNext = false;
   private initializationId = 0;
   private embla?: EmblaApi;
   private generatedSlideLabels = new WeakMap<HTMLElement, string>();
   private labeledSlides = new Set<HTMLElement>();
+
+  @query('.viewport')
+  private viewport!: HTMLElement | null;
+
+  @query('.container')
+  private container!: HTMLSlotElement | null;
+
+  @queryAssignedElements({ flatten: true })
+  private assignedSlides!: Element[];
 
   connectedCallback(): void {
     super.connectedCallback();
@@ -97,12 +118,10 @@ export class SunmarSlider extends LitElement {
   }
 
   private get slides(): HTMLElement[] {
-    return this.renderRoot.querySelector<HTMLSlotElement>('.container')?.assignedElements({ flatten: true })
-      .filter((element): element is HTMLElement => element instanceof HTMLElement) ?? [];
+    return this.assignedSlides.filter((element): element is HTMLElement => element instanceof HTMLElement);
   }
 
   private getEmblaOptions(): EmblaOptions {
-    const container = this.renderRoot.querySelector<HTMLSlotElement>('.container');
     const disabledFrom = SUPPORTED_DISABLED_BREAKPOINTS.find(
       (breakpoint) => breakpoint === this.disabledFrom
     );
@@ -118,7 +137,7 @@ export class SunmarSlider extends LitElement {
         `(min-width: ${breakpoint}px)`,
         { active: disabledFrom === undefined || breakpoint < disabledFrom }
       ])),
-      container: container ?? undefined,
+      container: this.container ?? undefined,
       dragFree: this.dragFree,
       loop: this.loop,
       slides: this.slides,
@@ -174,7 +193,7 @@ export class SunmarSlider extends LitElement {
   }
 
   private async initEmbla(): Promise<void> {
-    const viewport = this.renderRoot.querySelector<HTMLElement>('.viewport');
+    const viewport = this.viewport;
     if (!viewport || !this.isConnected || this.embla) return;
     const initializationId = ++this.initializationId;
 
@@ -213,16 +232,14 @@ export class SunmarSlider extends LitElement {
       this.slidesPerView1280, this.slidesPerView1440];
     const suffixes = ['', '-768', '-1024', '-1280', '-1440'];
     let previous = 1;
-    const slideStyles = [
-      `--sunmar-slider-gap:${this.getValidNumber(this.gap, 16, 0)}px`,
-      ...counts.flatMap((count, index) => {
-        previous = count === undefined ? previous : this.getValidNumber(count, 1, 1);
-        return [
-          `--sunmar-slider-slides${suffixes[index]}:${previous}`,
-          `--sunmar-slider-grid-columns${suffixes[index]}:${Math.floor(previous)}`
-        ];
-      })
-    ].join(';');
+    const slideStyles: Record<string, string | number> = {
+      '--sunmarino-slider-gap': `${this.getValidNumber(this.gap, 16, 0)}px`
+    };
+    counts.forEach((count, index) => {
+      previous = count === undefined ? previous : this.getValidNumber(count, 1, 1);
+      slideStyles[`--sunmarino-slider-slides${suffixes[index]}`] = previous;
+      slideStyles[`--sunmarino-slider-grid-columns${suffixes[index]}`] = Math.floor(previous);
+    });
 
     return html`
       <div class="stage">
@@ -230,7 +247,7 @@ export class SunmarSlider extends LitElement {
           <slot
             class="container"
             part="container"
-            style=${slideStyles}
+            style=${styleMap(slideStyles)}
             @slotchange=${this.handleSlotChange}
           ></slot>
         </div>

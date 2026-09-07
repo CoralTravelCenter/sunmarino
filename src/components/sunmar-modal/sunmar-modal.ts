@@ -1,5 +1,5 @@
 import { LitElement, css, html, nothing, unsafeCSS } from 'lit';
-import { state } from 'lit/decorators.js';
+import { property, query, queryAssignedElements, state } from 'lit/decorators.js';
 import { componentBaseStyles } from '../../styles/component-base';
 import { acquirePageScrollLock, releasePageScrollLock } from '../../utils/scroll/no-scroll';
 import { pushModal, removeModal, topModal } from './modal-stack';
@@ -25,22 +25,23 @@ const FOCUSABLE_SELECTOR = [
 let modalIdCounter = 0;
 
 export class SunmarModal extends LitElement {
-  static properties = {
-    open: { type: Boolean, reflect: true },
-    disableCloseOnBackdrop: { type: Boolean, attribute: 'disable-close-on-backdrop' },
-    disableCloseOnEsc: { type: Boolean, attribute: 'disable-close-on-esc' },
-    ariaLabel: { type: String, attribute: 'aria-label' },
-    ariaLabelledby: { type: String, attribute: 'aria-labelledby' }
-  };
-
   static styles = [componentBaseStyles, css`
     ${unsafeCSS(styles)}
   `];
 
+  @property({ type: Boolean, reflect: true })
   open = false;
+
+  @property({ type: Boolean, attribute: 'disable-close-on-backdrop' })
   disableCloseOnBackdrop = false;
+
+  @property({ type: Boolean, attribute: 'disable-close-on-esc' })
   disableCloseOnEsc = false;
+
+  @property({ type: String, attribute: 'aria-label' })
   ariaLabel: string | null = null;
+
+  @property({ type: String, attribute: 'aria-labelledby' })
   ariaLabelledby: string | null = null;
 
   @state()
@@ -51,8 +52,18 @@ export class SunmarModal extends LitElement {
   private previouslyFocusedElement: HTMLElement | null = null;
   private active = false;
   private labelObserver?: MutationObserver;
+
   @state()
   private externalLabel = '';
+
+  @query('.dialog')
+  private dialog!: HTMLElement | null;
+
+  @query('.close')
+  private closeButton!: HTMLButtonElement | null;
+
+  @queryAssignedElements({ slot: 'actions', flatten: true })
+  private actionElements!: Element[];
 
   private readonly syncExternalLabel = (): void => {
     const root = this.getRootNode() as Document | ShadowRoot;
@@ -99,12 +110,16 @@ export class SunmarModal extends LitElement {
     super.disconnectedCallback();
   }
 
+  protected willUpdate(changed: Map<PropertyKey, unknown>): void {
+    if (this.open && changed.has('open')) {
+      this.hasActions = Array.from(this.children).some(
+        (child) => child.getAttribute('slot') === 'actions',
+      );
+    }
+  }
+
   updated(changedProperties: Map<string, unknown>): void {
     if (!this.isConnected) return;
-    if (this.open) {
-      const actions = this.renderRoot.querySelector<HTMLSlotElement>('slot[name="actions"]');
-      this.hasActions = (actions?.assignedElements({ flatten: true }).length ?? 0) > 0;
-    }
     if (changedProperties.has('ariaLabelledby')) this.syncExternalLabel();
     if (!changedProperties.has('open')) {
       return;
@@ -183,7 +198,7 @@ export class SunmarModal extends LitElement {
             <slot></slot>
           </div>
           <footer class="actions" part="actions" ?hidden=${!this.hasActions}>
-            <slot name="actions" @slotchange=${this.handleActionsSlotChange}></slot>
+            <slot name="actions" @slotchange=${this.syncActions}></slot>
           </footer>
         </section>
       </div>
@@ -200,11 +215,8 @@ export class SunmarModal extends LitElement {
     event.stopPropagation();
   };
 
-  private readonly handleActionsSlotChange = (event: Event): void => {
-    const slot = event.target;
-    if (slot instanceof HTMLSlotElement) {
-      this.hasActions = slot.assignedElements({ flatten: true }).length > 0;
-    }
+  private readonly syncActions = (): void => {
+    this.hasActions = this.actionElements.length > 0;
   };
 
   private toggleDocumentHandlers(enabled: boolean): void {
@@ -272,9 +284,9 @@ export class SunmarModal extends LitElement {
     const autofocusElement = this.getFocusableElements().find((element) =>
       element.hasAttribute('autofocus')
     );
-    const lightDomElement = this.getFocusableElements().find((element) => element !== this.renderRoot.querySelector('.close'));
-    const fallbackElement = this.renderRoot.querySelector<HTMLElement>('.close');
-    const dialog = this.renderRoot.querySelector<HTMLElement>('.dialog');
+    const lightDomElement = this.getFocusableElements().find((element) => element !== this.closeButton);
+    const fallbackElement = this.closeButton;
+    const dialog = this.dialog;
 
     (autofocusElement ?? lightDomElement ?? fallbackElement ?? dialog)?.focus({
       preventScroll: true
@@ -283,7 +295,7 @@ export class SunmarModal extends LitElement {
 
   private trapFocus(event: KeyboardEvent): void {
     const focusableElements = this.getFocusableElements();
-    const dialog = this.renderRoot.querySelector<HTMLElement>('.dialog');
+    const dialog = this.dialog;
 
     if (!focusableElements.length) {
       event.preventDefault();

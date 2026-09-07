@@ -1,11 +1,11 @@
 @use '../../styles/mixins' as mixins;
 
 :host {
-  --sunmar-slider-navigation-outset: var(--sunmar-space-l);
+  --sunmarino-slider-navigation-outset: var(--sunmarino-space-l);
 
   display: block;
   position: relative;
-  color: var(--sunmar-slider-control-color, var(--sunmar-color-base-icon));
+  color: var(--sunmarino-slider-control-color, var(--sunmarino-color-base-icon));
 }
 
 .stage {
@@ -19,13 +19,13 @@
 
 
 .container {
-  --sunmar-slider-current-slides: var(--sunmar-slider-slides);
-  --sunmar-slider-current-columns: var(--sunmar-slider-grid-columns);
-  --sunmar-slider-slides-per-view: var(--sunmar-slider-current-slides);
-  --sunmar-slider-slide-padding: var(--sunmar-slider-gap);
+  --sunmarino-slider-current-slides: var(--sunmarino-slider-slides);
+  --sunmarino-slider-current-columns: var(--sunmarino-slider-grid-columns);
+  --sunmarino-slider-slides-per-view: var(--sunmarino-slider-current-slides);
+  --sunmarino-slider-slide-padding: var(--sunmarino-slider-gap);
 
   display: flex;
-  margin-inline-start: calc(var(--sunmar-slider-gap) * -1);
+  margin-inline-start: calc(var(--sunmarino-slider-gap) * -1);
   touch-action: pan-y pinch-zoom;
 }
 
@@ -33,7 +33,7 @@
   display: none;
   align-items: center;
   justify-content: center;
-  margin-top: var(--sunmar-space-l);
+  margin-top: var(--sunmarino-space-l);
 }
 
 :host([embla-ready]) .controls {
@@ -44,8 +44,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: var(--sunmar-space-xs);
-  min-height: var(--sunmar-space-xl);
+  gap: var(--sunmarino-space-xs);
+  min-height: var(--sunmarino-space-xl);
 }
 
 .navigation {
@@ -65,17 +65,17 @@
   position: absolute;
   top: 50%;
   display: flex;
-  width: var(--sunmar-icon-xl);
-  height: var(--sunmar-icon-xl);
+  width: var(--sunmarino-icon-xl);
+  height: var(--sunmarino-icon-xl);
   flex-direction: column;
   align-items: center;
   justify-content: center;
   padding: 0;
   border: 0;
-  border-radius: var(--sunmar-slider-navigation-radius, calc((var(--sunmar-radius-xxs) + var(--sunmar-radius-xs)) / 2));
+  border-radius: var(--sunmarino-slider-navigation-radius, calc((var(--sunmarino-radius-xxs) + var(--sunmarino-radius-xs)) / 2));
   background: var(
-    --sunmar-slider-navigation-background,
-    var(--sunmar-color-base-light)
+    --sunmarino-slider-navigation-background,
+    var(--sunmarino-color-base-light)
   );
   box-shadow: rgba(149, 157, 165, 0.2) 0 8px 24px;
   pointer-events: auto;
@@ -83,11 +83,11 @@
 }
 
 .button-prev {
-  left: var(--sunmar-space-n);
+  left: var(--sunmarino-space-n);
 }
 
 .button-next {
-  right: var(--sunmar-space-n);
+  right: var(--sunmarino-space-n);
 }
 
 .button svg {
@@ -96,18 +96,18 @@
 }
 
 .button path {
-  stroke: var(--sunmar-slider-control-color, var(--sunmar-color-text-light-alt));
+  stroke: var(--sunmarino-slider-control-color, var(--sunmarino-color-text-light-alt));
   transition: stroke 160ms ease;
 }
 
 @media (hover: hover) and (pointer: fine) {
   .button:not(:disabled):hover path {
-    stroke: var(--sunmar-color-btn-bg-secondary-default);
+    stroke: var(--sunmarino-color-btn-bg-secondary-default);
   }
 }
 
 .button:not(:disabled):active path {
-  stroke: var(--sunmar-color-btn-bg-primary-default);
+  stroke: var(--sunmarino-color-btn-bg-primary-default);
 }
 
 .button-next svg {
@@ -121,12 +121,12 @@
 
 .dot {
   position: relative;
-  width: calc((var(--sunmar-space-xs) + var(--sunmar-space-s)) / 2);
-  height: calc((var(--sunmar-space-xs) + var(--sunmar-space-s)) / 2);
+  width: calc((var(--sunmarino-space-xs) + var(--sunmarino-space-s)) / 2);
+  height: calc((var(--sunmarino-space-xs) + var(--sunmarino-space-s)) / 2);
   padding: 0;
   border: 0;
   border-radius: 50%;
-  background: var(--sunmar-slider-dot-color, var(--sunmar-color-base-light-alt1));
+  background: var(--sunmarino-slider-dot-color, var(--sunmarino-color-base-light-alt1));
 }
 
 .dot[aria-current='true'] {
@@ -137,8 +137,8 @@
   position: absolute;
   top: 50%;
   left: 50%;
-  width: var(--sunmar-space-n);
-  height: var(--sunmar-space-n);
+  width: var(--sunmarino-space-n);
+  height: var(--sunmarino-space-n);
   border: 2px solid currentColor;
   border-radius: 50%;
   box-sizing: border-box;
@@ -154,11 +154,11 @@
 
 @include mixins.media-min(bp-1024) {
   .button-prev {
-    left: var(--sunmar-space-l);
+    left: var(--sunmarino-space-l);
   }
 
   .button-next {
-    right: var(--sunmar-space-l);
+    right: var(--sunmarino-space-l);
   }
 }
 
@@ -180,15 +180,15 @@
   }
 
   .container {
-    --sunmar-slider-current-slides: var(--sunmar-slider-slides-768);
-    --sunmar-slider-current-columns: var(--sunmar-slider-grid-columns-768);
+    --sunmarino-slider-current-slides: var(--sunmarino-slider-slides-768);
+    --sunmarino-slider-current-columns: var(--sunmarino-slider-grid-columns-768);
   }
 }
 
 @include mixins.media-min(bp-1024) {
   .container {
-    --sunmar-slider-current-slides: var(--sunmar-slider-slides-1024);
-    --sunmar-slider-current-columns: var(--sunmar-slider-grid-columns-1024);
+    --sunmarino-slider-current-slides: var(--sunmarino-slider-slides-1024);
+    --sunmarino-slider-current-columns: var(--sunmarino-slider-grid-columns-1024);
   }
 }
 
@@ -196,7 +196,7 @@
   .button-prev {
     left: 0;
     transform: translate(
-      calc(-100% - var(--sunmar-slider-navigation-outset)),
+      calc(-100% - var(--sunmarino-slider-navigation-outset)),
       -50%
     );
   }
@@ -204,21 +204,21 @@
   .button-next {
     right: 0;
     transform: translate(
-      calc(100% + var(--sunmar-slider-navigation-outset)),
+      calc(100% + var(--sunmarino-slider-navigation-outset)),
       -50%
     );
   }
 
   .container {
-    --sunmar-slider-current-slides: var(--sunmar-slider-slides-1280);
-    --sunmar-slider-current-columns: var(--sunmar-slider-grid-columns-1280);
+    --sunmarino-slider-current-slides: var(--sunmarino-slider-slides-1280);
+    --sunmarino-slider-current-columns: var(--sunmarino-slider-grid-columns-1280);
   }
 }
 
 @include mixins.media-min(bp-1440) {
   .container {
-    --sunmar-slider-current-slides: var(--sunmar-slider-slides-1440);
-    --sunmar-slider-current-columns: var(--sunmar-slider-grid-columns-1440);
+    --sunmarino-slider-current-slides: var(--sunmarino-slider-slides-1440);
+    --sunmarino-slider-current-columns: var(--sunmarino-slider-grid-columns-1440);
   }
 }
 
@@ -226,11 +226,11 @@
 @mixin static-grid {
   .viewport { overflow: visible; }
   .container {
-    --sunmar-slider-slide-padding: 0;
+    --sunmarino-slider-slide-padding: 0;
     display: grid;
-    grid-template-columns: repeat(var(--sunmar-slider-current-columns), minmax(0, 1fr));
+    grid-template-columns: repeat(var(--sunmarino-slider-current-columns), minmax(0, 1fr));
     grid-auto-rows: 1fr;
-    gap: var(--sunmar-slider-gap);
+    gap: var(--sunmarino-slider-gap);
     margin-inline-start: 0;
     touch-action: auto;
   }

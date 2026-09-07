@@ -4,13 +4,4 @@
   display: block;
 }
 
-::slotted(sunmar-accordion-item) {
-  display: block;
-  margin-block-end: var(--sunmar-space-s);
-}
 
-@include mixins.media-min(bp-768) {
-  ::slotted(sunmar-accordion-item) {
-    margin-block-end: var(--sunmar-space-n);
-  }
-}

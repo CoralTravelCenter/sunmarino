@@ -1,5 +1,7 @@
+@use '../../styles/mixins' as mixins;
+
 :host {
-  --sunmar-tabs-gap: 8px;
+  --sunmarino-tabs-gap: var(--sunmarino-space-xs);
   display: block;
 }
 
@@ -7,9 +9,9 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: var(--sunmar-tabs-gap);
+  gap: var(--sunmarino-tabs-gap);
 }
 
-@media (min-width: 1024px) {
+@include mixins.media-min(bp-1024) {
   .nav { flex-wrap: nowrap; }
 }

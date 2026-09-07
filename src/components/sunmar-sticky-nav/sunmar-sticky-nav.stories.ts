@@ -45,7 +45,7 @@ const meta: Meta = {
 - если target section не найдена, компонент безопасно игнорирует такую ссылку
 
 **API стилизации**
-- CSS variables: \`--sunmar-sticky-nav-z-index\`, \`--sunmar-sticky-nav-bg\`, \`--sunmar-sticky-nav-border\`, \`--sunmar-sticky-nav-gap\`
+- CSS variables: \`--sunmarino-sticky-nav-z-index\`, \`--sunmarino-sticky-nav-bg\`, \`--sunmarino-sticky-nav-border\`, \`--sunmarino-sticky-nav-gap\`
 - \`Parts\`: \`root\`
 
 **Как использовать?**

@@ -1,3 +1,5 @@
+@use '../../styles/mixins' as mixins;
+
 @use '../../styles/action-control' as action-control;
 
 :host { display: flex; flex: 1 1 auto; }
@@ -5,20 +7,20 @@
 ::slotted(button) {
   @include action-control.control;
   width: 100%;
-  padding: 8px 15px;
-  font-size: 14px;
+  padding: var(--sunmarino-padding-xs) 15px;
+  font-size: var(--sunmarino-type-dropdown-font-size);
   white-space: normal;
   text-align: center;
-  background-color: var(--sunmar-color-btn-bg-light-default);
-  color: var(--sunmar-color-btn-text-dark);
-  border-color: var(--sunmar-color-btn-stroke-light);
+  background-color: var(--sunmarino-color-btn-bg-light-default);
+  color: var(--sunmarino-color-btn-text-dark);
+  border-color: var(--sunmarino-color-btn-stroke-light);
   border-radius: 100px;
 }
 
 :host([selected]) ::slotted(button) {
-  background-color: var(--sunmar-color-btn-bg-secondary-default);
-  border-color: var(--sunmar-color-btn-bg-secondary-default);
-  color: var(--sunmar-color-btn-text-light);
+  background-color: var(--sunmarino-color-btn-bg-secondary-default);
+  border-color: var(--sunmarino-color-btn-bg-secondary-default);
+  color: var(--sunmarino-color-btn-text-light);
 }
 
 ::slotted(button:focus-visible) { outline: 2px solid currentColor; outline-offset: 2px; }
@@ -26,12 +28,12 @@
 
 @media (hover: hover) and (pointer: fine) {
   :host([selected]) ::slotted(button:hover) {
-    background-color: var(--sunmar-color-btn-bg-secondary-hover);
-    border-color: var(--sunmar-color-btn-bg-secondary-hover);
+    background-color: var(--sunmarino-color-btn-bg-secondary-hover);
+    border-color: var(--sunmarino-color-btn-bg-secondary-hover);
   }
 }
 
-@media (min-width: 1024px) {
+@include mixins.media-min(bp-1024) {
   :host { flex: 1; }
-  ::slotted(button) { border: none; padding: 16px 30px; font-size: 16px; }
+  ::slotted(button) { border: none; padding: var(--sunmarino-padding-n) 30px; font-size: var(--sunmarino-type-btn-l-font-size); }
 }

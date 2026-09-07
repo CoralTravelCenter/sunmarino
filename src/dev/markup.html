@@ -1,10 +1,10 @@
-<section class="sunmarino hero kv">
+<section class="sunmarino sunmarino-kv">
     <sunmar-kv>
         <sunmar-image alt="Тропический берег с пальмами и бирюзовым океаном"
                       loading="eager"
                       slot="image"
                       src="https://images.unsplash.com/photo-1675198221188-767e513b9bd4?auto=format&amp;fit=crop&amp;w=1920&amp;q=85"></sunmar-image>
-        <p class="eyebrow" slot="eyebrow">Море. Солнце. Никаких планов.</p>
+        <p slot="eyebrow">Море. Солнце. Никаких планов.</p>
         <h1 slot="title">Пора туда, где хорошо.</h1>
         <p slot="text">Оставьте будни дома. Впереди — тёплое море,<br>новые места и время только для себя.</p>
         <sunmar-button-group slot="actions">
@@ -16,11 +16,20 @@
     </sunmar-kv>
 </section>
 
-<section class="sunmarino" id="cards">
-    <h2 class="sunmar-h2 sunmar-text-balance">Карточки</h2>
-    <p class="sunmar-text sunmar-text-balance">Вертикальная, горизонтальная и обратная раскладки.</p>
+<sunmar-sticky-nav disable-relocate>
+    <a slot="nav-link" href="#cards">Карточки</a>
+    <a slot="nav-link" href="#accordions">Аккордеоны</a>
+    <a slot="nav-link" href="#tabs">Табы</a>
+    <a slot="nav-link" href="#destinations">Направления</a>
+</sunmar-sticky-nav>
 
-    <sunmar-cards-grid layout="1/2/3/1" style="margin-top: 24px;">
+<section class="sunmarino" id="cards">
+    <header class="sunmarino-section-header">
+        <h2 class="sunmarino-h2 sunmarino-text-balance">Карточки</h2>
+        <p class="sunmarino-text sunmarino-text-balance">Вертикальная, горизонтальная и обратная раскладки.</p>
+    </header>
+
+    <div class="sunmarino-grid sunmarino-cols-1 sunmarino-bp-768-cols-2 sunmarino-bp-1024-cols-3 sunmarino-bp-1280-cols-1 sunmarino-mt-24">
         <sunmar-card>
             <sunmar-image alt="Курортный отель с бассейном"
                           height="480"
@@ -55,36 +64,63 @@
             <p slot="text">Комфортный отель с развлечениями для всей семьи.</p>
             <sunmar-button slot="actions" type="primary"><a href="#tour">Выбрать тур</a></sunmar-button>
         </sunmar-card>
-    </sunmar-cards-grid>
+    </div>
 </section>
 
 <section class="sunmarino" id="accordions">
-    <h2 class="sunmar-h2 sunmar-text-balance">Аккордеоны</h2>
-    <p class="sunmar-text sunmar-text-balance">FAQ в режиме, где одновременно открыт только один пункт.</p>
+    <header class="sunmarino-section-header">
+        <h2 class="sunmarino-h2 sunmarino-text-balance">Аккордеоны</h2>
+        <p class="sunmarino-text sunmarino-text-balance">FAQ в режиме, где одновременно открыт только один пункт.</p>
+    </header>
 
-    <sunmar-accordion faq mode="single" style="display: block; margin-top: 24px;">
+    <sunmar-accordion faq mode="single" class="sunmarino-grid sunmarino-cols-1 sunmarino-bp-768-cols-2 sunmarino-bp-1024-cols-3 sunmarino-bp-1280-cols-1 sunmarino-mt-24">
         <sunmar-accordion-item open>
-            <span slot="header">Что входит в стоимость тура?</span>
-            <p>Перелёт, проживание, трансфер и медицинская страховка.</p>
+            <h5 slot="header">Что входит в стоимость тура?</h5>
+            <p class="sunmarino-text">Перелёт, проживание, трансфер и медицинская страховка.</p>
         </sunmar-accordion-item>
         <sunmar-accordion-item>
-            <span slot="header">Можно ли изменить даты?</span>
-            <p>Условия изменения зависят от выбранного тарифа и партнёров тура.</p>
+            <h5 slot="header">Можно ли изменить даты?</h5>
+            <p class="sunmarino-text">Условия изменения зависят от выбранного тарифа и партнёров тура.</p>
         </sunmar-accordion-item>
         <sunmar-accordion-item>
-            <span slot="header">Когда приезжать в аэропорт?</span>
-            <p>Рекомендуем приехать не позднее чем за три часа до вылета.</p>
+            <h5 slot="header">Когда приезжать в аэропорт?</h5>
+            <p class="sunmarino-text">Рекомендуем приехать не позднее чем за три часа до вылета.</p>
         </sunmar-accordion-item>
         <sunmar-accordion-item disabled>
-            <span slot="header">Недоступный вопрос</span>
-            <p>Этот пункт добавлен для проверки заблокированного состояния.</p>
+            <h5 slot="header">Недоступный вопрос</h5>
+            <p class="sunmarino-text">Этот пункт добавлен для проверки заблокированного состояния.</p>
         </sunmar-accordion-item>
     </sunmar-accordion>
 </section>
 
-<section class="sunmarino">
-    <h2 class="sunmar-h2 sunmar-text-balance">Направления для следующего путешествия</h2>
-    <p class="sunmar-text sunmar-text-balance">Выберите отдых у моря, в уютном курорте или среди гор.</p>
+<section class="sunmarino" id="tabs">
+    <header class="sunmarino-section-header">
+        <h2 class="sunmarino-h2 sunmarino-text-balance">Табы</h2>
+        <p class="sunmarino-text sunmarino-text-balance">Выберите направление отдыха.</p>
+    </header>
+
+    <sunmar-tabs aria-label="Направления отдыха" value="turkey sunmarino-mt-24">
+        <sunmar-tab value="turkey"><button type="button">Турция</button></sunmar-tab>
+        <sunmar-tab value="egypt"><button type="button">Египет</button></sunmar-tab>
+        <sunmar-tab value="uae"><button type="button">ОАЭ</button></sunmar-tab>
+
+        <sunmar-tab-content value="turkey">
+            <p class="sunmarino-text">Пляжи Средиземного моря и курортные отели для всей семьи.</p>
+        </sunmar-tab-content>
+        <sunmar-tab-content value="egypt">
+            <p class="sunmarino-text">Красное море, коралловые рифы и отдых на солнечном побережье.</p>
+        </sunmar-tab-content>
+        <sunmar-tab-content value="uae">
+            <p class="sunmarino-text">Современные города, песчаные пляжи и путешествия по пустыне.</p>
+        </sunmar-tab-content>
+    </sunmar-tabs>
+</section>
+
+<section class="sunmarino" id="destinations">
+    <header class="sunmarino-section-header">
+        <h2 class="sunmarino-h2 sunmarino-text-balance">Направления для следующего путешествия</h2>
+        <p class="sunmarino-text sunmarino-text-balance">Выберите отдых у моря, в уютном курорте или среди гор.</p>
+    </header>
 
     <sunmar-slider aria-label="Направления отдыха"
                    gap="24"

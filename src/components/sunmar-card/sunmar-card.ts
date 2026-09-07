@@ -1,5 +1,5 @@
 import { LitElement, css, html, unsafeCSS } from 'lit';
-import { state } from 'lit/decorators.js';
+import { queryAssignedElements, state } from 'lit/decorators.js';
 import { componentBaseStyles } from '../../styles/component-base';
 import styles from './sunmar-card.scss?inline';
 
@@ -11,13 +11,19 @@ export class SunmarCard extends LitElement {
   @state()
   private hasActions = false;
 
+  @queryAssignedElements({ slot: 'actions', flatten: true })
+  private actionElements!: Element[];
+
   private readonly syncActions = (): void => {
-    const slot = this.renderRoot.querySelector<HTMLSlotElement>('slot[name="actions"]');
-    this.hasActions = (slot?.assignedElements({ flatten: true }).length ?? 0) > 0;
+    this.hasActions = this.actionElements.length > 0;
   };
 
-  protected firstUpdated(): void {
-    this.syncActions();
+  protected willUpdate(): void {
+    if (!this.hasUpdated) {
+      this.hasActions = Array.from(this.children).some(
+        (child) => child.getAttribute('slot') === 'actions',
+      );
+    }
   }
 
   protected render() {

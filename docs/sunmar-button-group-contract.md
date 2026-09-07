@@ -23,17 +23,17 @@ Default slot принимает кнопки. Пустая группа не с�
 
 Host: `inline-flex`, `align-items: center`, `flex-wrap: wrap`.
 
-- `--sunmar-button-group-direction`: `row` (по умолчанию) или `column`.
-- `--sunmar-button-group-gap`: расстояние, по умолчанию `var(--sunmar-space-s)`.
+- `--sunmarino-button-group-direction`: `row` (по умолчанию) или `column`.
+- `--sunmarino-button-group-gap`: расстояние, по умолчанию `var(--sunmarino-space-s)`.
 
 ```css
 sunmar-button-group {
-  --sunmar-button-group-direction: column;
+  --sunmarino-button-group-direction: column;
 }
 
 @media (min-width: 768px) {
   sunmar-button-group {
-    --sunmar-button-group-direction: row;
+    --sunmarino-button-group-direction: row;
   }
 }
 ```

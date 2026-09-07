@@ -49,9 +49,9 @@ export const InheritedSettings: Story = {
 export const ResponsiveDirection: Story = {
   render: () => html`
     <style>
-      .responsive-button-group { --sunmar-button-group-direction: column; }
+      .responsive-button-group { --sunmarino-button-group-direction: column; }
       @media (min-width: 768px) {
-        .responsive-button-group { --sunmar-button-group-direction: row; }
+        .responsive-button-group { --sunmarino-button-group-direction: row; }
       }
     </style>
     <sunmar-button-group class="responsive-button-group" type="secondary">

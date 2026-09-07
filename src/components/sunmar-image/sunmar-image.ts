@@ -1,4 +1,5 @@
 import { LitElement, css, html, nothing, unsafeCSS } from 'lit';
+import { property } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { componentBaseStyles } from '../../styles/component-base';
 import styles from './sunmar-image.scss?inline';
@@ -21,28 +22,32 @@ const normalizeLoading = (value: unknown): SunmarImageLoading | undefined =>
   value === 'eager' || value === 'lazy' ? value : undefined;
 
 export class SunmarImage extends LitElement {
-  static properties = {
-    src: { type: String },
-    srcset: { type: String },
-    sizes: { type: String },
-    media: { type: String },
-    alt: { type: String },
-    width: { type: Number },
-    height: { type: Number },
-    loading: { type: String }
-  };
-
   static styles = [componentBaseStyles, css`
     ${unsafeCSS(styles)}
   `];
 
+  @property({ type: String })
   src = '';
+
+  @property({ type: String })
   srcset = '';
+
+  @property({ type: String })
   sizes = '';
+
+  @property({ type: String })
   media = DEFAULT_MEDIA;
+
+  @property({ type: String })
   alt = '';
+
+  @property({ type: Number })
   width?: number;
+
+  @property({ type: Number })
   height?: number;
+
+  @property({ type: String })
   loading?: SunmarImageLoading;
 
   protected render() {

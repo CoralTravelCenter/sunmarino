@@ -24,7 +24,7 @@ function syncBackground(stack: ModalStack): void {
   for (const [element, inert] of stack.inert) element.inert = inert;
   stack.inert.clear();
   stack.items.forEach((item, index) => {
-    item.style.setProperty('--sunmar-modal-stack-index', String(index));
+    item.style.setProperty('--sunmarino-modal-stack-index', String(index));
   });
   let branch: Element | undefined = stack.items[stack.items.length - 1];
   while (branch) {
@@ -52,7 +52,7 @@ export function removeModal(modal: HTMLElement): boolean {
   const stack = stackFor(modal.ownerDocument);
   const wasTop = topModal(modal.ownerDocument) === modal;
   stack.items = stack.items.filter((item) => item !== modal);
-  modal.style.removeProperty('--sunmar-modal-stack-index');
+  modal.style.removeProperty('--sunmarino-modal-stack-index');
   syncBackground(stack);
   if (!stack.items.length) stack.observer?.disconnect();
   return wasTop;

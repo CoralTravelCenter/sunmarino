@@ -38,7 +38,7 @@ ID ищется в ownerDocument. Раздел может быть любым HT
 
 ## Оформление и доступность
 
-Part: `root`. Публичные CSS-переменные: `--sunmar-sticky-nav-z-index`, `--sunmar-sticky-nav-bg`, `--sunmar-sticky-nav-border`, `--sunmar-sticky-nav-gap`, `--sunmar-sticky-nav-top-offset`. При заданном topOffset последняя переменная управляется свойством.
+Part: `root`. Публичные CSS-переменные: `--sunmarino-sticky-nav-z-index`, `--sunmarino-sticky-nav-bg`, `--sunmarino-sticky-nav-border`, `--sunmarino-sticky-nav-gap`, `--sunmarino-sticky-nav-top-offset`. При заданном topOffset последняя переменная управляется свойством.
 
 CSS-offset: 81px до 768px, 65px от 768px, 16px от 1024px. Media queries используют общую карту. Фон, интервалы, размер шрифта и скругление контейнера берутся из системных токенов. Геометрия pill-ссылок и переходы сохранены. !important у slotted-ссылок сохраняет оформление навигации при подключении к странице со своими стилями ссылок.
 

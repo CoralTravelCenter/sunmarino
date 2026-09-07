@@ -1,34 +1,72 @@
+@use './mixins' as mixins;
+
 :where(.sunmarino) {
-  padding-block: 20px;
-  padding-inline: 16px;
+  font-family: var(--sunmarino-font-family);
+  color: var(--sunmarino-color-text-dark);
+  padding-block: var(--sunmarino-section-padding-block, var(--sunmarino-space-m));
+  padding-inline: var(--sunmarino-section-padding-inline, var(--sunmarino-space-n));
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: var(--sunmarino-section-gap, var(--sunmarino-space-l));
 
-  @media (min-width: 768px) {
-    padding-block: 40px;
+  @include mixins.media-min(bp-768) {
+    padding-block: var(--sunmarino-section-padding-block, var(--sunmarino-space-2xl));
   }
 
-  @media (min-width: 993px) {
-    padding-inline: 0;
+  // Граница внешней сетки принимающего сайта, отдельно от сетки компонентов.
+  @include mixins.media-min(993px) {
+    padding-inline: var(--sunmarino-section-padding-inline, 0px);
   }
 }
 
-:where(.sunmarino.kv) {
+:where(.sunmarino, .sunmarino-container, .sunmarino *),
+:where(.sunmarino, .sunmarino-container, .sunmarino *)::before,
+:where(.sunmarino, .sunmarino-container, .sunmarino *)::after {
+  box-sizing: border-box;
+}
+
+:where(.sunmarino.sunmarino-kv) {
   padding-inline: 0;
   padding-top: 0;
 
-  @media (min-width: 768px) {
-    padding-top: 16px;
-    padding-inline: 16px;
+  @include mixins.media-min(bp-768) {
+    padding-top: var(--sunmarino-space-n);
+    padding-inline: var(--sunmarino-space-n);
   }
 
-  @media (min-width: 992px) {
+  @include mixins.media-min(992px) {
     padding-inline: 0;
   }
 }
 
-.row-container.layout-container-limit.center:has(sunmar-kv[full-width]) {
+:where(.sunmarino-container) {
+  width: 100%;
+  max-width: var(--sunmarino-container-max-width, var(--sunmarino-grid-desktop-l-content));
+  margin-inline: auto;
+}
+
+:where(.sunmarino-container:not(.sunmarino)) {
+  padding-inline: var(--sunmarino-container-padding-inline, 0px);
+}
+
+:where(.sunmarino-section-header, .sunmarino-stack) {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sunmarino-space-s);
+}
+
+:where(.sunmarino-cluster) {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sunmarino-space-s);
+}
+
+:where(.sunmarino-w-full) { width: 100%; }
+:where(.sunmarino-min-w-0) { min-width: 0; }
+
+// Адаптер существующей обёртки сайта: имена внешних классов менять нельзя.
+.row-container.layout-container-limit.center:has(.sunmarino sunmar-kv[full-width]) {
   padding-inline: 0;
   overflow: visible;
 }

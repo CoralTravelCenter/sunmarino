@@ -34,7 +34,7 @@
 
 ## CSS-контракт
 
-Изображение расположено абсолютно на всю область баннера. Для `sunmar-image` передаётся `--sunmar-image-height: 100%`, чтобы внутренние picture и img заполняли высоту. Позиционирование изображения настраивается через `--sunmar-image-object-position`.
+Изображение расположено абсолютно на всю область баннера. Для `sunmar-image` передаётся `--sunmarino-image-height: 100%`, чтобы внутренние picture и img заполняли высоту. Позиционирование изображения настраивается через `--sunmarino-image-object-position`.
 
 Компонент адаптируется к ширине окна через media queries. `aspect-ratio` задаёт предпочтительную пропорцию баннера; длинный контент может увеличить его высоту.
 
@@ -52,7 +52,7 @@ Actions получает отступ сверху 32px, сохраняя соб
 
 Публичные parts: `root`, `media`, `picture`, `content`, `content-inner`, `eyebrow`, `title`, `text`. Part `actions` отсутствует.
 
-CSS-переменные: `--sunmar-kv-content-color`, `--sunmar-kv-content-max-width`, `--sunmar-kv-eyebrow-color`, `--sunmar-kv-title-color`, `--sunmar-kv-text-color`. Цвет по умолчанию — системный светлый текст; максимальная ширина контента — 100%. Текущие общие типографические токены с двойными дефисами сохранены, их миграция в этот этап не входит.
+CSS-переменные: `--sunmarino-kv-content-color`, `--sunmarino-kv-content-max-width`, `--sunmarino-kv-eyebrow-color`, `--sunmarino-kv-title-color`, `--sunmarino-kv-text-color`. Цвет по умолчанию — системный светлый текст; максимальная ширина контента — 100%. Текущие общие типографические токены с двойными дефисами сохранены, их миграция в этот этап не входит.
 
 `:host` отвечает за участие custom element во внешнем layout и наследуемые значения. `.root` отвечает за внутреннюю геометрию, clipping, aspect ratio и визуальную поверхность баннера. `full-width` используется глобальным layout-правилом и не смешивает стили внешнего контейнера с Shadow DOM компонента.
 

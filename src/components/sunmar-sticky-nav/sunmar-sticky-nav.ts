@@ -1,5 +1,5 @@
 import { LitElement, css, html, unsafeCSS } from 'lit';
-import { property } from 'lit/decorators.js';
+import { property, query } from 'lit/decorators.js';
 import { componentBaseStyles } from '../../styles/component-base';
 import styles from './sunmar-sticky-nav.scss?inline';
 
@@ -21,6 +21,9 @@ export class SunmarStickyNav extends LitElement {
 
   @property({ type: String })
   teleport: string | null = null;
+
+  @query('slot[name="nav-link"]')
+  private navSlot!: HTMLSlotElement | null;
 
   private contentObserver?: MutationObserver;
   private observerGeneration = 0;
@@ -125,17 +128,17 @@ export class SunmarStickyNav extends LitElement {
   private syncStickyOffset(): void {
     if (typeof this.topOffset === 'number' && Number.isFinite(this.topOffset)) {
       this.style.setProperty(
-        '--sunmar-sticky-nav-top-offset',
+        '--sunmarino-sticky-nav-top-offset',
         `${Math.max(0, this.topOffset)}px`
       );
       return;
     }
 
-    this.style.removeProperty('--sunmar-sticky-nav-top-offset');
+    this.style.removeProperty('--sunmarino-sticky-nav-top-offset');
   }
 
   private collectNavLinks(slot?: HTMLSlotElement): HTMLAnchorElement[] {
-    const navSlot = slot ?? this.renderRoot.querySelector<HTMLSlotElement>('slot[name="nav-link"]');
+    const navSlot = slot ?? this.navSlot;
     if (!navSlot) {
       return [];
     }

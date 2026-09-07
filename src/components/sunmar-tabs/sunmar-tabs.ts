@@ -12,6 +12,14 @@ export const SUNMAR_TABS_CHANGE_EVENT = 'sunmar-tabs-change';
 type TabElement = HTMLElement & { value?: string; forced?: boolean };
 type TabContentElement = HTMLElement & { value?: string };
 
+type TabCollection = {
+  tabs: TabElement[];
+  panels: TabContentElement[];
+  tabsByValue: Map<string, TabElement>;
+  panelsByValue: Map<string, TabContentElement>;
+  availableTabs: TabElement[];
+};
+
 export type SunmarTabsChangeDetail = {
   value: string;
   previousValue: string | null;
@@ -115,15 +123,24 @@ export class SunmarTabs extends LitElement {
 
   private readonly sync = (): void => {
     if (!this.isConnected || !this.hasUpdated) return;
+    const collection = this.collectTabs();
+    const activeValue = this.resolveActiveValue(collection);
+    if (collection.availableTabs.length) this.initialized = true;
+    if (activeValue !== this.value) this.value = activeValue;
+
     this.observer?.disconnect();
+    try {
+      this.restoreRemovedElements(collection);
+      this.distributeChildren();
+      this.applySelection(collection, activeValue);
+    } finally {
+      this.observeChildren();
+    }
+  };
+
+  private collectTabs(): TabCollection {
     const tabs = this.tabs;
     const panels = this.panels;
-    const managed = new Set<Element>([...tabs, ...panels]);
-    tabs.forEach((tab) => { const button = this.getButton(tab); if (button) managed.add(button); });
-    for (const element of this.ownedAttributes.keys()) {
-      if (!managed.has(element)) this.restoreAttributes(element);
-    }
-    this.distributeChildren();
     const panelsByValue = new Map<string, TabContentElement>();
     const tabsByValue = new Map<string, TabElement>();
 
@@ -141,23 +158,39 @@ export class SunmarTabs extends LitElement {
       }
     }
 
-    const isAvailable = (tab: TabElement): boolean =>
+    const availableTabs = tabs.filter((tab) =>
       tabsByValue.get(tab.value?.trim() ?? '') === tab
-      && !this.isDisabled(tab)
-      && panelsByValue.has(tab.value?.trim() ?? '');
+      && !this.getButton(tab)?.disabled
+      && panelsByValue.has(tab.value?.trim() ?? '')
+    );
+    return { tabs, panels, tabsByValue, panelsByValue, availableTabs };
+  }
+
+  private resolveActiveValue({ availableTabs }: TabCollection): string {
     const forcedValue = this.initialized
       ? ''
-      : tabs.find((tab) => tab.forced && isAvailable(tab))?.value?.trim() ?? '';
+      : availableTabs.find((tab) => tab.forced)?.value?.trim() ?? '';
     const requestedValue = this.value?.trim() ?? '';
-    const activeValue = forcedValue
-      || tabs.find((tab) => tab.value?.trim() === requestedValue && isAvailable(tab))?.value?.trim()
-      || tabs.find(isAvailable)?.value?.trim()
+    return forcedValue
+      || availableTabs.find((tab) => tab.value?.trim() === requestedValue)?.value?.trim()
+      || availableTabs[0]?.value?.trim()
       || '';
+  }
 
-    if (tabs.some(isAvailable)) this.initialized = true;
+  private restoreRemovedElements({ tabs, panels }: TabCollection): void {
+    const managed = new Set<Element>([...tabs, ...panels]);
+    for (const tab of tabs) {
+      const button = this.getButton(tab);
+      if (button) managed.add(button);
+    }
+    for (const element of this.ownedAttributes.keys()) {
+      if (!managed.has(element)) this.restoreAttributes(element);
+    }
+  }
 
-    if (activeValue !== this.value) this.value = activeValue;
-
+  // These elements belong to the consumer's light DOM, outside our Lit template.
+  private applySelection(collection: TabCollection, activeValue: string): void {
+    const { tabs, panels, tabsByValue, panelsByValue, availableTabs } = collection;
     panels.forEach((panel) => {
       const panelValue = panel.value?.trim() ?? '';
       const isPrimaryPanel = panelsByValue.get(panelValue) === panel;
@@ -171,7 +204,7 @@ export class SunmarTabs extends LitElement {
       const tabValue = tab.value?.trim() ?? '';
       const button = this.getButton(tab);
       const panel = panelsByValue.get(tabValue);
-      const available = isAvailable(tab);
+      const available = availableTabs.includes(tab);
       const selected = available && tabValue === activeValue;
       this.writeAttribute(tab, 'selected', selected ? '' : null);
       if (!button) return;
@@ -186,20 +219,19 @@ export class SunmarTabs extends LitElement {
         this.writeAttribute(panel, 'aria-labelledby', button.id);
       }
     });
-    this.observeChildren();
-  };
+  }
 
   private readonly onClick = (event: Event): void => {
     const tab = this.tabFromEvent(event);
     const button = tab ? this.getButton(tab) : null;
-    if (!tab || !button || !this.isAvailableTab(tab) || !event.composedPath().includes(button)) return;
+    if (!tab || !button || !this.collectTabs().availableTabs.includes(tab) || !event.composedPath().includes(button)) return;
     this.activate(tab.value?.trim() ?? '');
   };
 
   private readonly onKeyDown = (event: KeyboardEvent): void => {
     const tab = this.tabFromEvent(event);
     if (!tab || !event.composedPath().includes(this.getButton(tab)!)) return;
-    const tabs = this.tabs.filter((item) => this.isAvailableTab(item));
+    const tabs = this.collectTabs().availableTabs;
     const index = tabs.indexOf(tab);
     if (index < 0) return;
 
@@ -237,26 +269,8 @@ export class SunmarTabs extends LitElement {
     );
   }
 
-  private isDisabled(tab: TabElement): boolean {
-    return Boolean(this.getButton(tab)?.disabled);
-  }
-
   private canActivate(value: string): boolean {
-    const tab = this.tabs.find((item) =>
-      item.value?.trim() === value && this.getButton(item)
-    );
-    return Boolean(tab && this.isAvailableTab(tab));
-  }
-
-  private isAvailableTab(tab: TabElement): boolean {
-    const value = tab.value?.trim() ?? '';
-    if (!value || !this.getButton(tab) || this.isDisabled(tab)) return false;
-
-    const firstTab = this.tabs.find((item) =>
-      item.value?.trim() === value && this.getButton(item)
-    );
-    const firstPanel = this.panels.find((panel) => panel.value?.trim() === value);
-    return firstTab === tab && Boolean(firstPanel);
+    return this.collectTabs().availableTabs.some((tab) => tab.value?.trim() === value);
   }
 
   private getButton(tab: TabElement): HTMLButtonElement | null {

@@ -1,16 +1,16 @@
 @use '../../styles/mixins' as mixins;
 
 :host {
-  --sunmar-modal-z-index: 2147483000;
-  --sunmar-modal-overlay: color-mix(in srgb, var(--sunmar-color-base-icon) 60%, transparent);
-  --sunmar-modal-surface: var(--sunmar-color-base-light);
-  --sunmar-modal-border: var(--sunmar-color-btn-stroke-light);
-  --sunmar-modal-title: var(--sunmar-color-base-icon);
-  --sunmar-modal-text: var(--sunmar-color-text-dark);
+  --sunmarino-modal-z-index: 2147483000;
+  --sunmarino-modal-overlay: color-mix(in srgb, var(--sunmarino-color-base-icon) 60%, transparent);
+  --sunmarino-modal-surface: var(--sunmarino-color-base-light);
+  --sunmarino-modal-border: var(--sunmarino-color-btn-stroke-light);
+  --sunmarino-modal-title: var(--sunmarino-color-base-icon);
+  --sunmarino-modal-text: var(--sunmarino-color-text-dark);
 
   position: fixed;
   inset: 0;
-  z-index: calc(var(--sunmar-modal-z-index) + var(--sunmar-modal-stack-index, 0));
+  z-index: calc(var(--sunmarino-modal-z-index) + var(--sunmarino-modal-stack-index, 0));
   display: none;
   pointer-events: none;
   font-family: inherit;
@@ -24,68 +24,68 @@
 .overlay {
   position: absolute;
   inset: 0;
-  background: var(--sunmar-modal-overlay);
+  background: var(--sunmarino-modal-overlay);
   display: grid;
   place-items: center;
-  padding: var(--sunmar-padding-m);
+  padding: var(--sunmarino-padding-m);
 }
 
 .dialog {
   width: min(620px, 100%);
   max-height: min(90vh, 760px);
-  background: var(--sunmar-modal-surface);
-  border: 1px solid var(--sunmar-modal-border);
-  border-radius: var(--sunmar-radius-base);
+  background: var(--sunmarino-modal-surface);
+  border: 1px solid var(--sunmarino-modal-border);
+  border-radius: var(--sunmarino-radius-base);
   overflow: auto;
-  color: var(--sunmar-modal-text);
-  box-shadow: var(--sunmar-shadow-darker);
+  color: var(--sunmarino-modal-text);
+  box-shadow: var(--sunmarino-shadow-darker);
 }
 
 .header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--sunmar-space-s);
-  padding-block: var(--sunmar-padding-n);
-  padding-inline: var(--sunmar-padding-l);
-  border-bottom: 1px solid var(--sunmar-modal-border);
+  gap: var(--sunmarino-space-s);
+  padding-block: var(--sunmarino-padding-n);
+  padding-inline: var(--sunmarino-padding-l);
+  border-bottom: 1px solid var(--sunmarino-modal-border);
 }
 
 .title {
   margin: 0;
-  color: var(--sunmar-modal-title);
-  font-size: var(--sunmar-type-l-font-size);
-  line-height: var(--sunmar-type-l-line-height);
-  font-weight: var(--sunmar-heading-h5-font-weight);
+  color: var(--sunmarino-modal-title);
+  font-size: var(--sunmarino-type-l-font-size);
+  line-height: var(--sunmarino-type-l-line-height);
+  font-weight: var(--sunmarino-heading-h5-font-weight);
   @include mixins.text-balance;
 }
 
 .close {
   appearance: none;
-  border: 1px solid var(--sunmar-modal-border);
-  border-radius: var(--sunmar-radius-xs);
-  background: var(--sunmar-color-base-light-gray);
-  color: var(--sunmar-color-base-icon);
-  width: var(--sunmar-space-2xl);
-  height: var(--sunmar-space-2xl);
+  border: 1px solid var(--sunmarino-modal-border);
+  border-radius: var(--sunmarino-radius-xs);
+  background: var(--sunmarino-color-base-light-gray);
+  color: var(--sunmarino-color-base-icon);
+  width: var(--sunmarino-space-2xl);
+  height: var(--sunmarino-space-2xl);
   cursor: pointer;
 }
 
 .body {
-  padding-block: var(--sunmar-padding-m);
-  padding-inline: var(--sunmar-padding-l);
-  line-height: var(--sunmar-type-n-line-height);
+  padding-block: var(--sunmarino-padding-m);
+  padding-inline: var(--sunmarino-padding-l);
+  line-height: var(--sunmarino-type-n-line-height);
   @include mixins.text-balance;
 }
 
 .actions {
   display: flex;
   justify-content: flex-end;
-  gap: calc(var(--sunmar-space-xs) + var(--sunmar-space-3xs));
-  padding-top: var(--sunmar-padding-n);
-  padding-inline: var(--sunmar-padding-l);
-  padding-bottom: var(--sunmar-padding-m);
-  border-top: 1px solid var(--sunmar-modal-border);
+  gap: calc(var(--sunmarino-space-xs) + var(--sunmarino-space-3xs));
+  padding-top: var(--sunmarino-padding-n);
+  padding-inline: var(--sunmarino-padding-l);
+  padding-bottom: var(--sunmarino-padding-m);
+  border-top: 1px solid var(--sunmarino-modal-border);
 }
 
 .actions[hidden] {
@@ -94,15 +94,15 @@
 
 @include mixins.media-min(bp-768) {
   .title {
-    font-size: var(--sunmar-type-l-font-size);
+    font-size: var(--sunmarino-type-l-font-size);
   }
 
   .body {
-    font-size: var(--sunmar-type-n-font-size);
+    font-size: var(--sunmarino-type-n-font-size);
   }
 }
 
 .close:focus-visible {
-  outline: 2px solid var(--sunmar-color-brand-blue);
+  outline: 2px solid var(--sunmarino-color-brand-blue);
   outline-offset: 2px;
 }

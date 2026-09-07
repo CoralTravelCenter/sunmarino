@@ -37,7 +37,7 @@ Escape обрабатывает только верхнее окно. После
 
 ## CSS
 
-Parts: overlay, dialog, header, title, close, body, actions. Публичные переменные: `--sunmar-modal-z-index`, `--sunmar-modal-overlay`, `--sunmar-modal-surface`, `--sunmar-modal-border`, `--sunmar-modal-title`, `--sunmar-modal-text`. Переменная `--sunmar-modal-stack-index` служебная.
+Parts: overlay, dialog, header, title, close, body, actions. Публичные переменные: `--sunmarino-modal-z-index`, `--sunmarino-modal-overlay`, `--sunmarino-modal-surface`, `--sunmarino-modal-border`, `--sunmarino-modal-title`, `--sunmarino-modal-text`. Переменная `--sunmarino-modal-stack-index` служебная.
 
 Цвета, скругления, тень и типографика используют системные токены. При миграции внешний вид меняется: кнопка закрытия 40px, скругление 8px, заголовок 20px; применяются цвета и тень библиотеки. Геометрия диалога сохраняет ширину до 620px и высоту до min(90vh, 760px). Кнопка закрытия имеет focus-visible.
 

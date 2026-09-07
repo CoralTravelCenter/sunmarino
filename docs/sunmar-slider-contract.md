@@ -48,11 +48,11 @@ Parts: `viewport`, `container`, `controls`, `navigation`, `prev-button`, `next-b
 
 | CSS-переменная | Назначение |
 | --- | --- |
-| `--sunmar-slider-control-color` | Цвет управления |
-| `--sunmar-slider-navigation-background` | Фон стрелок |
-| `--sunmar-slider-navigation-outset` | Вынос стрелок от 1280px |
-| `--sunmar-slider-navigation-radius` | Скругление кнопок |
-| `--sunmar-slider-dot-color` | Цвет неактивных точек |
+| `--sunmarino-slider-control-color` | Цвет управления |
+| `--sunmarino-slider-navigation-background` | Фон стрелок |
+| `--sunmarino-slider-navigation-outset` | Вынос стрелок от 1280px |
+| `--sunmarino-slider-navigation-radius` | Скругление кнопок |
+| `--sunmarino-slider-dot-color` | Цвет неактивных точек |
 
 Fallback берётся из системных токенов. Ширина и отступ слайда передаются через внутренние переменные; для их настройки используйте атрибуты. Стрелки отображаются от 768px, пагинация доступна и на меньшей ширине. От 1280px нужно предусмотреть место для вынесенных стрелок.
 

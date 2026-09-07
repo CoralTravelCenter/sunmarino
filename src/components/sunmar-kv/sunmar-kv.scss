@@ -2,7 +2,7 @@
 
 :host {
   display: block;
-  color: var(--sunmar-kv-content-color, var(--sunmar-color-text-light));
+  color: var(--sunmarino-kv-content-color, var(--sunmarino-color-text-light));
 }
 
 :host([full-width]) {
@@ -49,7 +49,7 @@
   display: flex;
   align-items: stretch;
   min-height: 100%;
-  padding: 48px 32px;
+  padding: var(--sunmarino-padding-3xl) var(--sunmarino-padding-xl);
   color: inherit;
 }
 
@@ -68,7 +68,7 @@
 }
 
 ::slotted([slot='image']) {
-  --sunmar-image-height: 100%;
+  --sunmarino-image-height: 100%;
   display: block;
   width: 100%;
   height: 100%;
@@ -77,15 +77,15 @@
 
 ::slotted([slot='eyebrow']) {
   display: block;
-  margin: 0 0 16px 0;
-  color: var(--sunmar-kv-eyebrow-color, inherit);
+  margin: 0 0 var(--sunmarino-margin-n) 0;
+  color: var(--sunmarino-kv-eyebrow-color, inherit);
 }
 
 ::slotted([slot='title']) {
   display: block;
-  margin: 0 0 16px 0;
-  color: var(--sunmar-kv-title-color, inherit);
-  font-size: 40px;
+  margin: 0 0 var(--sunmarino-margin-n) 0;
+  color: var(--sunmarino-kv-title-color, inherit);
+  font-size: var(--sunmarino-heading-h2-font-size);
   font-weight: 400;
   line-height: 1.1;
 }
@@ -94,24 +94,24 @@
 ::slotted([slot='text']) {
   display: block;
   margin: 0;
-  color: var(--sunmar-kv-text-color, inherit);
-  font-size: 16px;
-  line-height: calc(var(--sunmar--text-line-height) / var(--sunmar--text-font-size));
+  color: var(--sunmarino-kv-text-color, inherit);
+  font-size: var(--sunmarino-text-font-size);
+  line-height: calc(var(--sunmarino-text-line-height) / var(--sunmarino-text-font-size));
 }
 
 ::slotted([slot='actions']) {
-  margin: 32px 0 0 0;
+  margin: var(--sunmarino-margin-xl) 0 0 0;
 }
 
 @include mixins.media-min(bp-768) {
   .root {
     aspect-ratio: 608 / 320;
-    border-radius: var(--sunmar-radius-base);
+    border-radius: var(--sunmarino-radius-base);
   }
 
 
   .content {
-    padding: 48px 40px;
+    padding: var(--sunmarino-padding-3xl) var(--sunmarino-padding-2xl);
     align-items: center;
   }
 }
@@ -122,7 +122,7 @@
   }
 
   .content {
-    padding: 48px;
+    padding: var(--sunmarino-padding-3xl);
   }
 }
 
@@ -132,7 +132,7 @@
   }
 
   .content {
-    padding: 48px 80px;
+    padding: var(--sunmarino-padding-3xl) 80px;
   }
 }
 
@@ -142,7 +142,7 @@
   }
 
   ::slotted([slot='title']) {
-    font-size: 56px;
+    font-size: var(--sunmarino-heading-kv-font-size);
     line-height: 1.1;
   }
 }

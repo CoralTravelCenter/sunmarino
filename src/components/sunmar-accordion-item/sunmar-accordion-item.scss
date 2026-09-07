@@ -2,25 +2,25 @@
 
 :host {
   display: block;
-  color: var(--sunmar-color-text-dark);
+  color: var(--sunmarino-color-text-dark);
 }
 
 .root {
   display: block;
-  background: var(--sunmar-color-base-light);
-  border: 1px solid var(--sunmar-color-btn-stroke-light);
-  border-radius: 12px;
-  box-shadow: var(--sunmar-shadow-main);
+  background: var(--sunmarino-color-base-light);
+  border: 1px solid var(--sunmarino-color-btn-stroke-light);
+  border-radius: var(--sunmarino-radius-s);
+  box-shadow: var(--sunmarino-shadow-main);
   overflow: clip;
 }
 
 .trigger {
   width: 100%;
   display: flex;
-  padding: 43px 20px;
+  padding: 43px var(--sunmarino-padding-m);
   justify-content: space-between;
   align-items: center;
-  gap: var(--sunmar-space-s);
+  gap: var(--sunmarino-space-s);
   border: 0;
   background: transparent;
   color: inherit;
@@ -42,35 +42,30 @@
 }
 
 .icon {
-  width: calc(var(--sunmar-icon-n) + var(--sunmar-space-s));
-  height: calc(var(--sunmar-icon-n) + var(--sunmar-space-s));
+  width: calc(var(--sunmarino-icon-n) + var(--sunmarino-space-s));
+  height: calc(var(--sunmarino-icon-n) + var(--sunmarino-space-s));
   display: inline-flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  color: var(--sunmar-color-base-icon);
+  color: var(--sunmarino-color-base-icon);
 }
 
-.icon::before {
-  content: '';
-  width: 12px;
-  height: 12px;
-  border-top: 3px solid currentColor;
-  border-right: 3px solid currentColor;
-  transform: rotate(-45deg);
+.icon svg {
+  display: block;
 }
 
 .panel {
   display: block;
-  padding: 0 var(--sunmar-padding-l) var(--sunmar-padding-l) var(--sunmar-padding-l);
+  padding: 0 var(--sunmarino-padding-l) var(--sunmarino-padding-l) var(--sunmarino-padding-l);
 }
 
 .content {
   font-family: inherit;
-  font-size: 16px;
-  line-height: 1.5;
+  font-size: var(--sunmarino-type-n-font-size);
+  line-height: calc(var(--sunmarino-type-n-line-height) / var(--sunmarino-type-n-font-size));
   font-weight: 400;
-  color: var(--sunmar-color-text-dark);
+  color: var(--sunmarino-color-text-dark);
 }
 
 ::slotted([slot='header']) {
@@ -78,16 +73,16 @@
   display: block;
   color: inherit;
   font-family: inherit;
-  font-size: var(--sunmar-heading-h5-font-size);
-  line-height: var(--sunmar-heading-h5-line-height);
-  font-weight: var(--sunmar-heading-h5-font-weight);
+  font-size: var(--sunmarino-heading-h5-font-size);
+  line-height: var(--sunmarino-heading-h5-line-height);
+  font-weight: var(--sunmarino-heading-h5-font-weight);
   letter-spacing: normal;
   margin: 0;
   @include mixins.text-balance;
 }
 
-.root[open] .icon::before {
-  transform: rotate(-135deg);
+.root[open] .icon svg {
+  transform: rotate(180deg);
 }
 
 :host([disabled]) .root {
@@ -99,24 +94,19 @@
 }
 
 .trigger:focus-visible {
-  outline: 2px solid var(--sunmar-color-brand-blue);
+  outline: 2px solid var(--sunmarino-color-brand-blue);
   outline-offset: -2px;
 }
 
 @include mixins.media-min(bp-768) {
   .trigger {
-    padding-block: var(--sunmar-padding-l);
-    padding-inline: var(--sunmar-padding-l);
-    column-gap: var(--sunmar-space-l);
+    padding-block: var(--sunmarino-padding-l);
+    padding-inline: var(--sunmarino-padding-l);
+    column-gap: var(--sunmarino-space-l);
   }
 
   .icon {
-    width: var(--sunmar-icon-xl);
-    height: var(--sunmar-icon-xl);
+    width: var(--sunmarino-icon-xl);
+    height: var(--sunmarino-icon-xl);
   }
-
-  //.content {
-  //  padding-inline: var(--sunmar-padding-l);
-  //  padding-bottom: var(--sunmar-padding-l);
-  //}
 }

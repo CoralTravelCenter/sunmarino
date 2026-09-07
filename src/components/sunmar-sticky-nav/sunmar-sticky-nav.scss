@@ -1,16 +1,16 @@
 @use '../../styles/mixins' as mixins;
 
 :host {
-  --sunmar-sticky-nav-z-index: 10;
-  --sunmar-sticky-nav-bg: var(--sunmar-color-btn-bg-light-hover);
-  --sunmar-sticky-nav-border: none;
-  --sunmar-sticky-nav-gap: var(--sunmar-space-xs);
-  --sunmar-sticky-nav-top-offset: 81px;
+  --sunmarino-sticky-nav-z-index: 10;
+  --sunmarino-sticky-nav-bg: var(--sunmarino-color-btn-bg-light-hover);
+  --sunmarino-sticky-nav-border: none;
+  --sunmarino-sticky-nav-gap: var(--sunmarino-space-xs);
+  --sunmarino-sticky-nav-top-offset: 81px;
 
   display: block;
   position: sticky;
-  top: var(--sunmar-sticky-nav-top-offset);
-  z-index: var(--sunmar-sticky-nav-z-index);
+  top: var(--sunmarino-sticky-nav-top-offset);
+  z-index: var(--sunmarino-sticky-nav-z-index);
   width: 100%;
   box-sizing: border-box;
 }
@@ -21,22 +21,22 @@
   margin: 0 auto;
   flex-wrap: wrap;
   justify-content: center;
-  gap: var(--sunmar-sticky-nav-gap);
-  padding: var(--sunmar-padding-xs);
-  border: var(--sunmar-sticky-nav-border);
-  border-radius: var(--sunmar-radius-l);
-  background: var(--sunmar-sticky-nav-bg);
+  gap: var(--sunmarino-sticky-nav-gap);
+  padding: var(--sunmarino-padding-xs);
+  border: var(--sunmarino-sticky-nav-border);
+  border-radius: var(--sunmarino-radius-l);
+  background: var(--sunmarino-sticky-nav-bg);
 }
 
 // These overrides keep navigation links consistent against host-page link styles in light DOM.
 ::slotted([slot="nav-link"]) {
   flex: 1 1 auto;
-  font-size: var(--sunmar-type-dropdown-font-size);
-  padding: var(--sunmar-padding-xs) calc(var(--sunmar-padding-n) - 1px);
-  border: 1px solid var(--sunmar-color-btn-stroke-light);
+  font-size: var(--sunmarino-type-dropdown-font-size);
+  padding: var(--sunmarino-padding-xs) calc(var(--sunmarino-padding-n) - 1px);
+  border: 1px solid var(--sunmarino-color-btn-stroke-light);
   border-radius: 100px;
   background: transparent !important;
-  color: var(--sunmar-color-btn-text-dark) !important;
+  color: var(--sunmarino-color-btn-text-dark) !important;
   cursor: pointer;
   text-decoration: none !important;
   text-align: center;
@@ -47,45 +47,45 @@
 }
 
 ::slotted([slot="nav-link"]:not(.active):active) {
-  background-color: var(--sunmar-color-btn-bg-light-pressed) !important;
+  background-color: var(--sunmarino-color-btn-bg-light-pressed) !important;
 }
 
 ::slotted([slot="nav-link"]:focus-visible) {
-  outline: 2px solid var(--sunmar-color-brand-blue) !important;
+  outline: 2px solid var(--sunmarino-color-brand-blue) !important;
   outline-offset: 2px !important;
 }
 
 ::slotted([slot="nav-link"].active) {
-  background-color: var(--sunmar-color-btn-bg-secondary-default) !important;
-  border-color: var(--sunmar-color-btn-bg-secondary-default);
-  color: var(--sunmar-color-btn-text-light) !important;
+  background-color: var(--sunmarino-color-btn-bg-secondary-default) !important;
+  border-color: var(--sunmarino-color-btn-bg-secondary-default);
+  color: var(--sunmarino-color-btn-text-light) !important;
 }
 
 ::slotted([slot="nav-link"].active:active) {
-  background-color: var(--sunmar-color-btn-bg-secondary-pressed) !important;
-  border-color: var(--sunmar-color-btn-bg-secondary-pressed);
+  background-color: var(--sunmarino-color-btn-bg-secondary-pressed) !important;
+  border-color: var(--sunmarino-color-btn-bg-secondary-pressed);
 }
 
 @media (hover: hover) and (pointer: fine) {
   ::slotted([slot="nav-link"]:not(.active):hover) {
-    background-color: var(--sunmar-color-btn-bg-light-default) !important;
+    background-color: var(--sunmarino-color-btn-bg-light-default) !important;
   }
 
   ::slotted([slot="nav-link"].active:hover) {
-    background-color: var(--sunmar-color-btn-bg-secondary-hover) !important;
-    border-color: var(--sunmar-color-btn-bg-secondary-hover);
+    background-color: var(--sunmarino-color-btn-bg-secondary-hover) !important;
+    border-color: var(--sunmarino-color-btn-bg-secondary-hover);
   }
 }
 
 @include mixins.media-min(bp-768) {
   :host {
-    --sunmar-sticky-nav-top-offset: 65px;
+    --sunmarino-sticky-nav-top-offset: 65px;
   }
 }
 
 @include mixins.media-min(bp-1024) {
   :host {
-    --sunmar-sticky-nav-top-offset: 16px;
+    --sunmarino-sticky-nav-top-offset: var(--sunmarino-space-n);
   }
 
   .root {
@@ -95,7 +95,7 @@
   ::slotted([slot="nav-link"]) {
     flex: 1;
     border: none;
-    font-size: var(--sunmar-type-n-font-size);
-    padding: var(--sunmar-padding-n) calc(var(--sunmar-padding-xl) - 2px);
+    font-size: var(--sunmarino-type-n-font-size);
+    padding: var(--sunmarino-padding-n) calc(var(--sunmarino-padding-xl) - 2px);
   }
 }

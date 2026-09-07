@@ -6,3 +6,6 @@ export const normalizeButtonType = (value: unknown): SunmarButtonType =>
 
 export const normalizeButtonSize = (value: unknown): SunmarButtonSize =>
   value === 'small' || value === 'large' ? value : 'medium';
+
+// Internal notification; it does not bubble outside the group.
+export const BUTTON_GROUP_SETTINGS_CHANGE_EVENT = 'sunmar-button-group-settings-change';

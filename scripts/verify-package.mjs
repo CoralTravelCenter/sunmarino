@@ -9,7 +9,7 @@ if (!bundle.trim()) {
   throw new Error('IIFE bundle is empty.');
 }
 
-if (!bundle.includes('--sunmar-') || !bundle.includes('document.createElement(`style`)')) {
+if (!bundle.includes('--sunmarino-') || !bundle.includes('document.createElement(`style`)')) {
   throw new Error('IIFE bundle does not contain the runtime style injection.');
 }
 

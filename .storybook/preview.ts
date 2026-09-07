@@ -38,7 +38,7 @@ const ensureStorybookFonts = (): void => {
     html,
     body,
     #storybook-root {
-      font-family: var(--sunmar-font-family);
+      font-family: var(--sunmarino-font-family);
     }
   `;
 

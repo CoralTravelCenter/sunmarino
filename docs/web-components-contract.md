@@ -142,23 +142,23 @@ Global tokens
 
 ```scss
 :root {
-  --sunmar-color-surface-primary: #ffffff;
+  --sunmarino-color-surface-primary: #ffffff;
 }
 
 :host {
-  --sunmar-modal-surface: var(--sunmar-color-surface-primary);
+  --sunmarino-modal-surface: var(--sunmarino-color-surface-primary);
 }
 
 .dialog {
-  background: var(--sunmar-modal-surface);
+  background: var(--sunmarino-modal-surface);
 }
 ```
 
 Правила:
 
-- все публичные токены имеют namespace `--sunmar-*`;
+- все публичные токены имеют namespace `--sunmarino-*`;
 - legacy-токены вроде `--Base-color_*` запрещены;
-- двойные разделители вроде `--sunmar--text-*` запрещены;
+- двойные разделители вроде `--sunmarino-text-*` запрещены;
 - цвета, типографика, интервалы, radius и shadows берутся из токенов;
 - hardcoded-значения допустимы для технической геометрии, например `1px` border, visually-hidden и координат SVG;
 - component tokens получают fallback из системных токенов;

@@ -122,3 +122,34 @@ $sunmar-breakpoints: (
   left: 50%;
   transform: translate(-50%, -50%);
 }
+
+// Применяется внутри селектора: автоматическая сетка и классы числа колонок.
+@mixin grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--sunmarino-grid-min-item-width, 240px)), 1fr));
+  gap: var(--sunmarino-grid-gap, var(--sunmarino-space-l, 24px));
+
+  > * {
+    min-width: 0;
+  }
+
+  @for $columns from 1 through 12 {
+    &:where(.sunmarino-cols-#{$columns}) {
+      grid-template-columns: repeat(#{$columns}, minmax(0, 1fr));
+    }
+  }
+
+  @each $breakpoint, $width in $sunmar-breakpoints {
+    @include media-min($breakpoint) {
+      @for $columns from 1 through 12 {
+        &:where(.sunmarino-#{$breakpoint}-cols-#{$columns}) {
+          grid-template-columns: repeat(#{$columns}, minmax(0, 1fr));
+        }
+      }
+    }
+  }
+
+  @include media-min(bp-1280) {
+    gap: var(--sunmarino-grid-gap-1280, var(--sunmarino-space-xl, 32px));
+  }
+}

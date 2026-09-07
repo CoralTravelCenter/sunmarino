@@ -1,6 +1,9 @@
 @use './tokens/foundation';
 @use './tokens/colors';
 @use './tokens/typography';
-@use './spacing-utilities';
 @use './typography-utilities';
 @use './layout-utilities';
+@use './grid-utilities';
+@use './content-utilities';
+// Утилиты идут последними, чтобы переопределять базовые отступы.
+@use './spacing-utilities';

@@ -1,6 +1,8 @@
+@use '../../styles/mixins' as mixins;
+
 :host {
-  --sunmar-card-background: var(--Base-color_Base_Light_Gray, #f5f5f8);
-  border-radius: var(--radius-radius_LG, 16px);
+  --sunmarino-card-background: var(--Base-color_Base_Light_Gray, var(--sunmarino-color-btn-bg-light-hover));
+  border-radius: var(--radius-radius_LG, var(--sunmarino-radius-base));
   overflow: clip;
   display: block;
   container-type: inline-size;
@@ -22,19 +24,19 @@
 .content {
   display: flex;
   flex-direction: column;
-  padding: var(--padding-padding_LG, 24px);
-  background: var(--sunmar-card-background);
+  padding: var(--padding-padding_LG, var(--sunmarino-padding-l));
+  background: var(--sunmarino-card-background);
 }
 
 .title {
-  margin-bottom: 12px;
-  font-size: 24px;
+  margin-bottom: var(--sunmarino-margin-s);
+  font-size: var(--sunmarino-heading-h5-font-size);
   line-height: 1.2;
 }
 
 .text {
-  font-size: 16px;
-  line-height: 1.5;
+  font-size: var(--sunmarino-type-n-font-size);
+  line-height: calc(var(--sunmarino-type-n-line-height) / var(--sunmarino-type-n-font-size));
 }
 
 ::slotted([slot='title']),
@@ -46,16 +48,16 @@
 
 .actions {
   display: grid;
-  gap: 12px;
+  gap: var(--sunmarino-space-s);
   margin-top: auto;
-  padding-top: 24px;
+  padding-top: var(--sunmarino-padding-l);
 }
 
 .actions[hidden] {
   display: none;
 }
 
-@container (min-width: 1024px) {
+@include mixins.container-min(bp-1024) {
   .actions {
     width: fit-content;
   }
@@ -80,12 +82,12 @@
   }
 
   .actions {
-    margin-top: 24px;
+    margin-top: var(--sunmarino-margin-l);
     padding-top: 0;
   }
 
   ::slotted([slot='media']) {
-    --sunmar-image-height: 100%;
+    --sunmarino-image-height: 100%;
 
     height: 100%;
     object-fit: cover;

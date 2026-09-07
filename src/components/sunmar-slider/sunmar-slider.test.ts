@@ -111,7 +111,7 @@ describe('SunmarSlider', () => {
     await settle(slider);
     expect(carousel.api.reInit).toHaveBeenCalledTimes(1);
     expect(carousel.api.reInit).toHaveBeenCalledWith(expect.objectContaining({ align: 'center' }));
-    expect(slider.shadowRoot!.querySelector<HTMLElement>('.container')!.style.getPropertyValue('--sunmar-slider-gap')).toBe('32px');
+    expect(slider.shadowRoot!.querySelector<HTMLElement>('.container')!.style.getPropertyValue('--sunmarino-slider-gap')).toBe('32px');
     vi.mocked(carousel.api.reInit).mockClear();
     vi.mocked(carousel.api.selectedScrollSnap).mockReturnValue(2);
     carousel.emit('select');
@@ -138,10 +138,10 @@ describe('SunmarSlider', () => {
     const slider = await mount('gap="-1" slides-per-view="2.5" slides-per-view-768="NaN" slides-to-scroll="2.8" align="invalid"');
     expect(factory.mock.calls[0][1]).toMatchObject({ slidesToScroll: 2, align: 'start' });
     const style = slider.shadowRoot!.querySelector<HTMLElement>('.container')!.style;
-    expect(style.getPropertyValue('--sunmar-slider-gap')).toBe('16px');
-    expect(style.getPropertyValue('--sunmar-slider-slides')).toBe('2.5');
-    expect(style.getPropertyValue('--sunmar-slider-grid-columns')).toBe('2');
-    expect(style.getPropertyValue('--sunmar-slider-slides-1024')).toBe('1');
+    expect(style.getPropertyValue('--sunmarino-slider-gap')).toBe('16px');
+    expect(style.getPropertyValue('--sunmarino-slider-slides')).toBe('2.5');
+    expect(style.getPropertyValue('--sunmarino-slider-grid-columns')).toBe('2');
+    expect(style.getPropertyValue('--sunmarino-slider-slides-1024')).toBe('1');
     slider.slidesToScroll = 'auto';
     await settle(slider);
     expect(carousel.api.reInit).toHaveBeenLastCalledWith(expect.objectContaining({ slidesToScroll: 'auto' }));

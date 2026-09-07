@@ -1,8 +1,8 @@
 import { afterEach, describe, expect, it } from 'vitest';
 import { registerSunmarComponents } from '../../registry/register-components';
-import type { SunmarButton } from '../sunmar-button/sunmar-button';
+import { SunmarButton } from '../sunmar-button/sunmar-button';
 import type { SunmarButtonSize } from '../sunmar-button/button-settings';
-import type { SunmarButtonGroup } from './sunmar-button-group';
+import { SunmarButtonGroup } from './sunmar-button-group';
 
 registerSunmarComponents();
 
@@ -28,6 +28,39 @@ function expectResolved(button: SunmarButton, type: string, size: string): void 
 
 describe('SunmarButtonGroup settings', () => {
   afterEach(() => document.body.replaceChildren());
+
+  it.each([SunmarButton, SunmarButtonGroup])('preserves properties assigned before registration of %s', async (Component) => {
+    const tag = `test-late-${Component.name.toLowerCase()}`;
+    const element = document.createElement(tag) as SunmarButton | SunmarButtonGroup;
+    element.type = 'secondary';
+    element.size = 'large';
+    document.body.append(element);
+    const Base: CustomElementConstructor = Component;
+    customElements.define(tag, class extends Base {});
+    await element.updateComplete;
+    expect(element.type).toBe('secondary');
+    expect(element.size).toBe('large');
+    expect(element.getAttribute('type')).toBe('secondary');
+    expect(element.getAttribute('size')).toBe('large');
+    element.removeAttribute('type');
+    element.removeAttribute('size');
+    await element.updateComplete;
+    expect(element.type).toBe('primary');
+    expect(element.size).toBe('medium');
+  });
+
+  it('keeps resolved getters and normalization synchronous', () => {
+    const { group, button } = mount();
+    group.type = 'secondary';
+    group.size = 'large';
+    expect(button.type).toBe('secondary');
+    expect(button.size).toBe('large');
+    button.setAttribute('type', 'invalid');
+    expect(button.type).toBe('primary');
+    expect(button.getAttribute('type')).toBe('primary');
+    button.removeAttribute('type');
+    expect(button.type).toBe('secondary');
+  });
 
   it('uses defaults without writing explicit settings onto the group or button', async () => {
     const { group, button } = mount();

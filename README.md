@@ -34,7 +34,7 @@
 
 ## Базовые SCSS mixins
 
-- Рекомендуемый подход: токены в компонентах использовать напрямую через `var(--sunmar-...)`
+- Рекомендуемый подход: токены в компонентах использовать напрямую через `var(--sunmarino-...)`
 - Mixins оставляем только для query-синтаксиса и `text-balance`
 - Исключение: брейкпоинты дублируются в `src/styles/_mixins.scss` как SCSS-карта, потому что CSS custom properties нельзя использовать как источник для `@media/@container`
 - `container-min(...)`
@@ -50,21 +50,57 @@
 - внутренние стили компонентов пишем через классы внутри shadow DOM
 - для контента слотов используем `::slotted(...)`, когда нужно стилизовать переданный внешний узел
 
-## Typography Utilities
+## Общие стили и служебные классы
 
-- глобальные utility-классы встраиваются в IIFE-бандл и не зависят от компонентов
-- текущий минимальный набор:
-  - `sunmar-h2`
-  - `sunmar-text`
-  - `sunmar-text-balance`
-- utility-классы можно вешать на любые теги (`div`, `p`, `span`, `h2` и т.д.)
+Пользовательские теги называются `sunmar-*`. Публичные CSS-классы называются
+`sunmarino-*`, CSS-переменные — `--sunmarino-*`; корневой класс секции — `.sunmarino`.
+Внутренние классы Shadow DOM изолированы от страницы. События и имена тегов не меняются.
+Старые CSS-имена не поддерживаются: внешнюю разметку и переопределения переменных
+нужно перевести на новый префикс. Старые номера шагов отступов нужно заменить пикселями:
+`sunmar-mt-5` → `sunmarino-mt-24`, а не `sunmarino-mt-5`.
 
-Пример:
+| Назначение | Классы |
+| --- | --- |
+| Заголовки | `sunmarino-h1` … `sunmarino-h5` |
+| Текст | `sunmarino-text`, `sunmarino-text-sm`, `sunmarino-text-lg` |
+| Выравнивание | `sunmarino-text-start`, `sunmarino-text-center`, `sunmarino-text-end` |
+| Цвет | `sunmarino-text-muted`, `sunmarino-text-light` |
+| Перенос заголовков | `sunmarino-text-balance` |
+| Группировка | `sunmarino-section-header`, `sunmarino-stack`, `sunmarino-cluster` |
+| Размеры | `sunmarino-w-full`, `sunmarino-min-w-0` |
+| Центрирование блока | `sunmarino-mx-auto` |
+| Текстовый контент | `sunmarino-prose`, `sunmarino-link`, `sunmarino-list`, `sunmarino-list-reset` |
+| Вспомогательный текст для скринридеров | `sunmarino-visually-hidden` |
 
-```html
-<div class="sunmar-h2 sunmar-text-balance">Заголовок секции</div>
-<p class="sunmar-text sunmar-text-balance">Текстовый блок с выравниванием строк.</p>
-```
+Классы заголовков задают оформление независимо от семантического уровня HTML-тега.
+Они наследуют цвет и шрифт, чтобы работать и на светлом, и на тёмном фоне.
+Секция `.sunmarino` задаёт базовый шрифт и цвет. Файлы шрифта подключает сайт.
+
+| Заголовок | До 768px, размер / строка | От 768px, размер / строка |
+| --- | --- | --- |
+| h1 | 32 / 36px | 48 / 52px |
+| h2 | 28 / 32px | 40 / 44px |
+| h3 | 24 / 28px | 32 / 36px |
+| h4 | 20 / 24px | 28 / 32px |
+| h5 | 20 / 24px | 24 / 28px |
+
+Мобильные размеры настраиваются токенами `--sunmarino-heading-hN-mobile-font-size`
+и `--sunmarino-heading-hN-mobile-line-height`. Компоненты сохраняют собственное оформление слотов.
+`sunmarino-prose` ограничивает длину строки до `65ch`; переопределение — `--sunmarino-prose-max-width`.
+
+### Отступы в пикселях
+
+Формат: `sunmarino-{свойство}-{пиксели}`. Например, `sunmarino-mt-24` — это
+ровно `margin-top: 24px`, независимо от значений дизайн-токенов.
+
+- `m`, `p` — все стороны; `mt/mb/ml/mr`, `pt/pb/pl/pr` — отдельные стороны.
+- `mx/my`, `px/py` — логические оси inline/block.
+- `gap`, `gap-x`, `gap-y` — интервалы между элементами.
+- Доступные значения: `0, 2, 4, 8, 12, 16, 20, 24, 32, 40, 48, 52, 64, 80, 96, 120`.
+- Для нового значения добавьте число в `$sunmarino-spacing-pixels` в `src/styles/_spacing-utilities.scss`
+  и пересоберите библиотеку. Произвольные числа автоматически из HTML не генерируются.
+- Утилиты отступов подключаются после базовых правил и переопределяют интервалы секций и сетки.
+  Не используйте несколько противоречащих классов для одного свойства.
 
 ## Регистрация компонентов
 
@@ -85,11 +121,32 @@
 
 ## Глобальный layout
 
-- для light DOM-разметки используем namespaced контейнер `.sunmarino-container`, а не generic `.container`
-- `sunmarino-container` держит глобальные внешние отступы:
-  - `padding-block: 32px`
-  - `>= 768px`: `padding-block: 40px`
-  - mobile `padding-inline: 16px`
+- `.sunmarino` — вертикальная секция: отступы сверху/снизу 20px, от 768px — 40px;
+  боковые 16px, от 993px — 0; интервал между блоками 24px.
+- Переопределения: `--sunmarino-section-padding-block`, `--sunmarino-section-padding-inline`,
+  `--sunmarino-section-gap`.
+- `.sunmarino-container` — ширина 100%, максимум 1368px, центрирование;
+  переменные `--sunmarino-container-max-width`, `--sunmarino-container-padding-inline`.
+- `.sunmarino-section-header` группирует заголовок и описание с интервалом 12px.
+- `.sunmarino-stack` — вертикальная группа; `.sunmarino-cluster` — горизонтальная с переносом.
+  Стандартный интервал 12px, меняется через `sunmarino-gap-{пиксели}`.
+- `.sunmarino.sunmarino-kv` сохраняет особые отступы первого экрана. Границы внешней
+  сетки 992/993px сохранены отдельно от брейкпоинтов компонентов.
+- Адаптер `.row-container.layout-container-limit.center` относится к существующему
+  сайту и действует только при наличии `sunmar-kv[full-width]` внутри `.sunmarino`.
+
+```html
+<section class="sunmarino sunmarino-container">
+  <header class="sunmarino-section-header">
+    <h2 class="sunmarino-h2 sunmarino-text-balance">Направления отдыха</h2>
+    <p class="sunmarino-text">Выберите подходящее путешествие.</p>
+  </header>
+  <div class="sunmarino-grid sunmarino-cols-1 sunmarino-bp-768-cols-2 sunmarino-gap-16">
+    <sunmar-card>…</sunmar-card>
+    <sunmar-card>…</sunmar-card>
+  </div>
+</section>
+```
 
 ## Компоненты
 
@@ -104,7 +161,6 @@
 - `sunmar-tabs`
 - `sunmar-tab`
 - `sunmar-tab-content`
-- `sunmar-cards-grid`
 
 ## Button API
 
@@ -135,10 +191,10 @@
 </sunmar-button>
 ```
 - `sunmar-button-group` attributes/properties: `type="primary|secondary|neutral"`, `size="small|medium|large"`; задают значения кнопкам без собственных настроек
-- направление задаётся CSS-переменной `--sunmar-button-group-direction: row | column` (по умолчанию `row`); перенос включён через `flex-wrap: wrap`
+- направление задаётся CSS-переменной `--sunmarino-button-group-direction: row | column` (по умолчанию `row`); перенос включён через `flex-wrap: wrap`
 - контракт группы: [sunmar-button-group](docs/sunmar-button-group-contract.md)
 - `sunmar-button-group` parts: нет
-- расстояние между элементами настраивается через `--sunmar-button-group-gap` (по умолчанию `--sunmar-space-s`)
+- расстояние между элементами настраивается через `--sunmarino-button-group-gap` (по умолчанию `--sunmarino-space-s`)
 
 ## Card API
 
@@ -151,18 +207,39 @@
 - обязательные slots: `media`, `title`, `text`
 - необязательный slot: `actions`; пустой actions-контейнер не занимает место
 - parts: `root`, `media`, `content`, `title`, `text`, `actions`
-- фон content настраивается через `--sunmar-card-background`
+- фон content настраивается через `--sunmarino-card-background`
 - компонент рендерит `article`, а семантический уровень заголовка задаёт потребитель в light DOM
 
-## Cards Grid API
+## CSS-сетка
 
-- `sunmar-cards-grid` раскладывает непосредственных потомков в адаптивную CSS Grid
-- `layout` принимает slash-последовательность количества колонок для base / `768px` / `1024px` / `1280px`
-- пример `layout="1/2/3/1"`: одна колонка базово, две от `768px`, три от `1024px`, одна от `1280px`
-- допустимы значения от `1` до `3`; если последовательность короче четырёх позиций, последнее значение наследуется дальше
-- gap по умолчанию `--sunmar-space-l` (`24px`), от `1280px` — `--sunmar-space-xl` (`32px`)
-- значения можно переопределить через `--sunmar-cards-grid-gap` и `--sunmar-cards-grid-gap-1280`
-- part: `grid`
+Класс `sunmarino-grid` доступен в общих стилях библиотеки и используется в playground. Без классов колонок сетка автоматически подбирает их число по ширине контейнера; минимальная ширина элемента — `240px`.
+
+```html
+<div class="sunmarino-grid sunmarino-cols-1 sunmarino-bp-768-cols-2 sunmarino-bp-1024-cols-3 sunmarino-bp-1280-cols-4 sunmarino-bp-1440-cols-6">
+  <section>Первый блок</section>
+  <section>Второй блок</section>
+</div>
+```
+
+- `sunmarino-cols-N` задаёт базовое число колонок (1–12).
+- `sunmarino-bp-768-cols-N`, `sunmarino-bp-1024-cols-N`, `sunmarino-bp-1280-cols-N`, `sunmarino-bp-1440-cols-N` задают число колонок от указанной ширины **экрана**.
+- Пропущенный брейкпоинт сохраняет предыдущую настройку; без `sunmarino-cols-N` до первого брейкпоинта действует автоматическая сетка.
+- Порядок классов в HTML не влияет на результат.
+- `--sunmarino-grid-min-item-width` настраивает минимальную ширину в автоматическом режиме.
+- Отступы: `--sunmarino-grid-gap` (по умолчанию 24px) и `--sunmarino-grid-gap-1280` (по умолчанию 32px от 1280px).
+- Каждый непосредственный дочерний элемент занимает одну ячейку; семантический тег контейнера выбирает потребитель.
+
+Стили класса генерирует миксин `grid` из `src/styles/_mixins.scss`. Его можно применить к своему селектору (путь `@use` задаётся относительно вашего SCSS-файла):
+
+```scss
+@use './mixins';
+
+.catalog-grid {
+  @include mixins.grid;
+}
+```
+
+Тогда вместо `sunmarino-grid` используется `catalog-grid`; классы `sunmarino-cols-1`, `sunmarino-bp-768-cols-2` и CSS-переменные работают так же.
 
 ## Modal API
 
@@ -177,7 +254,7 @@
 - `sunmar-modal` events: `sunmar-modal-open`, `sunmar-modal-close`
 - slots: `title`, default, `actions` (необязательный; пустой footer не занимает место)
 - parts: `overlay`, `dialog`, `header`, `title`, `close`, `body`, `actions`
-- CSS custom properties: `--sunmar-modal-z-index`, `--sunmar-modal-overlay`, `--sunmar-modal-surface`, `--sunmar-modal-border`, `--sunmar-modal-title`, `--sunmar-modal-text`
+- CSS custom properties: `--sunmarino-modal-z-index`, `--sunmarino-modal-overlay`, `--sunmarino-modal-surface`, `--sunmarino-modal-border`, `--sunmarino-modal-title`, `--sunmarino-modal-text`
 - `aria-label` задаёт явное доступное имя; без него dialog использует `aria-labelledby` или внутренний заголовок
 - при открытии фокус переходит внутрь modal и удерживается там по Tab/Shift+Tab
 - Escape закрывает окно, если `disable-close-on-esc` отсутствует
@@ -210,9 +287,9 @@
 - когда размеры изображения известны, указывайте `width` и `height`, чтобы браузер заранее резервировал место и уменьшал layout shift
 - `sunmar-image` parts: `picture`, `img`
 - CSS custom properties:
-  - `--sunmar-image-height` (default `auto`)
-  - `--sunmar-image-object-fit` (default `cover`)
-  - `--sunmar-image-object-position` (default `center center`)
+  - `--sunmarino-image-height` (default `auto`)
+  - `--sunmarino-image-object-fit` (default `cover`)
+  - `--sunmarino-image-object-position` (default `center center`)
 
 ## Slide API
 
@@ -221,8 +298,8 @@
 - attributes: стандартные глобальные HTML-атрибуты; для доступного имени можно передать `aria-label`
 - slots: default (ожидается один корневой элемент содержимого)
 - parts: `slide`
-- ширина определяется родительской переменной `--sunmar-slider-slides-per-view`
-- внутренний отступ определяется родительской переменной `--sunmar-slider-slide-padding`
+- ширина определяется родительской переменной `--sunmarino-slider-slides-per-view`
+- внутренний отступ определяется родительской переменной `--sunmarino-slider-slide-padding`
 - компонент по умолчанию получает `role="group"` и `aria-roledescription="slide"`, если потребитель не передал собственные значения
 - все слайды растягиваются до общей высоты, а единственный корневой slotted-элемент заполняет высоту слайда
 
@@ -239,7 +316,7 @@
   - `gap` — неотрицательный отступ между слайдами; по умолчанию `16`
 - slots: default
 - parts: `viewport`, `container`, `controls`, `navigation`, `prev-button`, `next-button`, `pagination`, `dot`, `status`
-- CSS custom properties: `--sunmar-slider-control-color`, `--sunmar-slider-navigation-background`, `--sunmar-slider-navigation-outset`, `--sunmar-slider-navigation-radius`, `--sunmar-slider-dot-color`
+- CSS custom properties: `--sunmarino-slider-control-color`, `--sunmarino-slider-navigation-background`, `--sunmarino-slider-navigation-outset`, `--sunmarino-slider-navigation-radius`, `--sunmarino-slider-dot-color`
 - после получения слайдов компонент добавляет им позиционные доступные имена вида «Слайд 1 из 6», не перезаписывая `aria-label`, заданный потребителем
 - во время загрузки и при ошибке Embla все слайды отображаются статической сеткой, управление скрыто; повторное подключение запускает новую попытку загрузки
 - прокрутка и snap-позиционирование выполняются только Embla; нативный scroll-snap fallback не используется
@@ -272,10 +349,10 @@
   - если `href` пустой/битый или целевая секция не найдена, компонент безопасно игнорирует такую ссылку и не ломает скрипты
 - переходы, прокрутка и обновление URL выполняются нативным поведением `<a href="#section-id">`; компонент не перехватывает клики
 - CSS custom properties:
-  - `--sunmar-sticky-nav-z-index`
-  - `--sunmar-sticky-nav-bg`
-  - `--sunmar-sticky-nav-border`
-  - `--sunmar-sticky-nav-gap`
+  - `--sunmarino-sticky-nav-z-index`
+  - `--sunmarino-sticky-nav-bg`
+  - `--sunmarino-sticky-nav-border`
+  - `--sunmarino-sticky-nav-gap`
 
 Пример:
 
@@ -327,11 +404,11 @@
 - `text` font-size: `16px`
 - `sunmar-kv` parts: `root`, `media`, `picture`, `content`, `content-inner`, `eyebrow`, `title`, `text`
 - CSS custom properties:
-  - `--sunmar-kv-content-color`
-  - `--sunmar-kv-content-max-width`
-  - `--sunmar-kv-eyebrow-color`
-  - `--sunmar-kv-title-color`
-  - `--sunmar-kv-text-color`
+  - `--sunmarino-kv-content-color`
+  - `--sunmarino-kv-content-max-width`
+  - `--sunmarino-kv-eyebrow-color`
+  - `--sunmarino-kv-title-color`
+  - `--sunmarino-kv-text-color`
 - SEO-friendly контракт:
   - значимый контент (`title`, `text`, `actions`) должен приходить уже семантическим в light DOM
   - компонент отвечает за layout и styling, а не за генерацию `h1/p` из `span`

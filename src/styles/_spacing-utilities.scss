@@ -1,67 +1,21 @@
-$sunmar-spacing-scale: (
-  0: 0,
-  1: var(--sunmar-space-2xs),
-  2: var(--sunmar-space-xs),
-  3: var(--sunmar-space-s),
-  4: var(--sunmar-space-n),
-  5: var(--sunmar-space-l),
-  6: var(--sunmar-space-xl),
-  7: var(--sunmar-space-2xl),
-  8: var(--sunmar-space-3xl),
+// Суффикс всегда равен числу пикселей. Добавляйте необходимые значения сюда.
+$sunmarino-spacing-pixels: (0, 2, 4, 8, 12, 16, 20, 24, 32, 40, 48, 52, 64, 80, 96, 120);
+$sunmarino-spacing-properties: (
+  m: margin, mt: margin-top, mb: margin-bottom, ml: margin-left, mr: margin-right,
+  mx: margin-inline, my: margin-block,
+  p: padding, pt: padding-top, pb: padding-bottom, pl: padding-left, pr: padding-right,
+  px: padding-inline, py: padding-block,
+  gap: gap, gap-x: column-gap, gap-y: row-gap
 );
 
-:root {
-  @each $step, $value in $sunmar-spacing-scale {
-    --sunmar-util-space-#{$step}: #{$value};
+@each $pixels in $sunmarino-spacing-pixels {
+  @each $suffix, $property in $sunmarino-spacing-properties {
+    :where(.sunmarino-#{$suffix}-#{$pixels}) {
+      #{$property}: #{$pixels}px;
+    }
   }
 }
 
-@each $step, $value in $sunmar-spacing-scale {
-  :where(.sunmar-mt-#{$step}) {
-    margin-top: var(--sunmar-util-space-#{$step});
-  }
-
-  :where(.sunmar-mb-#{$step}) {
-    margin-bottom: var(--sunmar-util-space-#{$step});
-  }
-
-  :where(.sunmar-ml-#{$step}) {
-    margin-left: var(--sunmar-util-space-#{$step});
-  }
-
-  :where(.sunmar-mr-#{$step}) {
-    margin-right: var(--sunmar-util-space-#{$step});
-  }
-
-  :where(.sunmar-mx-#{$step}) {
-    margin-inline: var(--sunmar-util-space-#{$step});
-  }
-
-  :where(.sunmar-my-#{$step}) {
-    margin-block: var(--sunmar-util-space-#{$step});
-  }
-
-  :where(.sunmar-pt-#{$step}) {
-    padding-top: var(--sunmar-util-space-#{$step});
-  }
-
-  :where(.sunmar-pb-#{$step}) {
-    padding-bottom: var(--sunmar-util-space-#{$step});
-  }
-
-  :where(.sunmar-pl-#{$step}) {
-    padding-left: var(--sunmar-util-space-#{$step});
-  }
-
-  :where(.sunmar-pr-#{$step}) {
-    padding-right: var(--sunmar-util-space-#{$step});
-  }
-
-  :where(.sunmar-px-#{$step}) {
-    padding-inline: var(--sunmar-util-space-#{$step});
-  }
-
-  :where(.sunmar-py-#{$step}) {
-    padding-block: var(--sunmar-util-space-#{$step});
-  }
+:where(.sunmarino-mx-auto) {
+  margin-inline: auto;
 }

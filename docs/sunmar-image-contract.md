@@ -38,9 +38,9 @@ URL, содержимое `srcset`, `sizes` и media query передаются 
 ## Оформление и доступность
 
 - Публичные parts: `picture`, `img`.
-- `--sunmar-image-height`: высота host, picture и img, по умолчанию `auto`.
-- `--sunmar-image-object-fit`: по умолчанию `cover`.
-- `--sunmar-image-object-position`: по умолчанию `center center`.
+- `--sunmarino-image-height`: высота host, picture и img, по умолчанию `auto`.
+- `--sunmarino-image-object-fit`: по умолчанию `cover`.
+- `--sunmarino-image-object-position`: по умолчанию `center center`.
 - Изображение занимает 100% ширины контейнера. Атрибуты `width` и `height` задают внутренние размеры изображения; CSS определяет отображаемую геометрию.
 - Потребитель задаёт осмысленный `alt` для содержательного изображения; пустой `alt` используется для декоративного.
 - Компонент не добавляет интерактивность, tabindex, role, disabled или собственное клавиатурное управление.
