@@ -2,11 +2,12 @@ import type { StorybookConfig } from '@storybook/web-components-vite';
 import { mergeConfig } from 'vite';
 
 const config: StorybookConfig = {
-  stories: ['../src/components/**/*.stories.@(js|jsx|mjs|ts|tsx)'],
+  stories: ['../src/components/**/*.stories.@(js|jsx|mjs|ts|tsx)', '../src/stories/**/*.mdx'],
   addons: ['@storybook/addon-a11y', '@storybook/addon-docs'],
   framework: '@storybook/web-components-vite',
   docs: {
-    autodocs: 'tag'
+    autodocs: 'tag',
+    defaultName: 'Документация'
   },
   async viteFinal(config) {
     return mergeConfig(config, {

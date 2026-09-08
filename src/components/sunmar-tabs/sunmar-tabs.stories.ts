@@ -1,42 +1,108 @@
+import { live } from 'lit/directives/live.js';
+import { useArgs } from 'storybook/preview-api';
+import documentation from '../../../docs/sunmar-tabs-contract.md?raw';
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import { html } from 'lit';
 
 const meta: Meta = {
-  title: 'Components/Tabs',
+  title: 'Компоненты/Вкладки',
+  id: 'components-tabs',
   tags: ['autodocs'],
   parameters: {
     layout: 'padded',
-    docs: {
-      description: {
-        component: `
-Доступные табы с единым состоянием в \`sunmar-tabs\`.
-
-**Контракт**
-- \`sunmar-tab\` содержит нативный \`button\`
-- \`sunmar-tab-content\` содержит семантический контент панели
-- одинаковый \`value\` связывает кнопку и панель
-- \`sunmar-tab[forced]\` задаёт начальную активную вкладку
-- \`sunmar-tabs[aria-label]\` задаёт доступное имя списка вкладок
-- нативный \`disabled\` задаётся на вложенном \`button\`
-- служебные slots, ARIA и состояние \`active\` устанавливает контейнер
-
-**Parts**
-- \`sunmar-tabs::part(root|nav|panels)\`
-- \`sunmar-tab-content::part(content)\`
-
-Клавиатура: стрелки, \`Home\`, \`End\`. Пользовательское переключение создаёт
-\`sunmar-tabs-change\` с \`detail: { value, previousValue }\`.
-Для программного переключения установи \`tabs.value = 'value'\`; пользовательское событие при этом не создаётся.
-`
-      }
-    }
+    controls: { disable: true },
+    docs: { description: { component: documentation.replace(/^# .+\n/, '') } }
   }
 };
 
 export default meta;
 type Story = StoryObj;
 
+const playgroundArgs = {
+  "value": "turkey",
+  "label": "Направления отдыха",
+  "disabledEgypt": false
+};
+type PlaygroundArgs = typeof playgroundArgs;
+
+export const Playground: StoryObj<PlaygroundArgs> = {
+  name: 'Песочница',
+  args: playgroundArgs,
+  argTypes: {
+  "value": {
+    "description": "value — идентификатор выбранной пары. Программный выбор не создаёт sunmar-tabs-change.",
+    "control": {
+      "type": "select"
+    },
+    "table": {
+      "category": "Параметры компонента",
+      "defaultValue": {
+        "summary": "Пустая строка; затем первая доступная пара"
+      }
+    },
+    "options": [
+      "april",
+      "turkey",
+      "egypt"
+    ]
+  },
+  "label": {
+    "description": "aria-label / label — доступное имя списка вкладок.",
+    "control": {
+      "type": "text"
+    },
+    "table": {
+      "category": "Параметры компонента",
+      "defaultValue": {
+        "summary": ""
+      }
+    }
+  },
+  "disabledEgypt": {
+    "description": "disabled на нативной кнопке «Египет». При отключении выбранной вкладки выбирается первая доступная.",
+    "control": {
+      "type": "boolean"
+    },
+    "table": {
+      "category": "Содержимое и настройки примера",
+      "defaultValue": {
+        "summary": "false"
+      }
+    }
+  }
+},
+  parameters: {
+    controls: { disable: false, expanded: true },
+    docs: { description: { story: 'Изменяйте параметры в Controls. Настройки примера не являются атрибутами компонента.' }, source: { type: 'dynamic' } }
+  },
+  render: function Render(args) {
+    const [, updateArgs] = useArgs<PlaygroundArgs>();
+    const value = args.disabledEgypt && args.value === 'egypt' ? 'april' : args.value;
+    if (value !== args.value) updateArgs({ value });
+    return html`
+      <div>
+        <sunmar-tabs .value=${live(value)} aria-label=${args.label}
+          @sunmar-tabs-change=${(event: CustomEvent<{ value: string; previousValue: string | null }>) => {
+            updateArgs({ value: event.detail.value });
+            const output = (event.currentTarget as HTMLElement).parentElement?.querySelector('output');
+            if (output) output.textContent = `sunmar-tabs-change: ${JSON.stringify(event.detail)}`;
+          }}>
+          <sunmar-tab value="april"><button type="button">Почему апрель?</button></sunmar-tab>
+          <sunmar-tab value="turkey"><button type="button">Турция</button></sunmar-tab>
+          <sunmar-tab value="egypt"><button type="button" ?disabled=${args.disabledEgypt}>Египет</button></sunmar-tab>
+          <sunmar-tab-content value="april"><h3>Почему апрель?</h3><p>Комфортная погода для прогулок.</p></sunmar-tab-content>
+          <sunmar-tab-content value="turkey"><h3>Турция</h3><p>Отели для семейного отдыха.</p></sunmar-tab-content>
+          <sunmar-tab-content value="egypt"><h3>Египет</h3><p>Море и коралловые рифы.</p></sunmar-tab-content>
+        </sunmar-tabs>
+        <p><output aria-live="polite">Переключите вкладку мышью или стрелками, чтобы увидеть событие.</output></p>
+      </div>
+    `;
+  }
+};
+
 export const Default: Story = {
+  name: "Начально выбранная вкладка",
+  parameters: { docs: { description: { story: "forced задаёт начальный выбор «Турция». Дальше можно переключаться мышью, стрелками, Home и End." } } },
   render: () => html`
     <sunmar-tabs aria-label="Направления отдыха" value="turkey" style="max-width:1080px; margin:0 auto;">
       <sunmar-tab value="april"><button type="button">Почему апрель?</button></sunmar-tab>
@@ -52,7 +118,8 @@ export const Default: Story = {
 
 
 export const Dynamic: Story = {
-  name: 'Динамические вкладки',
+  name: "Динамические вкладки",
+  parameters: { docs: { description: { story: "Добавьте второй раздел, затем отключите его. Выбор возвращается к первому доступному. Программное переключение через value не создаёт пользовательское событие." } } },
   render: () => html`
     <div>
       <button type="button" @click=${(event: Event) => {

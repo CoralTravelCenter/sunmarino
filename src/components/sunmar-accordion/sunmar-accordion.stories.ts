@@ -1,38 +1,135 @@
+import { live } from 'lit/directives/live.js';
+import documentation from '../../../docs/sunmar-accordion-contract.md?raw';
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import { html } from 'lit';
 
 const meta: Meta = {
-  title: 'Components/Accordion',
+  title: 'Компоненты/Аккордеон',
+  id: 'components-accordion',
   tags: ['autodocs'],
   parameters: {
-    layout: 'centered',
-    docs: {
-      description: {
-        component: `
-Группа нативных disclosure-элементов на основе \`details/summary\`.
-
-**Attributes sunmar-accordion**
-- \`mode="multiple"\` — можно открыть несколько элементов; значение по умолчанию
-- \`mode="single"\` — при открытии элемента закрывается ранее открытый
-- \`faq\` — добавляет JSON-LD \`FAQPage\` по содержимому элементов
-
-**Attributes sunmar-accordion-item**
-- \`open\` — открытое состояние
-- \`disabled\` — блокирует пользовательское переключение; программное изменение open разрешено
-
-**Slots**
-- \`slot="header"\` — заголовок элемента
-- default slot — содержимое панели
-`
-      }
-    }
+    layout: 'padded',
+    controls: { disable: true },
+    docs: { description: { component: documentation.replace(/^# .+\n/, '') } }
   }
 };
 
 export default meta;
 type Story = StoryObj;
 
+const playgroundArgs = {
+  "mode": "multiple",
+  "faq": false,
+  "firstOpen": true,
+  "disabled": false,
+  "question": "Что входит в стоимость тура?",
+  "answer": "Перелёт, проживание, трансфер и медицинская страховка."
+};
+type PlaygroundArgs = typeof playgroundArgs;
+
+export const Playground: StoryObj<PlaygroundArgs> = {
+  name: 'Песочница',
+  args: playgroundArgs,
+  argTypes: {
+  "mode": {
+    "description": "mode — несколько открытых пунктов или не более одного.",
+    "control": {
+      "type": "select"
+    },
+    "table": {
+      "category": "Параметры компонента",
+      "defaultValue": {
+        "summary": "multiple"
+      }
+    },
+    "options": [
+      "multiple",
+      "single"
+    ]
+  },
+  "faq": {
+    "description": "faq — создать рядом с группой структурированные данные FAQPage из текста вопросов и ответов.",
+    "control": {
+      "type": "boolean"
+    },
+    "table": {
+      "category": "Параметры компонента",
+      "defaultValue": {
+        "summary": "false"
+      }
+    }
+  },
+  "firstOpen": {
+    "description": "Программное состояние open первого sunmar-accordion-item. Сброс примера возвращает начальное состояние.",
+    "control": {
+      "type": "boolean"
+    },
+    "table": {
+      "category": "Содержимое и настройки примера",
+      "defaultValue": {
+        "summary": "true"
+      }
+    }
+  },
+  "disabled": {
+    "description": "disabled первого пункта блокирует пользовательское переключение; не закрывает открытый ответ.",
+    "control": {
+      "type": "boolean"
+    },
+    "table": {
+      "category": "Содержимое и настройки примера",
+      "defaultValue": {
+        "summary": "false"
+      }
+    }
+  },
+  "question": {
+    "description": "Слот header первого пункта.",
+    "control": {
+      "type": "text"
+    },
+    "table": {
+      "category": "Содержимое и настройки примера",
+      "defaultValue": {
+        "summary": "Что входит в стоимость тура?"
+      }
+    }
+  },
+  "answer": {
+    "description": "Ответ в слоте по умолчанию первого пункта. При faq обновляет JSON-LD.",
+    "control": {
+      "type": "text"
+    },
+    "table": {
+      "category": "Содержимое и настройки примера",
+      "defaultValue": {
+        "summary": "Перелёт, проживание, трансфер и медицинская страховка."
+      }
+    }
+  }
+},
+  parameters: {
+    controls: { disable: false, expanded: true },
+    docs: { description: { story: 'Изменяйте параметры в Controls. Настройки примера не являются атрибутами компонента.' }, source: { type: 'dynamic' } }
+  },
+  render: (args) => html`
+    <sunmar-accordion mode=${args.mode} ?faq=${args.faq} style="display:block; max-width:720px;">
+      <sunmar-accordion-item .open=${live(args.firstOpen)} ?disabled=${args.disabled}>
+        <span slot="header">${args.question}</span><p>${args.answer}</p>
+      </sunmar-accordion-item>
+      <sunmar-accordion-item>
+        <span slot="header">Можно ли изменить даты?</span><p>Условия изменения зависят от выбранного тарифа.</p>
+      </sunmar-accordion-item>
+      <sunmar-accordion-item>
+        <span slot="header">Где получить документы?</span><p>Документы доступны в личном кабинете.</p>
+      </sunmar-accordion-item>
+    </sunmar-accordion>
+  `
+};
+
 export const Multiple: Story = {
+  name: "Несколько открытых пунктов",
+  parameters: { docs: { description: { story: "Можно открыть несколько ответов одновременно. Недоступный пункт не переключается пользователем." } } },
   render: () => html`
     <sunmar-accordion style="display:block; width:min(calc(100vw - 32px), 720px);">
       <sunmar-accordion-item open>
@@ -52,6 +149,8 @@ export const Multiple: Story = {
 };
 
 export const SingleFaq: Story = {
+  name: "Один ответ и FAQ",
+  parameters: { docs: { description: { story: "Открытие второго ответа закрывает первый. faq создаёт рядом с группой JSON-LD FAQPage из текста вопросов и ответов." } } },
   render: () => html`
     <sunmar-accordion mode="single" faq style="display:block; width:min(calc(100vw - 32px), 720px);">
       <sunmar-accordion-item open>
@@ -68,7 +167,8 @@ export const SingleFaq: Story = {
 
 
 export const DynamicFaq: Story = {
-  name: 'Обновление FAQ',
+  name: "Обновление FAQ",
+  parameters: { docs: { description: { story: "Нажатие меняет ответ в HTML. Соседний script с JSON-LD обновляется автоматически; увидеть его можно в инструментах разработчика." } } },
   render: () => html`
     <div style="width:min(calc(100vw - 32px), 720px);">
       <button type="button" @click=${(event: MouseEvent) => {
@@ -89,7 +189,8 @@ export const DynamicFaq: Story = {
 };
 
 export const DisabledOpen: Story = {
-  name: 'Открытый недоступный пункт',
+  name: "Открытый недоступный пункт",
+  parameters: { docs: { description: { story: "Ответ остаётся видимым для чтения, но пользовательское раскрытие и закрытие отключены." } } },
   render: () => html`
     <sunmar-accordion-item open disabled>
       <span slot="header">Условия бронирования</span>

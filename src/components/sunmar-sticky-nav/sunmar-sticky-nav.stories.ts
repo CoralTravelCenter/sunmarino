@@ -1,3 +1,4 @@
+import documentation from '../../../docs/sunmar-sticky-nav-contract.md?raw';
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import { html } from 'lit';
 
@@ -18,42 +19,13 @@ const sectionStyle = `
 `;
 
 const meta: Meta = {
-  title: 'Components/Sticky Nav',
+  title: 'Компоненты/Навигация по разделам',
+  id: 'components-sticky-nav',
   tags: ['autodocs'],
   parameters: {
     layout: 'fullscreen',
-    docs: {
-      description: {
-        component: `
-Навигация с нативным \`position: sticky\`, slot-driven ссылками и автоматическим активным состоянием по \`IntersectionObserver\`.
-
-**Attributes**
-- \`top-offset\` — явный отступ sticky-навигации от верхней границы viewport
-- \`teleport\` — CSS-селектор целевого узла; по умолчанию \`.row-outer-container\`
-- \`disable-relocate\` — отключает перенос и имеет приоритет над \`teleport\`
-
-**Slots**
-- \`slot="nav-link"\` — рекомендуемый consumer contract: \`<a href="#section-id">...</a>\`
-
-**Поведение**
-- цель из \`teleport\` ожидается через \`MutationObserver\` не более 5 секунд; ожидание отменяется при отключении компонента или смене селектора
-- некорректный CSS-селектор безопасно игнорируется
-- если \`top-offset\` не задан, CSS выбирает offset по текущему viewport: меньше \`768px\` — \`81px\`, от \`768px\` — \`65px\`, от \`1024px\` — \`16px\`
-- фиксацию при прокрутке обеспечивает нативный \`position: sticky\`
-- переходы выполняют нативные якорные ссылки; компонент не перехватывает клики
-- active-state по scroll работает только когда у ссылок есть \`href="#id"\`, а на странице есть соответствующие секции с \`id\`
-- если target section не найдена, компонент безопасно игнорирует такую ссылку
-
-**API стилизации**
-- CSS variables: \`--sunmarino-sticky-nav-z-index\`, \`--sunmarino-sticky-nav-bg\`, \`--sunmarino-sticky-nav-border\`, \`--sunmarino-sticky-nav-gap\`
-- \`Parts\`: \`root\`
-
-**Как использовать?**
-- docs ниже показывают только сам компонент и его контракт
-- для проверки sticky-поведения и active-state используй отдельную story с демо-секциями
-`
-      }
-    }
+    controls: { disable: true },
+    docs: { description: { component: documentation.replace(/^# .+\n/, '') } }
   }
 };
 
@@ -61,10 +33,99 @@ export default meta;
 
 type Story = StoryObj;
 
+const playgroundArgs = {
+  "topOffset": 12,
+  "autoOffset": false,
+  "disableRelocate": true,
+  "teleport": "[data-playground-anchor]"
+};
+type PlaygroundArgs = typeof playgroundArgs;
+
+export const Playground: StoryObj<PlaygroundArgs> = {
+  name: 'Песочница',
+  args: playgroundArgs,
+  argTypes: {
+  "topOffset": {
+    "description": "top-offset / topOffset — отступ от верхней границы в пикселях.",
+    "control": {
+      "type": "number"
+    },
+    "table": {
+      "category": "Параметры компонента",
+      "defaultValue": {
+        "summary": "81px / 65px / 16px по ширине окна"
+      }
+    }
+  },
+  "autoOffset": {
+    "description": "Удалить top-offset и использовать адаптивные CSS-значения.",
+    "control": {
+      "type": "boolean"
+    },
+    "table": {
+      "category": "Содержимое и настройки примера",
+      "defaultValue": {
+        "summary": "false"
+      }
+    }
+  },
+  "disableRelocate": {
+    "description": "disable-relocate / disableRelocate — запретить дальнейший перенос. Не возвращает навигацию на старое место.",
+    "control": {
+      "type": "boolean"
+    },
+    "table": {
+      "category": "Параметры компонента",
+      "defaultValue": {
+        "summary": "false"
+      }
+    }
+  },
+  "teleport": {
+    "description": "teleport — CSS-селектор элемента, после которого будет размещена навигация.",
+    "control": {
+      "type": "text"
+    },
+    "table": {
+      "category": "Параметры компонента",
+      "defaultValue": {
+        "summary": ".row-outer-container"
+      }
+    }
+  }
+},
+  parameters: {
+    controls: { disable: false, expanded: true },
+    docs: { description: { story: 'Изменяйте параметры в Controls. Настройки примера не являются атрибутами компонента.' }, source: { type: 'dynamic' } }
+  },
+  render: (args) => html`
+    <div style="padding:24px 16px;">
+      <section data-playground-anchor style=${introStyle}>
+        <h2>Навигация по направлениям</h2>
+        <p>Прокрутите пример вниз. Для проверки переноса выключите disableRelocate; навигация располагается после этого блока.</p>
+      </section>
+      <div style="height:32px;" aria-hidden="true"></div>
+      <sunmar-sticky-nav .topOffset=${args.autoOffset ? undefined : args.topOffset}
+        ?disable-relocate=${args.disableRelocate} teleport=${args.teleport}>
+        <a slot="nav-link" href="#playground-april">Почему апрель?</a>
+        <a slot="nav-link" href="#playground-turkey">Турция</a>
+        <a slot="nav-link" href="#playground-egypt">Египет</a>
+      </sunmar-sticky-nav>
+      ${['april', 'turkey', 'egypt'].map((id, index) => html`
+        <section id=${`playground-${id}`} style=${sectionStyle}>
+          <h2>${['Почему апрель?', 'Турция', 'Египет'][index]}</h2>
+          <p>Ссылка получает подсветку, когда раздел достаточно виден в области просмотра.</p>
+        </section>
+      `)}
+    </div>
+  `
+};
+
 export const Default: Story = {
-  name: 'Demo со скроллом',
+  name: "Прокрутка и перенос",
   parameters: {
     docs: {
+      description: { story: "Навигация переносится после промо-блока. Прокручивайте сам пример: фиксация зависит от предков, подсветка — от видимости секций." },
       source: {
         code: `<sunmar-sticky-nav teleport=".header-actions" top-offset="12">
   <a slot="nav-link" href="#april">Почему апрель?</a>
@@ -121,7 +182,8 @@ export const Default: Story = {
 
 
 export const Dynamic: Story = {
-  name: 'Изменение ссылки и раздела',
+  name: "Изменение ссылки и раздела",
+  parameters: { docs: { description: { story: "Кнопка одновременно меняет href ссылки и id раздела. Компонент повторно связывает их для подсветки." } } },
   render: () => html`
     <div style="padding:24px;">
       <button type="button" @click=${(event: Event) => {

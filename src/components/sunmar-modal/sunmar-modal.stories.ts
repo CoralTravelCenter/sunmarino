@@ -1,34 +1,17 @@
+import { live } from 'lit/directives/live.js';
+import { useArgs } from 'storybook/preview-api';
+import documentation from '../../../docs/sunmar-modal-contract.md?raw';
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
-import { html } from 'lit';
+import { html, nothing } from 'lit';
 
 const meta: Meta = {
-  title: 'Components/Modal',
+  title: 'Компоненты/Модальное окно',
+  id: 'components-modal',
   tags: ['autodocs'],
   parameters: {
-    docs: {
-      description: {
-        component: `
-Доступное модальное окно с управлением фокусом.
-
-**Attributes**
-- \`open\` — открытое состояние
-- \`disable-close-on-backdrop\` — отключает закрытие по клику на фон
-- \`disable-close-on-esc\` — отключает закрытие по Escape
-- \`aria-label\` — явное доступное имя; рекомендуется, когда внешний заголовок не используется
-- \`aria-labelledby\` — id элемента, задающего доступное имя
-
-**Фокус и фон**
-- при открытии фокус переходит на элемент с \`autofocus\`, первый интерактивный light DOM-элемент, кнопку закрытия или dialog
-- Tab и Shift+Tab удерживаются внутри модального окна
-- после закрытия фокус возвращается на элемент, открывший окно
-- фон получает \`inert\` только на время открытого состояния и затем восстанавливается
-
-**Events**
-- \`sunmar-modal-open\`
-- \`sunmar-modal-close\`
-`
-      }
-    }
+    layout: 'padded',
+    controls: { disable: true },
+    docs: { description: { component: documentation.replace(/^# .+\n/, '') } }
   }
 };
 
@@ -36,7 +19,142 @@ export default meta;
 
 type Story = StoryObj;
 
+const playgroundArgs = {
+  "open": false,
+  "disableCloseOnBackdrop": false,
+  "disableCloseOnEsc": false,
+  "ariaLabel": "",
+  "title": "Подтверждение бронирования",
+  "text": "Проверьте выбранные параметры перед продолжением.",
+  "actions": true
+};
+type PlaygroundArgs = typeof playgroundArgs;
+
+export const Playground: StoryObj<PlaygroundArgs> = {
+  name: 'Песочница',
+  args: playgroundArgs,
+  argTypes: {
+  "open": {
+    "description": "open — текущее состояние. Кнопка, Escape и фон синхронизируют значение в Controls.",
+    "control": {
+      "type": "boolean"
+    },
+    "table": {
+      "category": "Параметры компонента",
+      "defaultValue": {
+        "summary": "false"
+      }
+    }
+  },
+  "disableCloseOnBackdrop": {
+    "description": "disable-close-on-backdrop / disableCloseOnBackdrop — запретить закрытие по фону.",
+    "control": {
+      "type": "boolean"
+    },
+    "table": {
+      "category": "Параметры компонента",
+      "defaultValue": {
+        "summary": "false"
+      }
+    }
+  },
+  "disableCloseOnEsc": {
+    "description": "disable-close-on-esc / disableCloseOnEsc — запретить закрытие клавишей Escape.",
+    "control": {
+      "type": "boolean"
+    },
+    "table": {
+      "category": "Параметры компонента",
+      "defaultValue": {
+        "summary": "false"
+      }
+    }
+  },
+  "ariaLabel": {
+    "description": "aria-label / ariaLabel — явное доступное имя. Пустое значение использует заголовок.",
+    "control": {
+      "type": "text"
+    },
+    "table": {
+      "category": "Параметры компонента",
+      "defaultValue": {
+        "summary": "Не задано"
+      }
+    }
+  },
+  "title": {
+    "description": "Текст в слоте title; компонент сам создаёт h2.",
+    "control": {
+      "type": "text"
+    },
+    "table": {
+      "category": "Содержимое и настройки примера",
+      "defaultValue": {
+        "summary": "Подтверждение бронирования"
+      }
+    }
+  },
+  "text": {
+    "description": "Содержимое слота по умолчанию.",
+    "control": {
+      "type": "text"
+    },
+    "table": {
+      "category": "Содержимое и настройки примера",
+      "defaultValue": {
+        "summary": "Проверьте выбранные параметры перед продолжением."
+      }
+    }
+  },
+  "actions": {
+    "description": "Показать кнопку в слоте actions.",
+    "control": {
+      "type": "boolean"
+    },
+    "table": {
+      "category": "Содержимое и настройки примера",
+      "defaultValue": {
+        "summary": "true"
+      }
+    }
+  }
+},
+  parameters: {
+    controls: { disable: false, expanded: true },
+    docs: { description: { story: 'Изменяйте параметры в Controls. Настройки примера не являются атрибутами компонента.' }, source: { type: 'dynamic' } }
+  },
+  render: function Render(args) {
+    const [, updateArgs] = useArgs<PlaygroundArgs>();
+    const onStateChange = (event: Event) => {
+      const modal = event.currentTarget as HTMLElementTagNameMap['sunmar-modal'];
+      updateArgs({ open: modal.open });
+      const output = modal.parentElement?.querySelector('output');
+      if (output) output.textContent = `Последнее событие: ${event.type}`;
+    };
+    return html`
+      <div>
+        <sunmar-button><button type="button" @click=${(event: Event) => {
+          (event.currentTarget as HTMLElement).closest('div')?.querySelector('sunmar-modal')?.show();
+        }}>Открыть окно</button></sunmar-button>
+        <p><output aria-live="polite">События появятся после открытия или закрытия окна.</output></p>
+        <sunmar-modal .open=${live(args.open)} aria-label=${args.ariaLabel}
+          ?disable-close-on-backdrop=${args.disableCloseOnBackdrop} ?disable-close-on-esc=${args.disableCloseOnEsc}
+          @sunmar-modal-open=${onStateChange} @sunmar-modal-close=${onStateChange}>
+          <span slot="title">${args.title}</span>
+          <p>${args.text}</p>
+          <button type="button" autofocus>Изменить параметры</button>
+          ${args.actions ? html`<button slot="actions" type="button" @click=${(event: Event) => {
+            (event.currentTarget as HTMLElement).closest('sunmar-modal')?.hide();
+          }}>Готово</button>` : nothing}
+        </sunmar-modal>
+      </div>
+    `;
+  }
+};
+
 export const Default: Story = {
+  name: "Открытие и закрытие",
+  parameters: { docs: { description: { story: "Откройте окно кнопкой. Проверьте Escape, клик по фону, Tab/Shift+Tab и возврат фокуса. show() и hide() вызываются на sunmar-modal." } } },
   render: () => html`
     <div data-modal-demo>
       <sunmar-button type="primary">
@@ -73,7 +191,8 @@ export const Default: Story = {
 
 
 export const Stacked: Story = {
-  name: 'Два окна',
+  name: "Два окна",
+  parameters: { docs: { description: { story: "Откройте первое, затем второе окно. Escape закрывает верхнее и возвращает фокус в первое. Следующее нажатие закрывает первое." } } },
   render: () => html`
     <div data-modal-demo>
       <button type="button" @click=${(event: Event) => {
@@ -94,7 +213,8 @@ export const Stacked: Story = {
 };
 
 export const ExplicitClose: Story = {
-  name: 'Закрытие только кнопкой',
+  name: "Закрытие только кнопкой",
+  parameters: { docs: { description: { story: "Escape и фон отключены логическими атрибутами. Кнопка закрытия в заголовке остаётся доступной." } } },
   render: () => html`
     <div>
       <button type="button" @click=${(event: Event) => {

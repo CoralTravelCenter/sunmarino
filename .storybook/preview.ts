@@ -1,3 +1,4 @@
+import Documentation from './Documentation.mdx';
 import '../src/dev/suppress-lit-dev-warnings';
 import type { Preview } from '@storybook/web-components-vite';
 import '../src/styles/sunmar-tokens-runtime.scss';
@@ -50,13 +51,16 @@ ensureStorybookFonts();
 const preview: Preview = {
   parameters: {
     layout: 'padded',
+    options: { storySort: { order: ['Руководство', 'Компоненты'] } },
     controls: {
+      expanded: true,
       matchers: {
         color: /(background|color)$/i,
         date: /Date$/i
       }
     },
     docs: {
+      page: Documentation,
       canvas: {
         sourceState: 'shown'
       }
