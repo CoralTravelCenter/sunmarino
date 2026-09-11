@@ -2,26 +2,11 @@ import documentation from '../../../docs/sunmar-sticky-nav-contract.md?raw';
 import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import { html } from 'lit';
 
-const introStyle = `
-  min-height: 56vh;
-  padding: 32px;
-  border-radius: 32px;
-  background: linear-gradient(180deg, #f5f5f8 0%, #ffffff 100%);
-  color: #1a1a1a;
-`;
-
-const sectionStyle = `
-  min-height: 75vh;
-  padding: 32px;
-  border-radius: 24px;
-  background: #f5f5f8;
-  color: #1a1a1a;
-`;
-
 const meta: Meta = {
-  title: 'Компоненты/Навигация по разделам',
+  title: 'Компоненты/Sticky Navigation',
   id: 'components-sticky-nav',
   tags: ['autodocs'],
+  decorators: [(story) => html`<div class="storybook-sticky-demo">${story()}</div>`],
   parameters: {
     layout: 'fullscreen',
     controls: { disable: true },
@@ -99,12 +84,12 @@ export const Playground: StoryObj<PlaygroundArgs> = {
     docs: { description: { story: 'Изменяйте параметры в Controls. Настройки примера не являются атрибутами компонента.' }, source: { type: 'dynamic' } }
   },
   render: (args) => html`
-    <div style="padding:24px 16px;">
-      <section data-playground-anchor style=${introStyle}>
+    <div data-sticky-page>
+      <section data-playground-anchor data-sticky-intro>
         <h2>Навигация по направлениям</h2>
         <p>Прокрутите пример вниз. Для проверки переноса выключите disableRelocate; навигация располагается после этого блока.</p>
       </section>
-      <div style="height:32px;" aria-hidden="true"></div>
+      <div data-sticky-spacer aria-hidden="true"></div>
       <sunmar-sticky-nav .topOffset=${args.autoOffset ? undefined : args.topOffset}
         ?disable-relocate=${args.disableRelocate} teleport=${args.teleport}>
         <a slot="nav-link" href="#playground-april">Почему апрель?</a>
@@ -112,7 +97,7 @@ export const Playground: StoryObj<PlaygroundArgs> = {
         <a slot="nav-link" href="#playground-egypt">Египет</a>
       </sunmar-sticky-nav>
       ${['april', 'turkey', 'egypt'].map((id, index) => html`
-        <section id=${`playground-${id}`} style=${sectionStyle}>
+        <section id=${`playground-${id}`} data-sticky-section>
           <h2>${['Почему апрель?', 'Турция', 'Египет'][index]}</h2>
           <p>Ссылка получает подсветку, когда раздел достаточно виден в области просмотра.</p>
         </section>
@@ -136,11 +121,11 @@ export const Default: Story = {
     }
   },
   render: () => html`
-    <div style="background: #ffffff; padding: 24px 16px 120px;">
-      <div style="max-width: 1280px; margin: 0 auto; display: grid; gap: 24px;">
-        <section class="header-actions" style=${introStyle}>
-          <h2 style="margin: 0;">Промо-блок перед навигацией</h2>
-          <p style="max-width: 720px; margin: 16px 0 0;">
+    <div data-sticky-page>
+      <div data-sticky-layout>
+        <section class="header-actions" data-sticky-intro>
+          <h2>Промо-блок перед навигацией</h2>
+          <p>
             Этот блок нужен, чтобы в canvas было видно нативное sticky-поведение навигации.
             Прокрути страницу вниз: навигация останется у верхней границы с заданным отступом.
           </p>
@@ -152,25 +137,25 @@ export const Default: Story = {
           <a slot="nav-link" href="#egypt">Египет</a>
         </sunmar-sticky-nav>
 
-        <section id="april" style=${sectionStyle}>
-          <h2 style="margin: 0;">Почему апрель?</h2>
-          <p style="margin: 16px 0 0; max-width: 720px;">
+        <section id="april" data-sticky-section>
+          <h2>Почему апрель?</h2>
+          <p>
             Первая тестовая секция для проверки sticky-поведения и active-state. При входе в видимую область
             соответствующая ссылка должна стать активной.
           </p>
         </section>
 
-        <section id="turkey" style=${sectionStyle}>
-          <h2 style="margin: 0;">Турция</h2>
-          <p style="margin: 16px 0 0; max-width: 720px;">
+        <section id="turkey" data-sticky-section>
+          <h2>Турция</h2>
+          <p>
             Вторая секция нужна для проверки переключения активной ссылки при скролле и поведения sticky-навигации
             на длинной странице.
           </p>
         </section>
 
-        <section id="egypt" style=${sectionStyle}>
-          <h2 style="margin: 0;">Египет</h2>
-          <p style="margin: 16px 0 0; max-width: 720px;">
+        <section id="egypt" data-sticky-section>
+          <h2>Египет</h2>
+          <p>
             Третья секция завершает минимальный сценарий интеграции. На ней удобно проверять, что предыдущие
             ссылки корректно теряют активное состояние.
           </p>
@@ -185,7 +170,7 @@ export const Dynamic: Story = {
   name: "Изменение ссылки и раздела",
   parameters: { docs: { description: { story: "Кнопка одновременно меняет href ссылки и id раздела. Компонент повторно связывает их для подсветки." } } },
   render: () => html`
-    <div style="padding:24px;">
+    <div data-sticky-page>
       <button type="button" @click=${(event: Event) => {
         const root = (event.currentTarget as HTMLElement).parentElement!;
         const link = root.querySelector('a')!;
@@ -198,7 +183,7 @@ export const Dynamic: Story = {
       <sunmar-sticky-nav disable-relocate top-offset="0">
         <a slot="nav-link" href="#dynamic-first">Первый раздел</a>
       </sunmar-sticky-nav>
-      <section id="dynamic-first" style=${sectionStyle}>
+      <section id="dynamic-first" data-sticky-section>
         <h2>Динамический раздел</h2>
         <p>Подсветка продолжает работать после изменения ID и ссылки.</p>
       </section>

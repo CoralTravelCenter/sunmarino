@@ -5,7 +5,7 @@ import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import { html, nothing } from 'lit';
 
 const meta: Meta = {
-  title: 'Компоненты/Модальное окно',
+  title: 'Компоненты/Modal',
   id: 'components-modal',
   tags: ['autodocs'],
   parameters: {

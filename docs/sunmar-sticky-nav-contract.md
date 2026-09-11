@@ -17,14 +17,3 @@
 | `disable-relocate` | Присутствует / отсутствует | Запретить перенос; по умолчанию выключен |
 
 `disable-relocate` не возвращает уже перенесённую навигацию на прежнее место. Закрепление зависит от высоты и CSS родительского контейнера.
-
-## Внешнее JS-управление
-
-```js
-const nav = document.querySelector('sunmar-sticky-nav');
-nav.topOffset = 16;
-nav.disableRelocate = true;
-// Для переноса:
-nav.teleport = '.header-actions';
-nav.disableRelocate = false;
-```

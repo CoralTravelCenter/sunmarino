@@ -5,7 +5,7 @@ import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import { html } from 'lit';
 
 const meta: Meta = {
-  title: 'Компоненты/Группа кнопок',
+  title: 'Компоненты/Button Group',
   id: 'components-button-group',
   tags: ['autodocs'],
   parameters: {
@@ -31,6 +31,11 @@ type PlaygroundArgs = typeof playgroundArgs;
 export const Playground: StoryObj<PlaygroundArgs> = {
   name: 'Песочница',
   args: playgroundArgs,
+  decorators: [(story, context) => html`
+    <div style=${styleMap({ '--sunmarino-button-group-direction': context.args.direction, '--sunmarino-button-group-gap': `${context.args.gap}px` })}>
+      ${story()}
+    </div>
+  `],
   argTypes: {
   "type": {
     "description": "type — общий вариант непосредственных дочерних кнопок.",
@@ -112,8 +117,7 @@ export const Playground: StoryObj<PlaygroundArgs> = {
     docs: { description: { story: 'Изменяйте параметры в Controls. Настройки примера не являются атрибутами компонента.' }, source: { type: 'dynamic' } }
   },
   render: (args) => html`
-    <sunmar-button-group type=${args.type} size=${args.size}
-      style=${styleMap({ '--sunmarino-button-group-direction': args.direction, '--sunmarino-button-group-gap': `${args.gap}px` })}>
+    <sunmar-button-group type=${args.type} size=${args.size}>
       <sunmar-button><button type="button">От группы</button></sunmar-button>
       <sunmar-button type=${ifDefined(args.override ? 'primary' : undefined)} size=${ifDefined(args.override ? 'small' : undefined)}>
         <button type="button">${args.override ? 'Собственные настройки' : 'От группы'}</button>
@@ -150,14 +154,9 @@ export const InheritedSettings: Story = {
 export const ResponsiveDirection: Story = {
   name: "Адаптивное направление",
   parameters: { docs: { description: { story: "До 768px кнопки идут колонкой, от 768px — строкой. Измените ширину области просмотра. Направление задаёт CSS-переменная, а не атрибут." } } },
+  decorators: [(story) => html`<div class="storybook-responsive-button-group">${story()}</div>`],
   render: () => html`
-    <style>
-      .responsive-button-group { --sunmarino-button-group-direction: column; }
-      @media (min-width: 768px) {
-        .responsive-button-group { --sunmarino-button-group-direction: row; }
-      }
-    </style>
-    <sunmar-button-group class="responsive-button-group" type="secondary">
+    <sunmar-button-group type="secondary">
       <sunmar-button><button type="button">Подобрать тур</button></sunmar-button>
       <sunmar-button><a href="#details">Подробнее</a></sunmar-button>
     </sunmar-button-group>

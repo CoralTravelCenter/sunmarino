@@ -4,7 +4,7 @@ import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import { html } from 'lit';
 
 const meta: Meta = {
-  title: 'Компоненты/Аккордеон',
+  title: 'Компоненты/Accordion',
   id: 'components-accordion',
   tags: ['autodocs'],
   parameters: {
@@ -30,6 +30,7 @@ type PlaygroundArgs = typeof playgroundArgs;
 export const Playground: StoryObj<PlaygroundArgs> = {
   name: 'Песочница',
   args: playgroundArgs,
+  decorators: [(story) => html`<div class="storybook-demo storybook-demo--narrow">${story()}</div>`],
   argTypes: {
   "mode": {
     "description": "mode — несколько открытых пунктов или не более одного.",
@@ -113,7 +114,7 @@ export const Playground: StoryObj<PlaygroundArgs> = {
     docs: { description: { story: 'Изменяйте параметры в Controls. Настройки примера не являются атрибутами компонента.' }, source: { type: 'dynamic' } }
   },
   render: (args) => html`
-    <sunmar-accordion mode=${args.mode} ?faq=${args.faq} style="display:block; max-width:720px;">
+    <sunmar-accordion mode=${args.mode} ?faq=${args.faq}>
       <sunmar-accordion-item .open=${live(args.firstOpen)} ?disabled=${args.disabled}>
         <span slot="header">${args.question}</span><p>${args.answer}</p>
       </sunmar-accordion-item>
@@ -130,8 +131,9 @@ export const Playground: StoryObj<PlaygroundArgs> = {
 export const Multiple: Story = {
   name: "Несколько открытых пунктов",
   parameters: { docs: { description: { story: "Можно открыть несколько ответов одновременно. Недоступный пункт не переключается пользователем." } } },
+  decorators: [(story) => html`<div class="storybook-demo storybook-demo--narrow">${story()}</div>`],
   render: () => html`
-    <sunmar-accordion style="display:block; width:min(calc(100vw - 32px), 720px);">
+    <sunmar-accordion>
       <sunmar-accordion-item open>
         <span slot="header">Что входит в стоимость тура?</span>
         <p>Перелёт, проживание, трансфер и медицинская страховка.</p>
@@ -151,8 +153,9 @@ export const Multiple: Story = {
 export const SingleFaq: Story = {
   name: "Один ответ и FAQ",
   parameters: { docs: { description: { story: "Открытие второго ответа закрывает первый. faq создаёт рядом с группой JSON-LD FAQPage из текста вопросов и ответов." } } },
+  decorators: [(story) => html`<div class="storybook-demo storybook-demo--narrow">${story()}</div>`],
   render: () => html`
-    <sunmar-accordion mode="single" faq style="display:block; width:min(calc(100vw - 32px), 720px);">
+    <sunmar-accordion mode="single" faq>
       <sunmar-accordion-item open>
         <span slot="header">Когда приезжать в аэропорт?</span>
         <p>Рекомендуем приехать не позднее чем за три часа до вылета.</p>
@@ -169,8 +172,9 @@ export const SingleFaq: Story = {
 export const DynamicFaq: Story = {
   name: "Обновление FAQ",
   parameters: { docs: { description: { story: "Нажатие меняет ответ в HTML. Соседний script с JSON-LD обновляется автоматически; увидеть его можно в инструментах разработчика." } } },
+  decorators: [(story) => html`<div class="storybook-demo storybook-demo--narrow">${story()}</div>`],
   render: () => html`
-    <div style="width:min(calc(100vw - 32px), 720px);">
+    <div>
       <button type="button" @click=${(event: MouseEvent) => {
         const group = (event.currentTarget as HTMLButtonElement).parentElement!.querySelector('sunmar-accordion')!;
         const answer = group.querySelector('p')!;

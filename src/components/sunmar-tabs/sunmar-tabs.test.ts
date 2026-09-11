@@ -19,6 +19,17 @@ async function mount() {
 }
 afterEach(() => document.body.replaceChildren());
 describe('SunmarTabs', () => {
+  it('normalizes the initial value without scheduling a follow-up update', async () => {
+    document.body.innerHTML = `<sunmar-tabs value="missing">
+      <sunmar-tab value="first"><button type="button">Первый</button></sunmar-tab>
+      <sunmar-tab-content value="first">Один</sunmar-tab-content>
+    </sunmar-tabs>`;
+    const tabs = document.querySelector('sunmar-tabs')!;
+
+    await expect(tabs.updateComplete).resolves.toBe(true);
+    expect(tabs.value).toBe('first');
+  });
+
   it('uses the same duplicate availability rules for clicks, keyboard and fallback', async () => {
     const tabs = await mount();
     const first = tabs.querySelector('sunmar-tab')!;

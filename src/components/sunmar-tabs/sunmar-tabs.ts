@@ -113,8 +113,12 @@ export class SunmarTabs extends LitElement {
     `;
   }
 
-  protected firstUpdated(): void {
-    this.sync();
+  protected willUpdate(changed: Map<string, unknown>): void {
+    if (!changed.has('value')) return;
+    const collection = this.collectTabs();
+    const activeValue = this.resolveActiveValue(collection);
+    if (collection.availableTabs.length) this.initialized = true;
+    if (activeValue !== this.value) this.value = activeValue;
   }
 
   protected updated(changed: Map<string, unknown>): void {

@@ -20,14 +20,3 @@
 | Пункт / `disabled` | Присутствует / отсутствует | Запретить пользовательское переключение; открытый ответ остаётся видимым |
 
 Логические атрибуты работают по присутствию: для выключения удалите атрибут, а не задавайте `"false"`.
-
-## Внешнее JS-управление
-
-```js
-const accordion = document.querySelector('sunmar-accordion');
-accordion.mode = 'single';
-accordion.faq = true;
-const item = accordion.querySelector('sunmar-accordion-item');
-item.open = true;
-item.disabled = true; // Программное изменение open остаётся доступным.
-```

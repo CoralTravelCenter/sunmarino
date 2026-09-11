@@ -17,6 +17,10 @@ describe('registerSunmarComponents', () => {
     expect(registry.get('sunmar-tabs')).toBeDefined();
     expect(registry.get('sunmar-slider')).toBeDefined();
     expect(registry.get('sunmar-sticky-nav')).toBeDefined();
+    expect(registry.get('sunmar-lead')).toBeDefined();
+    expect(registry.get('sunmar-table')).toBeDefined();
+    expect(registry.get('sunmar-climate-grid')).toBeDefined();
+    expect(registry.get('sunmar-promo-terms')).toBeDefined();
   });
 
   it('is safe to call repeatedly', () => {
@@ -32,6 +36,6 @@ describe('registerSunmarComponents', () => {
       registerSunmarComponents(registry);
       registerSunmarComponents(registry);
     }).not.toThrow();
-    expect(registry.define).toHaveBeenCalledTimes(14);
+    expect(registry.define).toHaveBeenCalledTimes(18);
   });
 });

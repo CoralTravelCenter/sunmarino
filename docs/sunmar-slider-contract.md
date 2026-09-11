@@ -27,17 +27,3 @@
 | `aria-label` или `aria-labelledby` | Текст или ID заголовка | Доступное имя карусели |
 
 Незаданный брейкпоинт наследует значение предыдущего. В Controls `none` означает отсутствие `disabled-from`.
-
-## Внешнее JS-управление
-
-```js
-const slider = document.querySelector('sunmar-slider');
-slider.slidesPerView = 1;
-slider.slidesPerView768 = 2;
-slider.slidesToScroll = 'auto';
-slider.disabledFrom = 1280;
-slider.loop = true;
-slider.gap = 24;
-```
-
-Публичных методов переключения и событий нет. У `sunmar-slide` собственных параметров нет.

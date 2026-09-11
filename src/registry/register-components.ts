@@ -54,6 +54,22 @@ import {
   SUNMAR_SLIDER_TAG_NAME,
   SunmarSlider
 } from '../components/sunmar-slider/sunmar-slider';
+import {
+  SUNMAR_LEAD_TAG_NAME,
+  SunmarLead
+} from '../components/sunmar-lead/sunmar-lead';
+import {
+  SUNMAR_TABLE_TAG_NAME,
+  SunmarTable
+} from '../components/sunmar-table/sunmar-table';
+import {
+  SUNMAR_CLIMATE_GRID_TAG_NAME,
+  SunmarClimateGrid
+} from '../components/sunmar-climate-grid/sunmar-climate-grid';
+import {
+  SUNMAR_PROMO_TERMS_TAG_NAME,
+  SunmarPromoTerms
+} from '../components/sunmar-promo-terms/sunmar-promo-terms';
 
 const sunmarComponentRegistryEntries = [
   [SUNMAR_MODAL_TAG_NAME, SunmarModal],
@@ -69,7 +85,11 @@ const sunmarComponentRegistryEntries = [
   [SUNMAR_STICKY_NAV_TAG_NAME, SunmarStickyNav],
   [SUNMAR_CARD_TAG_NAME, SunmarCard],
   [SUNMAR_SLIDE_TAG_NAME, SunmarSlide],
-  [SUNMAR_SLIDER_TAG_NAME, SunmarSlider]
+  [SUNMAR_SLIDER_TAG_NAME, SunmarSlider],
+  [SUNMAR_LEAD_TAG_NAME, SunmarLead],
+  [SUNMAR_TABLE_TAG_NAME, SunmarTable],
+  [SUNMAR_CLIMATE_GRID_TAG_NAME, SunmarClimateGrid],
+  [SUNMAR_PROMO_TERMS_TAG_NAME, SunmarPromoTerms]
 ] as const;
 
 export function registerSunmarComponents(registry?: CustomElementRegistry): void {

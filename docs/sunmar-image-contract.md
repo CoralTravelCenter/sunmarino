@@ -17,13 +17,3 @@
 | `sizes` | Например `100vw` / не задан | Ожидаемая ширина изображения; работает с `srcset` |
 | `media` | По умолчанию `(min-width: 768px)` | Условие выбора `source`; пустая строка снимает ограничение |
 | `loading` | `lazy`, `eager` / решает браузер | Отложенная или немедленная загрузка |
-
-## Внешнее JS-управление
-
-```js
-const image = document.querySelector('sunmar-image');
-image.src = '/images/coast.jpg';
-image.alt = 'Побережье';
-image.width = 720;
-image.height = 480;
-```

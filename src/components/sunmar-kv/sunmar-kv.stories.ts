@@ -7,7 +7,7 @@ const desktopImageUrl = 'https://b2ccdn.sunmar.ru/content/landing-pages/rb-summe
 const mobileImageUrl = 'https://b2ccdn.sunmar.ru/content/landing-pages/rb-summer/rb-kv-mo.jpg';
 
 const meta: Meta = {
-  title: 'Компоненты/Главный баннер',
+  title: 'Компоненты/Key Visual',
   id: 'components-kv',
   tags: ['autodocs'],
   parameters: {
@@ -35,6 +35,11 @@ type PlaygroundArgs = typeof playgroundArgs;
 export const Playground: StoryObj<PlaygroundArgs> = {
   name: 'Песочница',
   args: playgroundArgs,
+  decorators: [(story, context) => html`
+    <div style=${styleMap({ '--sunmarino-kv-content-color': context.args.contentColor, '--sunmarino-image-object-position': context.args.objectPosition })}>
+      ${story()}
+    </div>
+  `],
   argTypes: {
   "fullWidth": {
     "description": "full-width / fullWidth — растягивает внутренний баннер до 100vw, убирает скругление и ограничивает высоту 520px. Контент ограничен 1530px.",
@@ -126,8 +131,7 @@ export const Playground: StoryObj<PlaygroundArgs> = {
     docs: { description: { story: 'Изменяйте параметры в Controls. Настройки примера не являются атрибутами компонента.' }, source: { type: 'dynamic' } }
   },
   render: (args) => html`
-    <sunmar-kv ?full-width=${args.fullWidth}
-      style=${styleMap({ '--sunmarino-kv-content-color': args.contentColor, '--sunmarino-image-object-position': args.objectPosition })}>
+    <sunmar-kv ?full-width=${args.fullWidth}>
       <sunmar-image slot="image" src=${mobileImageUrl} srcset=${desktopImageUrl} media="(min-width: 768px)" alt="" loading="eager"></sunmar-image>
       ${args.eyebrow ? html`<p slot="eyebrow">${args.eyebrow}</p>` : nothing}
       <h1 slot="title">${args.title}</h1>

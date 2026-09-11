@@ -13,5 +13,9 @@ export { SunmarStickyNav } from './components/sunmar-sticky-nav/sunmar-sticky-na
 export { SunmarCard } from './components/sunmar-card/sunmar-card';
 export { SunmarSlide } from './components/sunmar-slide/sunmar-slide';
 export { SunmarSlider } from './components/sunmar-slider/sunmar-slider';
+export { SunmarLead } from './components/sunmar-lead/sunmar-lead';
+export { SunmarTable } from './components/sunmar-table/sunmar-table';
+export { SunmarClimateGrid } from './components/sunmar-climate-grid/sunmar-climate-grid';
+export { SunmarPromoTerms } from './components/sunmar-promo-terms/sunmar-promo-terms';
 export { preloadScript } from './utils/dom/preload-script';
 export { registerSunmarComponents } from './registry/register-components';

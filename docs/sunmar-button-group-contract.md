@@ -18,11 +18,3 @@
 Свои `type` и `size` на кнопке переопределяют настройку группы. Наследование работает только для непосредственных дочерних кнопок.
 
 Направление задаёт CSS-переменная `--sunmarino-button-group-direction`: `row` или `column`. Интервал — `--sunmarino-button-group-gap`. Отдельных атрибутов для них нет.
-
-## Внешнее JS-управление
-
-```js
-const group = document.querySelector('sunmar-button-group');
-group.type = 'secondary';
-group.size = 'large';
-```

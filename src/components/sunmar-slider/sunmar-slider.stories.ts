@@ -6,25 +6,11 @@ import coastImageUrl from '../../dev/assets/cards/coast.jpg?url';
 import resortImageUrl from '../../dev/assets/cards/resort.jpg?url';
 import mountainsImageUrl from '../../dev/assets/cards/mountains.jpg?url';
 
-const sliderDemoStyles = html`
-  <style>
-    .slider-demo {
-      display: block;
-      padding: 24px;
-    }
-
-    @media (min-width: 1280px) {
-      .slider-demo {
-        padding-inline: 96px;
-      }
-    }
-  </style>
-`;
-
 const meta: Meta = {
-  title: 'Компоненты/Слайдер',
+  title: 'Компоненты/Slider',
   id: 'components-slider',
   tags: ['autodocs'],
+  decorators: [(story) => html`<div class="storybook-slider-demo">${story()}</div>`],
   parameters: {
     layout: 'fullscreen',
     controls: { disable: true },
@@ -239,8 +225,7 @@ export const Playground: StoryObj<PlaygroundArgs> = {
     docs: { description: { story: 'Изменяйте параметры в Controls. Настройки примера не являются атрибутами компонента.' }, source: { type: 'dynamic' } }
   },
   render: (args) => html`
-    ${sliderDemoStyles}
-    <sunmar-slider class="slider-demo" aria-label=${args.ariaLabel}
+    <sunmar-slider aria-label=${args.ariaLabel}
       slides-per-view=${args.slidesPerView} slides-per-view-768=${args.slidesPerView768}
       slides-per-view-1024=${args.slidesPerView1024} slides-per-view-1280=${args.slidesPerView1280}
       slides-per-view-1440=${args.slidesPerView1440} slides-to-scroll=${args.slidesToScroll}
@@ -264,9 +249,7 @@ export const Cards: Story = {
   name: "Карточки в карусели",
   parameters: { docs: { description: { story: "Перетаскивайте слайды или используйте управление. Число видимых карточек меняется от 768px и 1024px. Для loop нужно достаточно содержимого." } } },
   render: () => html`
-    ${sliderDemoStyles}
     <sunmar-slider
-      class="slider-demo"
       aria-label="Направления отдыха"
       slides-per-view="1"
       slides-per-view-768="2"
@@ -335,8 +318,7 @@ export const DisabledFromDesktop: Story = {
   name: "Сетка от 1024px",
   parameters: { docs: { description: { story: "До 1024px работает карусель, от 1024px — сетка без управления. Уменьшение окна снова включает карусель." } } },
   render: () => html`
-    ${sliderDemoStyles}
-    <sunmar-slider class="slider-demo" aria-label="Направления отдыха"
+    <sunmar-slider aria-label="Направления отдыха"
       slides-per-view="1.5" slides-per-view-768="2" slides-per-view-1024="3"
       disabled-from="1024" gap="24">
       ${['Турция', 'Египет', 'ОАЭ', 'Мальдивы'].map((title) => html`
@@ -350,8 +332,7 @@ export const SingleSlide: Story = {
   name: "Один слайд",
   parameters: { docs: { description: { story: "При одной позиции переключать нечего: управление скрывается, даже если запрошен loop." } } },
   render: () => html`
-    ${sliderDemoStyles}
-    <sunmar-slider class="slider-demo" aria-label="Предложение отдыха" loop>
+    <sunmar-slider aria-label="Предложение отдыха" loop>
       <sunmar-slide><sunmar-card><sunmar-image slot="media" src=${coastImageUrl} alt="" width="720" height="480"></sunmar-image><h3 slot="title">Отдых у моря</h3><p slot="text">Предложение для вашего отпуска.</p></sunmar-card></sunmar-slide>
     </sunmar-slider>
   `

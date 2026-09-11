@@ -5,7 +5,7 @@ import { html, nothing } from 'lit';
 import coastImageUrl from '../../dev/assets/cards/coast.jpg?url';
 
 const meta: Meta = {
-  title: 'Компоненты/Карточка',
+  title: 'Компоненты/Card',
   id: 'components-card',
   tags: ['autodocs'],
   parameters: {
@@ -31,6 +31,11 @@ type PlaygroundArgs = typeof playgroundArgs;
 export const Playground: StoryObj<PlaygroundArgs> = {
   name: 'Песочница',
   args: playgroundArgs,
+  decorators: [(story, context) => html`
+    <div class="storybook-demo" style=${styleMap({ 'max-width': `${context.args.width}px`, '--sunmarino-card-background': context.args.background })}>
+      ${story()}
+    </div>
+  `],
   argTypes: {
   "reversed": {
     "description": "reversed — изображение справа при ширине карточки от 1024px. Это HTML-атрибут без JS-свойства.",
@@ -113,8 +118,7 @@ export const Playground: StoryObj<PlaygroundArgs> = {
     docs: { description: { story: 'Изменяйте параметры в Controls. Настройки примера не являются атрибутами компонента.' }, source: { type: 'dynamic' } }
   },
   render: (args) => html`
-    <sunmar-card ?reversed=${args.reversed}
-      style=${styleMap({ width: `${args.width}px`, 'max-width': '100%', '--sunmarino-card-background': args.background })}>
+    <sunmar-card ?reversed=${args.reversed}>
       <sunmar-image slot="media" src=${coastImageUrl} width="720" height="480" alt="Побережье Турции"></sunmar-image>
       <h3 slot="title">${args.title}</h3>
       <p slot="text">${args.text}</p>
@@ -129,8 +133,9 @@ export const Playground: StoryObj<PlaygroundArgs> = {
 export const Mobile: Story = {
   name: "Узкая карточка",
   parameters: { docs: { description: { story: "Ширина карточки 360px: вертикальная раскладка сохраняется даже в широком окне." } } },
+  decorators: [(story) => html`<div class="storybook-demo storybook-demo--card-narrow">${story()}</div>`],
   render: () => html`
-    <sunmar-card style="display:block; width:min(100%, 360px);">
+    <sunmar-card>
       <sunmar-image
         slot="media"
         src=${coastImageUrl}
@@ -149,8 +154,9 @@ export const Mobile: Story = {
 export const WithButtonGroup: Story = {
   name: "Карточка с группой кнопок",
   parameters: { docs: { description: { story: "В слот actions передаётся целая группа. Она управляет интервалами и наследованием кнопок." } } },
+  decorators: [(story) => html`<div class="storybook-demo storybook-demo--card-narrow">${story()}</div>`],
   render: () => html`
-    <sunmar-card style="width:min(100%, 360px);">
+    <sunmar-card>
       <sunmar-image slot="media" src=${coastImageUrl} width="720" height="480" alt="Побережье Турции"></sunmar-image>
       <h3 slot="title">Турция</h3>
       <p slot="text">Семейные отели и отдых у моря.</p>
@@ -165,8 +171,9 @@ export const WithButtonGroup: Story = {
 export const Reversed: Story = {
   name: "Изображение справа",
   parameters: { docs: { description: { story: "Увеличьте область просмотра: reversed меняет порядок колонок только при ширине самой карточки от 1024px." } } },
+  decorators: [(story) => html`<div class="storybook-demo storybook-demo--card-wide">${story()}</div>`],
   render: () => html`
-    <sunmar-card reversed style="width:1200px; max-width:100%;">
+    <sunmar-card reversed>
       <sunmar-image slot="media" src=${coastImageUrl} width="720" height="480" alt="Побережье Турции"></sunmar-image>
       <h3 slot="title">Турция</h3>
       <p slot="text">Семейные отели и отдых у моря.</p>
@@ -177,8 +184,9 @@ export const Reversed: Story = {
 export const Responsive: Story = {
   name: "Адаптивная карточка",
   parameters: { docs: { description: { story: "Карточка ограничена шириной 1200px и доступным местом. Изменяйте ширину области просмотра, чтобы увидеть переход при 1024px." } } },
+  decorators: [(story) => html`<div class="storybook-demo storybook-demo--card-wide">${story()}</div>`],
   render: () => html`
-    <sunmar-card style="display:block; width:min(100%, 1200px);">
+    <sunmar-card>
       <sunmar-image slot="media" src=${coastImageUrl} width="720" height="480" alt="Побережье Турции"></sunmar-image>
       <h3 slot="title">Турция</h3>
       <p slot="text">Семейные отели и отдых у моря.</p>

@@ -6,7 +6,7 @@ import coastImageUrl from '../../dev/assets/cards/coast.jpg?url';
 import resortImageUrl from '../../dev/assets/cards/resort.jpg?url';
 
 const meta: Meta = {
-  title: 'Компоненты/Изображение',
+  title: 'Компоненты/Image',
   id: 'components-image',
   tags: ['autodocs'],
   parameters: {
@@ -37,6 +37,13 @@ type PlaygroundArgs = typeof playgroundArgs;
 export const Playground: StoryObj<PlaygroundArgs> = {
   name: 'Песочница',
   args: playgroundArgs,
+  decorators: [(story, context) => html`
+    <div class="storybook-demo storybook-demo--image" style=${styleMap({
+      '--sunmarino-image-height': context.args.displayHeight,
+      '--sunmarino-image-object-fit': context.args.objectFit,
+      '--sunmarino-image-object-position': context.args.objectPosition
+    })}>${story()}</div>
+  `],
   argTypes: {
   "src": {
     "description": "src — адрес основного изображения img.",
@@ -188,9 +195,7 @@ export const Playground: StoryObj<PlaygroundArgs> = {
   },
   render: (args) => html`
     <sunmar-image src=${args.src} srcset=${args.srcset} sizes=${args.sizes} media=${args.media}
-      alt=${args.alt} width=${args.width} height=${args.height} loading=${args.loading}
-      style=${styleMap({ width: '720px', 'max-width': '100%', '--sunmarino-image-height': args.displayHeight,
-        '--sunmarino-image-object-fit': args.objectFit, '--sunmarino-image-object-position': args.objectPosition })}>
+      alt=${args.alt} width=${args.width} height=${args.height} loading=${args.loading}>
     </sunmar-image>
   `
 };
@@ -198,6 +203,7 @@ export const Playground: StoryObj<PlaygroundArgs> = {
 export const Default: Story = {
   name: "Обычное изображение",
   parameters: { docs: { description: { story: "Без srcset создаётся только img. width и height описывают исходные размеры, CSS ограничивает отображаемую ширину." } } },
+  decorators: [(story) => html`<div class="storybook-demo storybook-demo--image">${story()}</div>`],
   render: () => html`
     <sunmar-image
       src=${coastImageUrl}
@@ -205,7 +211,6 @@ export const Default: Story = {
       width="720"
       height="480"
       loading="lazy"
-      style="display:block; width:min(calc(100vw - 32px), 720px);"
     ></sunmar-image>
   `
 };
@@ -213,6 +218,7 @@ export const Default: Story = {
 export const ArtDirection: Story = {
   name: "Разные изображения для экранов",
   parameters: { docs: { description: { story: "До 768px браузер использует src, от 768px — source из srcset. Измените ширину окна примера." } } },
+  decorators: [(story) => html`<div class="storybook-demo storybook-demo--image">${story()}</div>`],
   render: () => html`
     <sunmar-image
       srcset=${coastImageUrl}
@@ -221,7 +227,6 @@ export const ArtDirection: Story = {
       alt="Курорт у моря"
       width="720"
       height="480"
-      style="display:block; width:min(calc(100vw - 32px), 720px);"
     ></sunmar-image>
   `
 };

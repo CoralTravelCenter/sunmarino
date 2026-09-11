@@ -5,7 +5,7 @@ import type { Meta, StoryObj } from '@storybook/web-components-vite';
 import { html } from 'lit';
 
 const meta: Meta = {
-  title: 'Компоненты/Вкладки',
+  title: 'Компоненты/Tabs',
   id: 'components-tabs',
   tags: ['autodocs'],
   parameters: {
@@ -103,8 +103,9 @@ export const Playground: StoryObj<PlaygroundArgs> = {
 export const Default: Story = {
   name: "Начально выбранная вкладка",
   parameters: { docs: { description: { story: "forced задаёт начальный выбор «Турция». Дальше можно переключаться мышью, стрелками, Home и End." } } },
+  decorators: [(story) => html`<div class="storybook-demo storybook-demo--centered storybook-demo--tabs">${story()}</div>`],
   render: () => html`
-    <sunmar-tabs aria-label="Направления отдыха" value="turkey" style="max-width:1080px; margin:0 auto;">
+    <sunmar-tabs aria-label="Направления отдыха" value="turkey">
       <sunmar-tab value="april"><button type="button">Почему апрель?</button></sunmar-tab>
       <sunmar-tab value="turkey" forced><button type="button">Турция</button></sunmar-tab>
       <sunmar-tab value="egypt"><button type="button">Египет</button></sunmar-tab>
