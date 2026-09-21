@@ -19,3 +19,4 @@ export { SunmarClimateGrid } from './components/sunmar-climate-grid/sunmar-clima
 export { SunmarPromoTerms } from './components/sunmar-promo-terms/sunmar-promo-terms';
 export { preloadScript } from './utils/dom/preload-script';
 export { registerSunmarComponents } from './registry/register-components';
+export { SunmarBadge } from './components/sunmar-badge/sunmar-badge';

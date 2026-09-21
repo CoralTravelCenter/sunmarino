@@ -1,0 +1,57 @@
+.tippy-box[data-theme~="sunmar-shild-component"] {
+  box-sizing: border-box;
+  width: min(275.067px, calc(100vw - 16px));
+  max-width: none;
+  min-height: 64.067px;
+  border-radius: 8.267px;
+  background: #fff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  color: #111;
+  font-family: "Manrope", Arial, sans-serif;
+
+  > .tippy-content {
+    box-sizing: border-box;
+    width: 100%;
+    padding: 0;
+  }
+
+  .sunmar-tooltip-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    box-sizing: border-box;
+    width: 100%;
+    min-height: 64.067px;
+    padding: 14.033px 16.533px;
+    overflow-wrap: anywhere;
+    gap: 8px;
+  }
+
+  .sunmar-tooltip-content > * {
+    margin-block: 0;
+  }
+
+  .sunmar-tooltip-content :is(ul, ol) {
+    margin: 0;
+    padding-inline-start: 15px;
+  }
+
+  .sunmar-tooltip-content,
+  .sunmar-tooltip-content :is(p, ul, ol) {
+    font-size: 10px;
+    font-weight: 400;
+    line-height: 12px;
+  }
+
+  .sunmar-tooltip-content li + li {
+    margin-top: 2px;
+  }
+
+  .tippy-arrow {
+    color: #fff;
+  }
+
+  &[data-placement^="top"] > .tippy-arrow {
+    bottom: 2px;
+  }
+}

@@ -21,6 +21,7 @@ describe('registerSunmarComponents', () => {
     expect(registry.get('sunmar-table')).toBeDefined();
     expect(registry.get('sunmar-climate-grid')).toBeDefined();
     expect(registry.get('sunmar-promo-terms')).toBeDefined();
+    expect(registry.get('sunmar-badge')).toBeDefined();
   });
 
   it('is safe to call repeatedly', () => {
@@ -36,6 +37,6 @@ describe('registerSunmarComponents', () => {
       registerSunmarComponents(registry);
       registerSunmarComponents(registry);
     }).not.toThrow();
-    expect(registry.define).toHaveBeenCalledTimes(18);
+    expect(registry.define).toHaveBeenCalledTimes(19);
   });
 });

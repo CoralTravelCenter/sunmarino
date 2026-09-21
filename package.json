@@ -45,7 +45,8 @@
   "license": "MIT",
   "dependencies": {
     "@fluejs/noscroll": "^1.0.0",
-    "lit": "^3.3.3"
+    "lit": "^3.3.3",
+    "tippy.js": "^6.3.7"
   },
   "devDependencies": {
     "@storybook/addon-a11y": "^10.4.4",

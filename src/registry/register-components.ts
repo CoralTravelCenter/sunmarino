@@ -70,6 +70,10 @@ import {
   SUNMAR_PROMO_TERMS_TAG_NAME,
   SunmarPromoTerms
 } from '../components/sunmar-promo-terms/sunmar-promo-terms';
+import {
+  SUNMAR_BADGE_TAG_NAME,
+  SunmarBadge
+} from '../components/sunmar-badge/sunmar-badge';
 
 const sunmarComponentRegistryEntries = [
   [SUNMAR_MODAL_TAG_NAME, SunmarModal],
@@ -89,7 +93,8 @@ const sunmarComponentRegistryEntries = [
   [SUNMAR_LEAD_TAG_NAME, SunmarLead],
   [SUNMAR_TABLE_TAG_NAME, SunmarTable],
   [SUNMAR_CLIMATE_GRID_TAG_NAME, SunmarClimateGrid],
-  [SUNMAR_PROMO_TERMS_TAG_NAME, SunmarPromoTerms]
+  [SUNMAR_PROMO_TERMS_TAG_NAME, SunmarPromoTerms],
+  [SUNMAR_BADGE_TAG_NAME, SunmarBadge]
 ] as const;
 
 export function registerSunmarComponents(registry?: CustomElementRegistry): void {

@@ -1,0 +1,52 @@
+.sunmar-shild-component {
+  position: absolute;
+  top: clamp(8px, 2.5vw, 16px);
+  left: clamp(8px, 2.5vw, 16px);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  width: 232.951px;
+  height: 32px;
+  padding: 2px 6px;
+  border-radius: 8px;
+  background:
+          linear-gradient(-81.726deg, #ac0341 5.451%, #ea5c18 113.32%),
+          linear-gradient(90deg, #ac0341 0%, #ea5c18 100%);
+  color: #fff;
+  font-family: "Manrope", Arial, sans-serif;
+
+  .sunmar-shild--img {
+    flex: 0 0 auto;
+    width: 25.525px;
+    height: 27.374px;
+    object-fit: cover;
+  }
+
+  .sunmar-shild--text {
+    flex: 0 0 168px;
+    margin-left: 7.426px;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 14px;
+    white-space: nowrap;
+  }
+
+  .sunmar-shild-info-button {
+    flex: 0 0 auto;
+    width: 14px;
+    height: 14px;
+    margin-left: 6px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    line-height: 0;
+    cursor: pointer;
+    touch-action: manipulation;
+
+    svg {
+      display: block;
+    }
+  }
+}
