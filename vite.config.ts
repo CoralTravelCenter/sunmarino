@@ -22,6 +22,9 @@ export default defineConfig(({ command }) => {
   const bundleFileName = `sunmarino-${packageJson.version}.iife.js`;
 
   return {
+    define: {
+      'process.env.NODE_ENV': JSON.stringify(command === 'build' ? 'production' : 'development')
+    },
     server: {
       host: '127.0.0.1',
       port: 5173,

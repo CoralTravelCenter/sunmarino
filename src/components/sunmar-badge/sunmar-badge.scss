@@ -16,11 +16,15 @@
   color: #fff;
   font-family: "Manrope", Arial, sans-serif;
 
-  .sunmar-shild--img {
-    flex: 0 0 auto;
+  &::before {
+    content: "";
+    flex: 0 0 25.525px;
     width: 25.525px;
     height: 27.374px;
-    object-fit: cover;
+    background-image: url("https://b2ccdn.coral.ru/content/rak_guarantee.png");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
   }
 
   .sunmar-shild--text {

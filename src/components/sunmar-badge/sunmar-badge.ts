@@ -3,9 +3,25 @@ import type { Instance } from 'tippy.js';
 import { componentBaseStyles } from '../../styles/component-base';
 import styles from './sunmar-badge.scss?inline';
 import { property } from 'lit/decorators.js';
-import { injectTippy } from './scripts/utils/tippy/injectTippy';
+import { waitForHotelID } from './scripts/badgeLogic/waitForHotelID';
+import { waitForElement } from './scripts/utils/mutations.js';
+import { injectTippy } from './scripts/badgeLogic/tippy/injectTippy';
 
 export const SUNMAR_BADGE_TAG_NAME = 'sunmar-badge';
+
+const TARGET_SELECTOR = '[class*="PhotoGalleryMainCarousel_mainSwiperContainer__"]';
+const INJECTED_DATA_KEY = 'CoralShildRakInject';
+
+const hotelIdsConverter = {
+  fromAttribute(value: string | null): string[] {
+    return value
+      ? value.split(/[\s,;]+/).map((id) => id.trim()).filter(Boolean)
+      : [];
+  },
+  toAttribute(value: string[]): string {
+    return value.join(',');
+  }
+};
 
 const infoButtonTemplate = html`
   <button
@@ -28,13 +44,97 @@ export class SunmarBadge extends LitElement {
   @property({ type: Boolean, attribute: 'info-button' })
   infoButton = false;
 
+  @property({ attribute: 'hotel-ids', converter: hotelIdsConverter })
+  hotelIds: string[] = [];
+
   private tippyInstances: Instance[] = [];
+  private mountPromise: Promise<void> | null = null;
+  private mountedToTarget = false;
+  private mountedContainer: HTMLElement | null = null;
+
+  connectedCallback(): void {
+    super.connectedCallback();
+    this.scheduleAutoMount();
+  }
 
   protected updated(changedProperties: Map<PropertyKey, unknown>): void {
-    if (!changedProperties.has('infoButton')) {
+    if (changedProperties.has('infoButton')) {
+      this.setupTippy();
+    }
+
+    if (changedProperties.has('hotelIds')) {
+      this.scheduleAutoMount();
+    }
+  }
+
+  disconnectedCallback(): void {
+    super.disconnectedCallback();
+
+    queueMicrotask(() => {
+      if (!this.isConnected) {
+        this.destroyTippy();
+        if (this.mountedContainer) {
+          delete this.mountedContainer.dataset[INJECTED_DATA_KEY];
+          this.mountedContainer = null;
+          this.mountedToTarget = false;
+        }
+      }
+    });
+  }
+
+  private scheduleAutoMount(): void {
+    const autoMountEnabled = this.hasAttribute('hotel-ids') || this.hotelIds.length > 0;
+
+    if (
+      !autoMountEnabled ||
+      !this.isConnected ||
+      this.mountedToTarget ||
+      this.mountPromise
+    ) {
       return;
     }
 
+    this.hidden = true;
+    this.mountPromise = this.mountToTarget().finally(() => {
+      this.mountPromise = null;
+    });
+  }
+
+  private async mountToTarget(): Promise<void> {
+    if (this.hotelIds.length > 0) {
+      const currentHotelId = await waitForHotelID();
+      if (!currentHotelId || !this.hotelIds.includes(currentHotelId)) {
+        return;
+      }
+    }
+
+    let devContainer: HTMLElement;
+
+    try {
+      devContainer = await waitForElement<HTMLElement>(TARGET_SELECTOR);
+    } catch {
+      return;
+    }
+
+    if (
+      !this.isConnected ||
+      (devContainer.dataset[INJECTED_DATA_KEY] && !devContainer.contains(this))
+    ) {
+      return;
+    }
+
+    this.mountedToTarget = true;
+    this.mountedContainer = devContainer;
+    devContainer.dataset[INJECTED_DATA_KEY] = 'true';
+
+    if (this.parentElement !== devContainer) {
+      devContainer.prepend(this);
+    }
+
+    this.hidden = false;
+  }
+
+  private setupTippy(): void {
     this.destroyTippy();
 
     const infoButton = this.renderRoot.querySelector<HTMLElement>('#sunmar-shild-info-button');
@@ -42,11 +142,6 @@ export class SunmarBadge extends LitElement {
     if (infoButton && tooltipContent) {
       this.tippyInstances = injectTippy(infoButton, tooltipContent);
     }
-  }
-
-  disconnectedCallback(): void {
-    this.destroyTippy();
-    super.disconnectedCallback();
   }
 
   private destroyTippy(): void {
@@ -72,8 +167,7 @@ export class SunmarBadge extends LitElement {
     return html`
       <div class="root" part="root">
         <div class="sunmar-shild-component" id="sunmar-shild-component">
-          <img src="https://b2ccdn.coral.ru/content/rak_guarantee.png" alt="" class="sunmar-shild--img">
-          <span class="sunmar-shild--text">Бесплатно для туристов</span>
+          <span class="sunmar-shild--text"><slot></slot></span>
           ${this.infoButton ? infoButtonTemplate : null}
         </div>
       </div>
